@@ -27,6 +27,7 @@ function buildChecklist() {
 }
 
 function toggleItem(id) {
+  if (isVisitor) return;
   userProgress.checked[id] = !userProgress.checked[id];
   buildChecklist(); renderProgress(); updateHeaderStats(); scheduleSave();
 }

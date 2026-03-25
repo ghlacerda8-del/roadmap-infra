@@ -5,10 +5,19 @@
   try {
     const { data: { session } } = await sb.auth.getSession();
     if (session?.user) {
-      const cpf    = session.user.user_metadata?.cpf || session.user.email.split('@')[0];
-      const master = cpf === MASTER_CPF.replace(/\D/g, '');
-      currentUser  = { cpf, email: session.user.email, id: session.user.id, master };
-      isMaster     = master;
+      const email = session.user.email;
+      let identifier, master;
+      if (email.endsWith('@roadmap.infra')) {
+        // Conta master (CPF-based)
+        identifier = session.user.user_metadata?.cpf || email.split('@')[0];
+        master     = identifier === MASTER_CPF.replace(/\D/g, '');
+      } else {
+        // Conta de usuário comum (email real)
+        identifier = email;
+        master     = false;
+      }
+      currentUser = { cpf: identifier, email, id: session.user.id, master };
+      isMaster    = master;
       try {
         await Promise.race([
           loadProgressFromDB(),

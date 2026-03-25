@@ -30,12 +30,14 @@
     <div class="auth-card">
       <div class="auth-tag">Acesso restrito</div>
       <div class="auth-title">Roadmap<br><span>Analista de Infra</span></div>
-      <div class="auth-sub">Entre com seu CPF e senha para acessar</div>
-      <div class="field"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14"
-          autocomplete="username" /></div>
+      <div class="auth-sub" id="l-sub">Entre com seu e-mail e senha para acessar</div>
+      <div class="field" id="l-email-field"><label>E-mail</label><input type="email" id="l-email" placeholder="seu@email.com" autocomplete="username" /></div>
+      <div class="field" id="l-cpf-field" style="display:none"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username" /></div>
       <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••"
           autocomplete="current-password" /></div>
       <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
+      <button class="btn-visitor" onclick="doVisitorLogin()">Entrar como Visitante</button>
+      <div class="auth-toggle"><a href="#" onclick="toggleLoginMode(event)">Acesso administrativo →</a></div>
       <div class="auth-msg auth-error" id="l-error"></div>
       <div class="auth-msg auth-warn" id="l-pending"></div>
     </div>
@@ -47,8 +49,7 @@
       <div class="auth-tag">Solicitação de acesso</div>
       <div class="auth-title">Solicitar<br><span>Acesso</span></div>
       <div class="auth-sub">Preencha seus dados — o administrador será notificado para aprovação</div>
-      <div class="field"><label>CPF</label><input type="text" id="i-cpf" placeholder="000.000.000-00" maxlength="14" />
-      </div>
+      <div class="field"><label>E-mail</label><input type="email" id="i-email" placeholder="seu@email.com" /></div>
       <div class="field"><label>Senha</label><input type="password" id="i-senha" placeholder="Mínimo 6 caracteres" />
       </div>
       <div class="field"><label>Confirmar senha</label><input type="password" id="i-senha2"

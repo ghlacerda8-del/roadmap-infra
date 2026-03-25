@@ -26,7 +26,9 @@ async function loadAdminPanel() {
     const dados  = progMap[sol.cpf] || { checked: {} };
     const done   = allItems.filter(i => dados.checked?.[i.id]).length;
     const pct    = Math.round((done / allItems.length) * 100);
+    const isEmail  = sol.cpf.includes('@');
     const initials = sol.cpf.slice(0, 2).toUpperCase();
+    const display  = isEmail ? sol.cpf : fmtCpfDisplay(sol.cpf);
     const statusLabel = { 0: 'PENDENTE', 1: 'ATIVO', 2: 'INATIVO' };
     const sk = sol.status;
     let actions = '';
@@ -39,7 +41,7 @@ async function loadAdminPanel() {
       <div class="user-card-top">
         <div class="user-avatar">${initials}</div>
         <div>
-          <div class="user-cpf-label">${fmtCpfDisplay(sol.cpf)}</div>
+          <div class="user-cpf-label">${display}</div>
           <span class="status-badge sb-${sk}">${statusLabel[sk]}</span>
           <span style="font-size:11px;color:var(--muted);margin-left:6px">${new Date(sol.created_at).toLocaleDateString('pt-BR')}</span>
           ${sol.senha_hint ? `<span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:6px">senha: ${sol.senha_hint}</span>` : ''}

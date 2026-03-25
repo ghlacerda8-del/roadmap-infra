@@ -34,6 +34,7 @@ function renderWeek() {
 }
 
 function toggleStudyDay(key) {
+  if (isVisitor) return;
   if (!userProgress.studiedDays) userProgress.studiedDays = [];
   const idx = userProgress.studiedDays.indexOf(key);
   if (idx >= 0) userProgress.studiedDays.splice(idx, 1);

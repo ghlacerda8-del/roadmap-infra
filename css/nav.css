@@ -8,5 +8,6 @@
 .nav-role{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:10px}
 .role-master{background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
 .role-viewer{background:rgba(77,159,255,.12);color:var(--blue);border:1px solid rgba(77,159,255,.2)}
+.role-visitor{background:rgba(150,150,150,.12);color:var(--muted);border:1px solid rgba(150,150,150,.2)}
 .btn-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:border-color .15s}
 .btn-logout:hover{border-color:var(--border2);color:var(--text)}
