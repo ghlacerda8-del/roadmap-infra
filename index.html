@@ -648,8 +648,8 @@ async function loginAuth(cpf,senha,master,btn){
   currentUser={cpf,email,id:data.user?.id,master};
   isMaster=master;
   sb.from('login_log').insert({user_cpf:cpf,logged_at:new Date().toISOString(),user_agent:navigator.userAgent.slice(0,200)}).catch(()=>{});
-  // Recarrega a página — o init() detecta a sessão e entra automaticamente
-  window.location.reload();
+  // Força reload completo para o init() carregar o app com a sessão
+  setTimeout(()=>{ window.location.href=window.location.pathname; },300);
 }
 
 async function doLogout(){
@@ -882,14 +882,23 @@ function confirmReset(){if(confirm('Apagar todo o progresso?')){userProgress={ch
   if(checkInviteMode())return;
   if(SUPABASE_URL.includes('COLE'))return;
   initSB();
-  const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){
-    const cpf=session.user.user_metadata?.cpf||session.user.email.split('@')[0];
-    const master=cpf===MASTER_CPF.replace(/\D/g,'');
-    currentUser={cpf,email:session.user.email,id:session.user.id,master};
-    isMaster=master;
-    await loadProgressFromDB();
-    showApp();
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(session?.user){
+      const cpf=session.user.user_metadata?.cpf||session.user.email.split('@')[0];
+      const master=cpf===MASTER_CPF.replace(/\D/g,'');
+      currentUser={cpf,email:session.user.email,id:session.user.id,master};
+      isMaster=master;
+      try{
+        await Promise.race([
+          loadProgressFromDB(),
+          new Promise(r=>setTimeout(r,4000))
+        ]);
+      }catch(e){}
+      showApp();
+    }
+  }catch(e){
+    console.error('Init error:',e);
   }
 })();
 </script>
