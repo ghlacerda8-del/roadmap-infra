@@ -367,12 +367,13 @@ hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 
   <div class="invite-box">
     <div style="font-size:13px;font-weight:600;margin-bottom:4px">Link de convite</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Compartilhe para alguém solicitar acesso</div>
-    <div class="invite-url" id="invite-url-txt"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-sm" onclick="copyLink()">Copiar link</button>
-      <button class="btn-sm teal" onclick="shareWhatsApp()">Enviar via WhatsApp</button>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Compartilhe para alguém solicitar acesso · clique na URL para copiar</div>
+    <div class="invite-url" id="invite-url-txt" onclick="copyLink()" style="cursor:pointer;user-select:all" title="Clique para copiar"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <button class="btn-sm teal" onclick="copyLink()">📋 Copiar link</button>
+      <button class="btn-sm teal" onclick="shareWhatsApp()">📲 Enviar via WhatsApp</button>
     </div>
+    <div id="copy-confirm" style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:6px;display:none">✓ Link copiado!</div>
   </div>
 
   <div class="section-title">Usuários</div>
@@ -742,13 +743,22 @@ async function updateSol(cpf,status){
 
 function copyLink(){
   const url=`${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
-  navigator.clipboard.writeText(url).then(()=>alert('Link copiado!'));
+  navigator.clipboard.writeText(url).then(()=>{
+    const el=document.getElementById('copy-confirm');
+    if(el){el.style.display='block';setTimeout(()=>el.style.display='none',2500);}
+  }).catch(()=>{
+    prompt('Copie o link abaixo:', url);
+  });
 }
 
 function shareWhatsApp(){
   const url=`${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
-  const msg=encodeURIComponent(`Olá! Você foi convidado para acompanhar o Roadmap Analista de Infra.\n\nClique para solicitar acesso:\n${url}`);
-  window.open(`https://wa.me/?text=${msg}`,'_blank');
+  const msg=encodeURIComponent(
+    `Olá! Você foi convidado para acompanhar o Roadmap Analista de Infra.\n\n`+
+    `Para solicitar acesso, clique no link abaixo:\n${url}`
+  );
+  // Abre WhatsApp para compartilhar o link (usuário escolhe o contato)
+  window.open(`https://api.whatsapp.com/send?text=${msg}`,'_blank');
 }
 
 // PERSISTÊNCIA
