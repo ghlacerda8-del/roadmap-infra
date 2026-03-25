@@ -12,9 +12,9 @@
   // ╚═══════════════════════════════════════════════════════════╝
   const SUPABASE_URL    = 'https://hxosxvuiqugzgnwrvaxz.supabase.co';
   const SUPABASE_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4b3N4dnVpcXVnemdud3J2YXh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTU2NjksImV4cCI6MjA4OTk3MTY2OX0.Tub-6qeUprHTW6GFCgu3xayQEJo6iSwYq_LQH58AuCg';
-  const MASTER_CPF      = 'SEU_CPF_AQUI';          // só números, ex: 12345678900
-  const INVITE_TOKEN    = 'CRIE_UM_TOKEN_SECRETO'; // ex: infra2025gustavo
-  const WHATSAPP_NUMBER = '5531900000000';          // DDI+DDD+número, ex: 5531999998888
+  const MASTER_CPF      = '14317216620';             // aceita com ou sem pontos e traço
+  const INVITE_TOKEN    = 'roadmap_infra_2026'; // ex: infra2025gustavo
+  const WHATSAPP_NUMBER = '5531983391648';          // DDI+DDD+número, ex: 5531999998888
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -608,7 +608,7 @@ async function doLogin(){
   const btn=document.getElementById('btn-login');
   hideMsg('l-error'); hideMsg('l-pending');
 
-  if(cpf.length!==11){showMsg('l-error','CPF inválido.','error');return;}
+  if(cpf.length<10||cpf.length>11){showMsg('l-error','CPF inválido — digite 10 ou 11 dígitos.','error');return;}
   if(senha.length<6){showMsg('l-error','Senha deve ter ao menos 6 caracteres.','error');return;}
 
   btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Entrando...';
