@@ -12,9 +12,9 @@
   // ╚═══════════════════════════════════════════════════════════╝
   const SUPABASE_URL    = 'https://hxosxvuiqugzgnwrvaxz.supabase.co';
   const SUPABASE_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4b3N4dnVpcXVnemdud3J2YXh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTU2NjksImV4cCI6MjA4OTk3MTY2OX0.Tub-6qeUprHTW6GFCgu3xayQEJo6iSwYq_LQH58AuCg';
-  const MASTER_CPF      = '14371216620';          // só números, ex: 12345678900
-  const INVITE_TOKEN    = 'convite_roadmap'; // ex: infra2025gustavo
-  const WHATSAPP_NUMBER = '5531983391648';          // DDI+DDD+número, ex: 5531999998888
+  const MASTER_CPF      = 'SEU_CPF_AQUI';          // só números, ex: 12345678900
+  const INVITE_TOKEN    = 'CRIE_UM_TOKEN_SECRETO'; // ex: infra2025gustavo
+  const WHATSAPP_NUMBER = '5531900000000';          // DDI+DDD+número, ex: 5531999998888
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -158,9 +158,9 @@ hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal);flex-shrink:0}
 .user-cpf-label{font-family:var(--mono);font-size:12px;font-weight:700}
 .status-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-family:var(--mono);font-size:10px;font-weight:700;margin-top:2px}
-.sb-pendente{background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
-.sb-aprovado{background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.2)}
-.sb-reprovado{background:rgba(255,95,95,.12);color:var(--red);border:1px solid rgba(255,95,95,.2)}
+.sb-0{background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
+.sb-1{background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.2)}
+.sb-2{background:rgba(255,95,95,.12);color:var(--red);border:1px solid rgba(255,95,95,.2)}
 .user-prog-bar{background:rgba(255,255,255,.05);border-radius:3px;height:4px;margin:10px 0 5px;overflow:hidden}
 .user-prog-fill{height:100%;border-radius:3px;background:var(--teal)}
 .user-prog-lbl{font-family:var(--mono);font-size:11px;color:var(--muted)}
@@ -589,8 +589,9 @@ async function doInviteSignup(){
     showMsg('i-error','Erro: '+regErr.message,'error');btn.disabled=false;btn.textContent='Enviar solicitação';return;
   }
 
-  // Salva solicitação
-  await sb.from('solicitacoes').insert({cpf,status:'pendente',created_at:new Date().toISOString()});
+  // Salva solicitação com status 0 (pendente) e hint da senha
+  const senhaHint='****'+s1.slice(-2);
+  await sb.from('solicitacoes').insert({cpf,status:0,senha_hint:senhaHint,created_at:new Date().toISOString()});
 
   // Notifica no WhatsApp
   const msg=encodeURIComponent(`🔔 *Nova solicitação - Roadmap Infra*\n\nCPF: ${fmtCpfDisplay(cpf)}\nHorário: ${new Date().toLocaleString('pt-BR')}\n\nAcesse para aprovar:\nhttps://ghlacerda8-del.github.io/roadmap-infra`);
@@ -621,8 +622,8 @@ async function doLogin(){
 
   const {data:sol}=await sb.from('solicitacoes').select('*').eq('cpf',cpf).single();
   if(!sol){showMsg('l-error','CPF não encontrado. Solicite acesso pelo link de convite.','error');btn.disabled=false;btn.textContent='Entrar';return;}
-  if(sol.status==='pendente'){showMsg('l-pending','⏳ Sua conta está aguardando aprovação do administrador.','warn');btn.disabled=false;btn.textContent='Entrar';return;}
-  if(sol.status==='reprovado'){showMsg('l-error','Acesso negado pelo administrador.','error');btn.disabled=false;btn.textContent='Entrar';return;}
+  if(sol.status===0){showMsg('l-pending','⏳ Sua conta está aguardando aprovação do administrador.','warn');btn.disabled=false;btn.textContent='Entrar';return;}
+  if(sol.status===2){showMsg('l-error','Usuário inativo. Entre em contato com o administrador.','error');btn.disabled=false;btn.textContent='Entrar';return;}
 
   await loginAuth(cpf,senha,false,btn);
 }
@@ -695,7 +696,7 @@ async function loadAdminPanel(){
   const {data:sols}=await sb.from('solicitacoes').select('*').order('created_at',{ascending:false});
   if(!sols||sols.length===0){grid.innerHTML='<div style="color:var(--muted);font-size:13px">Nenhuma solicitação ainda.</div>';banner.innerHTML='';return;}
 
-  const pendentes=sols.filter(s=>s.status==='pendente').length;
+  const pendentes=sols.filter(s=>s.status===0).length;
   banner.innerHTML=pendentes>0?`<div class="pending-banner">⚠️ ${pendentes} solicitação(ões) aguardando aprovação</div>`:'';
 
   const {data:progs}=await sb.from('progresso').select('user_cpf,dados');
@@ -710,10 +711,12 @@ async function loadAdminPanel(){
     const pct=Math.round((done/allItems.length)*100);
     const initials=sol.cpf.slice(0,2).toUpperCase();
 
+    const statusLabel={0:'PENDENTE',1:'ATIVO',2:'INATIVO'};
+    const statusKey=sol.status;
     let actions='';
-    if(sol.status==='pendente') actions=`<button class="btn-approve" onclick="updateSol('${sol.cpf}','aprovado')">✓ Aprovar</button><button class="btn-reject" onclick="updateSol('${sol.cpf}','reprovado')">✕ Reprovar</button>`;
-    else if(sol.status==='aprovado') actions=`<button class="btn-revoke" onclick="updateSol('${sol.cpf}','reprovado')">Revogar acesso</button>`;
-    else actions=`<button class="btn-approve" onclick="updateSol('${sol.cpf}','aprovado')">Reativar</button>`;
+    if(statusKey===0) actions=`<button class="btn-approve" onclick="updateSol('${sol.cpf}',1)">✓ Aprovar</button><button class="btn-reject" onclick="updateSol('${sol.cpf}',2)">✕ Reprovar</button>`;
+    else if(statusKey===1) actions=`<button class="btn-revoke" onclick="updateSol('${sol.cpf}',2)">⏸ Inativar</button>`;
+    else actions=`<button class="btn-approve" onclick="updateSol('${sol.cpf}',1)">▶ Reativar</button>`;
 
     const card=document.createElement('div'); card.className='user-card';
     card.innerHTML=`
@@ -721,8 +724,9 @@ async function loadAdminPanel(){
         <div class="user-avatar">${initials}</div>
         <div>
           <div class="user-cpf-label">${fmtCpfDisplay(sol.cpf)}</div>
-          <span class="status-badge sb-${sol.status}">${sol.status.toUpperCase()}</span>
+          <span class="status-badge sb-${statusKey}">${statusLabel[statusKey]}</span>
           <span style="font-size:11px;color:var(--muted);margin-left:6px">${new Date(sol.created_at).toLocaleDateString('pt-BR')}</span>
+          ${sol.senha_hint?`<span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:6px">senha: ${sol.senha_hint}</span>`:''}
         </div>
       </div>
       <div class="user-prog-bar"><div class="user-prog-fill" style="width:${pct}%"></div></div>
@@ -733,7 +737,7 @@ async function loadAdminPanel(){
 }
 
 async function updateSol(cpf,status){
-  await sb.from('solicitacoes').update({status}).eq('cpf',cpf);
+  await sb.from('solicitacoes').update({status,updated_at:new Date().toISOString()}).eq('cpf',cpf);
   loadAdminPanel();
 }
 
