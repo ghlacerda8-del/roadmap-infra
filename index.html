@@ -6,13 +6,15 @@
 <title>Roadmap — Analista de Infraestrutura</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<!-- ╔══════════════════════════════════════════════════╗
-     ║  CONFIGURAÇÃO SUPABASE — EDITE ESTAS 2 LINHAS   ║
-     ║  Instruções no arquivo SETUP.md                  ║
-     ╚══════════════════════════════════════════════════╝ -->
 <script>
- const SUPABASE_URL = 'https://hxosxvuiqugzgnwrvaxz.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4b3N4dnVpcXVnemdud3J2YXh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTU2NjksImV4cCI6MjA4OTk3MTY2OX0.Tub-6qeUprHTW6GFCgu3xayQEJo6iSwYq_LQH58AuCg'; // cole o valor completo
+  // ╔═══════════════════════════════════════════════════════════╗
+  // ║  CONFIGURAÇÃO — EDITE ESTAS 4 LINHAS ANTES DE PUBLICAR   ║
+  // ╚═══════════════════════════════════════════════════════════╝
+  const SUPABASE_URL    = 'https://hxosxvuiqugzgnwrvaxz.supabase.co';
+  const SUPABASE_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4b3N4dnVpcXVnemdud3J2YXh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTU2NjksImV4cCI6MjA4OTk3MTY2OX0.Tub-6qeUprHTW6GFCgu3xayQEJo6iSwYq_LQH58AuCg';
+  const MASTER_CPF      = '14371216620';          // só números, ex: 12345678900
+  const INVITE_TOKEN    = 'convite_roadmap'; // ex: infra2025gustavo
+  const WHATSAPP_NUMBER = '5531983391648';          // DDI+DDD+número, ex: 5531999998888
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -27,287 +29,265 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh}
 
-/* ── LOGIN ── */
-#login-screen{
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;padding:20px;
-}
-.login-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:16px;padding:40px;width:100%;max-width:400px;
-  position:relative;overflow:hidden;
-}
-.login-card::before{
-  content:'';position:absolute;top:-80px;right:-80px;
-  width:260px;height:260px;
-  background:radial-gradient(circle,rgba(0,229,160,.07) 0%,transparent 70%);
-  pointer-events:none;
-}
-.login-tag{font-family:var(--mono);font-size:10px;color:var(--teal);
-  letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;
-  display:flex;align-items:center;gap:8px}
-.login-tag::before{content:'';display:inline-block;width:16px;height:1px;background:var(--teal)}
-.login-title{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1.15;margin-bottom:6px}
-.login-title span{color:var(--teal)}
-.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:12px;font-weight:500;color:var(--muted);
-  margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;font-family:var(--mono)}
-.field input{
-  width:100%;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;padding:11px 14px;font-family:var(--sans);font-size:14px;
-  color:var(--text);transition:border-color .15s;outline:none;
-}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+#screen-login,#screen-invite{align-items:center;justify-content:center;padding:20px}
+#screen-app{flex-direction:column}
+
+.auth-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:420px;position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(0,229,160,.07) 0%,transparent 70%);pointer-events:none}
+.auth-tag{font-family:var(--mono);font-size:10px;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.auth-tag::before{content:'';display:inline-block;width:16px;height:1px;background:var(--teal)}
+.auth-title{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1.15;margin-bottom:6px}
+.auth-title span{color:var(--teal)}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase;font-family:var(--mono)}
+.field input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-family:var(--sans);font-size:14px;color:var(--text);transition:border-color .15s;outline:none}
 .field input:focus{border-color:rgba(0,229,160,.4)}
 .field input::placeholder{color:var(--muted)}
-.btn-login{
-  width:100%;background:var(--teal);border:none;border-radius:8px;
-  padding:13px;font-family:var(--mono);font-size:12px;font-weight:700;
-  letter-spacing:.06em;color:#000;cursor:pointer;transition:opacity .15s;margin-top:8px;
-}
-.btn-login:hover{opacity:.88}
-.btn-login:disabled{opacity:.4;cursor:not-allowed}
-.login-error{
-  background:rgba(255,95,95,.08);border:1px solid rgba(255,95,95,.2);
-  border-radius:7px;padding:10px 14px;font-size:12px;color:var(--red);
-  margin-top:12px;display:none;
-}
-.login-error.show{display:block}
-.login-spinner{display:inline-block;width:14px;height:14px;
-  border:2px solid rgba(0,0,0,.3);border-top-color:#000;
-  border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle}
+.btn-primary{width:100%;background:var(--teal);border:none;border-radius:8px;padding:13px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;color:#000;cursor:pointer;transition:opacity .15s;margin-top:6px}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.auth-msg{border-radius:7px;padding:10px 14px;font-size:12px;margin-top:10px;display:none}
+.auth-msg.show{display:block}
+.auth-error{background:rgba(255,95,95,.08);border:1px solid rgba(255,95,95,.2);color:var(--red)}
+.auth-success{background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);color:var(--teal)}
+.auth-warn{background:rgba(255,184,48,.08);border:1px solid rgba(255,184,48,.2);color:var(--amber)}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── APP ── */
-#app{display:none}
-
-/* NAV */
-.nav{display:flex;border-bottom:1px solid var(--border);background:var(--bg);
-  position:sticky;top:0;z-index:100;overflow-x:auto}
-.nav-btn{padding:14px 18px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;
-  border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav{display:flex;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100;overflow-x:auto}
+.nav-btn{padding:14px 15px;font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
 .nav-btn:hover{color:var(--text)}
 .nav-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
-.nav-user{margin-left:auto;display:flex;align-items:center;gap:10px;padding:0 16px}
+.nav-admin.active{color:var(--amber);border-bottom-color:var(--amber)}
+.nav-user{margin-left:auto;display:flex;align-items:center;gap:8px;padding:0 14px;flex-shrink:0}
 .nav-cpf{font-family:var(--mono);font-size:10px;color:var(--muted)}
-.btn-logout{background:none;border:1px solid var(--border);color:var(--muted);
-  padding:5px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;
-  cursor:pointer;transition:border-color .15s}
+.nav-role{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:10px}
+.role-master{background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
+.role-viewer{background:rgba(77,159,255,.12);color:var(--blue);border:1px solid rgba(77,159,255,.2)}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:border-color .15s}
 .btn-logout:hover{border-color:var(--border2);color:var(--text)}
 
-/* HEADER */
-.header{padding:48px 48px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
-.header::before{content:'';position:absolute;top:-60px;right:-60px;width:400px;height:400px;
-  background:radial-gradient(circle,rgba(0,229,160,.06) 0%,transparent 70%);pointer-events:none}
-.header-tag{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:.12em;
-  text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.header{padding:44px 48px 32px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(0,229,160,.06) 0%,transparent 70%);pointer-events:none}
+.header-tag{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .header-tag::before{content:'';display:inline-block;width:20px;height:1px;background:var(--teal)}
-h1{font-family:var(--mono);font-size:clamp(24px,4vw,42px);font-weight:700;line-height:1.1;
-  letter-spacing:-.02em;margin-bottom:10px}
+h1{font-family:var(--mono);font-size:clamp(22px,4vw,40px);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:8px}
 h1 span{color:var(--teal)}
 .header-sub{color:var(--muted);font-size:14px;max-width:520px}
-.header-stats{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap}
+.header-stats{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
 .stat{display:flex;flex-direction:column;gap:3px}
-.stat-val{font-family:var(--mono);font-size:22px;font-weight:700}
+.stat-val{font-family:var(--mono);font-size:20px;font-weight:700}
 .stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 
-/* LAYOUT */
 .container{max-width:1100px;margin:0 auto;padding:0 48px 80px}
-.section-title{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;
-  letter-spacing:.12em;margin:44px 0 18px;display:flex;align-items:center;gap:12px}
+.section-title{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin:40px 0 16px;display:flex;align-items:center;gap:12px}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-hr{border:none;border-top:1px solid var(--border);margin:36px 0}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+.page{display:none}.page.active{display:block}
 
-/* PROGRESS */
-.pdash{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px;margin-top:28px}
-.pdash-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.pdash{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:26px;margin-top:24px}
+.pdash-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:10px}
 .pdash-title{font-family:var(--mono);font-size:13px;font-weight:700}
-.pdash-pct{font-family:var(--mono);font-size:36px;font-weight:700;color:var(--teal)}
-.pdash-pct span{font-size:14px;color:var(--muted);font-weight:400}
-.pbar-wrap{background:rgba(255,255,255,.06);border-radius:6px;height:8px;margin-bottom:22px;overflow:hidden}
+.pdash-pct{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--teal)}
+.pdash-pct span{font-size:13px;color:var(--muted);font-weight:400}
+.pbar-wrap{background:rgba(255,255,255,.06);border-radius:6px;height:7px;margin-bottom:20px;overflow:hidden}
 .pbar-fill{height:100%;border-radius:6px;background:var(--teal);transition:width .6s ease}
-.pstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.pstat{background:var(--bg3);border-radius:10px;padding:14px}
-.pstat-val{font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:3px}
+.pstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px}
+.pstat{background:var(--bg3);border-radius:9px;padding:12px}
+.pstat-val{font-family:var(--mono);font-size:18px;font-weight:700;margin-bottom:2px}
 .pstat-label{font-size:11px;color:var(--muted)}
+.sync-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;margin-left:8px}
+.sync-ok{background:rgba(0,229,160,.1);color:var(--teal)}
+.sync-err{background:rgba(255,95,95,.1);color:var(--red)}
+.sync-ing{background:rgba(77,159,255,.1);color:var(--blue)}
 
-/* WEEK */
-.week-view{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-top:28px}
-.week-view-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+.week-view{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;margin-top:24px}
+.week-view-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .week-view-title{font-family:var(--mono);font-size:12px;color:var(--teal)}
-.week-nav{display:flex;gap:8px}
-.week-nav button{background:var(--bg3);border:1px solid var(--border);color:var(--text);
-  padding:6px 12px;border-radius:6px;cursor:pointer;font-family:var(--mono);font-size:10px;transition:border-color .15s}
+.week-nav{display:flex;gap:7px}
+.week-nav button{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:5px 11px;border-radius:6px;cursor:pointer;font-family:var(--mono);font-size:10px;transition:border-color .15s}
 .week-nav button:hover{border-color:var(--border2)}
-.week-days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.wdc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;
-  cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.week-days{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.wdc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
 .wdc:hover{border-color:var(--border2)}
 .wdc.done{background:rgba(0,229,160,.05);border-color:rgba(0,229,160,.25)}
 .wdc.today-card{border-color:rgba(77,159,255,.3)}
-.wdc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.wdc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
 .wdc-name{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
 .wdc-date{font-family:var(--mono);font-size:10px;color:var(--muted)}
 .wdc-tema{font-size:13px;font-weight:600;margin-bottom:3px}
 .wdc-detalhe{font-size:11px;color:var(--muted);line-height:1.4}
-.wdc-btn{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;
-  padding:6px 8px;border-radius:6px;font-size:11px;font-family:var(--mono);transition:background .15s}
+.wdc-btn{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:9px;padding:5px 8px;border-radius:6px;font-size:11px;font-family:var(--mono);transition:background .15s}
 .wdc:not(.done) .wdc-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted)}
 .wdc.done .wdc-btn{background:rgba(0,229,160,.12);border:1px solid rgba(0,229,160,.25);color:var(--teal)}
 
-/* CHECKLIST */
-.cl-phases{display:flex;flex-direction:column;gap:20px}
+.cl-phases{display:flex;flex-direction:column;gap:18px}
 .cl-phase{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.cl-phase-header{padding:18px 22px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .15s}
+.cl-phase-header{padding:16px 20px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:background .15s}
 .cl-phase-header:hover{background:rgba(255,255,255,.02)}
-.cl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .cl-phase-name{font-size:14px;font-weight:600;flex:1}
-.cl-phase-meta{display:flex;align-items:center;gap:12px}
+.cl-phase-meta{display:flex;align-items:center;gap:10px}
 .cl-phase-count{font-family:var(--mono);font-size:11px;color:var(--muted)}
 .cl-phase-pct{font-family:var(--mono);font-size:12px;font-weight:700}
-.cl-pbar{height:3px;margin:0 22px 2px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden}
+.cl-pbar{height:3px;margin:0 20px 2px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden}
 .cl-pbar-fill{height:100%;border-radius:3px;transition:width .4s ease}
-.cl-items{padding:12px 22px 18px;display:flex;flex-direction:column;gap:4px}
-.cl-item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:7px;
-  cursor:pointer;transition:background .12s;user-select:none}
+.cl-items{padding:10px 20px 16px;display:flex;flex-direction:column;gap:4px}
+.cl-item{display:flex;align-items:center;gap:11px;padding:8px 9px;border-radius:7px;cursor:pointer;transition:background .12s;user-select:none}
 .cl-item:hover{background:rgba(255,255,255,.03)}
 .cl-item.checked{opacity:.55}
 .cl-item.checked .cl-text{text-decoration:line-through;color:var(--muted)}
-.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border2);
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cl-box{width:17px;height:17px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .cl-item.checked .cl-box{border-color:var(--teal);background:var(--teal)}
-.cl-check-icon{font-size:11px;color:#000;display:none}
+.cl-check-icon{font-size:10px;color:#000;display:none}
 .cl-item.checked .cl-check-icon{display:block}
 .cl-text{font-size:13px;flex:1}
-.cl-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-family:var(--mono);flex-shrink:0}
+.cl-tag{font-size:10px;padding:2px 7px;border-radius:10px;font-family:var(--mono);flex-shrink:0}
 .t-teoria{background:rgba(77,159,255,.1);color:var(--blue)}
 .t-lab{background:rgba(0,229,160,.1);color:var(--teal)}
 .t-proj{background:rgba(255,184,48,.1);color:var(--amber)}
 .t-cert{background:rgba(167,139,250,.1);color:var(--purple)}
 
-/* ROADMAP CARDS */
-.phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:14px}
-.phase-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px;
-  position:relative;overflow:hidden;transition:transform .2s}
+/* ADMIN */
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;margin-top:16px}
+.user-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.user-card-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal);flex-shrink:0}
+.user-cpf-label{font-family:var(--mono);font-size:12px;font-weight:700}
+.status-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-family:var(--mono);font-size:10px;font-weight:700;margin-top:2px}
+.sb-pendente{background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
+.sb-aprovado{background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.2)}
+.sb-reprovado{background:rgba(255,95,95,.12);color:var(--red);border:1px solid rgba(255,95,95,.2)}
+.user-prog-bar{background:rgba(255,255,255,.05);border-radius:3px;height:4px;margin:10px 0 5px;overflow:hidden}
+.user-prog-fill{height:100%;border-radius:3px;background:var(--teal)}
+.user-prog-lbl{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.user-actions{display:flex;gap:7px;margin-top:12px}
+.btn-approve{flex:1;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--teal);padding:7px;border-radius:7px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
+.btn-approve:hover{background:rgba(0,229,160,.2)}
+.btn-reject{flex:1;background:rgba(255,95,95,.08);border:1px solid rgba(255,95,95,.15);color:var(--red);padding:7px;border-radius:7px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
+.btn-reject:hover{background:rgba(255,95,95,.15)}
+.btn-revoke{flex:1;background:rgba(255,184,48,.08);border:1px solid rgba(255,184,48,.15);color:var(--amber);padding:7px;border-radius:7px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
+.btn-revoke:hover{background:rgba(255,184,48,.15)}
+.pending-banner{background:rgba(255,184,48,.07);border:1px solid rgba(255,184,48,.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--amber);margin-bottom:16px}
+.invite-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px}
+.invite-url{font-family:var(--mono);font-size:12px;color:var(--teal);background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin:10px 0;word-break:break-all;line-height:1.5}
+.btn-sm{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:border-color .15s}
+.btn-sm:hover{border-color:var(--border2);color:var(--text)}
+.btn-sm.teal{color:var(--teal);border-color:rgba(0,229,160,.2)}
+
+/* ROADMAP */
+.phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-bottom:13px}
+.phase-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden;transition:transform .2s}
 .phase-card:hover{transform:translateY(-2px)}
 .phase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.p0::before{background:var(--teal)} .p0{border-color:rgba(0,229,160,.15)}
-.p1::before{background:var(--blue)} .p1{border-color:rgba(77,159,255,.15)}
+.p0::before{background:var(--teal)}.p0{border-color:rgba(0,229,160,.15)}
+.p1::before{background:var(--blue)}.p1{border-color:rgba(77,159,255,.15)}
 .p2::before{background:var(--amber)}.p2{border-color:rgba(255,184,48,.15)}
 .p3::before{background:var(--purple)}.p3{border-color:rgba(167,139,250,.15)}
-.phase-num{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
-.p0 .phase-num{color:var(--teal)} .p1 .phase-num{color:var(--blue)}
-.p2 .phase-num{color:var(--amber)}.p3 .phase-num{color:var(--purple)}
-.phase-name{font-size:15px;font-weight:600;margin-bottom:5px}
-.phase-period{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:14px}
-.phase-items{list-style:none;display:flex;flex-direction:column;gap:5px}
-.phase-items li{font-size:13px;color:#9ca3b8;padding-left:14px;position:relative}
+.phase-num{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.p0 .phase-num{color:var(--teal)}.p1 .phase-num{color:var(--blue)}.p2 .phase-num{color:var(--amber)}.p3 .phase-num{color:var(--purple)}
+.phase-name{font-size:14px;font-weight:600;margin-bottom:4px}
+.phase-period{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:12px}
+.phase-items{list-style:none;display:flex;flex-direction:column;gap:4px}
+.phase-items li{font-size:12px;color:#9ca3b8;padding-left:13px;position:relative}
 .phase-items li::before{content:'›';position:absolute;left:0;color:var(--muted)}
-.phase-hours{margin-top:18px;font-family:var(--mono);font-size:20px;font-weight:700}
-.phase-hours span{font-size:12px;font-weight:400;color:var(--muted);margin-left:4px}
-.cert-badge{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:20px;
-  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em}
+.phase-hours{margin-top:16px;font-family:var(--mono);font-size:18px;font-weight:700}
+.phase-hours span{font-size:11px;font-weight:400;color:var(--muted);margin-left:3px}
+.cert-badge{display:inline-block;margin-top:8px;padding:3px 9px;border-radius:20px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.05em}
 .p0 .cert-badge{background:rgba(0,229,160,.1);color:var(--teal);border:1px solid rgba(0,229,160,.2)}
 .p1 .cert-badge{background:rgba(77,159,255,.1);color:var(--blue);border:1px solid rgba(77,159,255,.2)}
 .p2 .cert-badge{background:rgba(255,184,48,.1);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
 .p3 .cert-badge{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
 
-/* TRACKS / CERTS */
-.tracks{display:flex;flex-direction:column;gap:8px;margin:20px 0}
-.track{display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px}
+.tracks{display:flex;flex-direction:column;gap:7px;margin:18px 0}
+.track{display:flex;align-items:center;gap:13px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 15px}
 .track-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.track-label{font-size:13px;font-weight:500;min-width:130px}
+.track-label{font-size:13px;font-weight:500;min-width:125px}
 .track-desc{font-size:13px;color:var(--muted)}
-.cert-row{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:28px 0}
-.cert-item{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:110px}
-.cert-connector{flex:1;height:1px;background:var(--border2);min-width:30px;position:relative;top:-18px}
-.cert-pill{padding:5px 14px;border-radius:24px;font-family:var(--mono);font-size:12px;font-weight:700}
+.cert-row{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:24px 0}
+.cert-item{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:100px}
+.cert-connector{flex:1;height:1px;background:var(--border2);min-width:25px;position:relative;top:-15px}
+.cert-pill{padding:4px 12px;border-radius:24px;font-family:var(--mono);font-size:11px;font-weight:700}
 .cert-month{font-family:var(--mono);font-size:10px;color:var(--muted)}
 .cert-name{font-size:11px;color:var(--muted);text-align:center}
 
-/* SCHED */
-.sched-block{margin-bottom:36px}
-.sched-title{font-size:15px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.sched-desc{font-size:13px;color:var(--muted);margin-bottom:14px}
-.week-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.day-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
-.day-name{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.sched-block{margin-bottom:32px}
+.sched-title{font-size:14px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:9px}
+.sched-desc{font-size:13px;color:var(--muted);margin-bottom:12px}
+.week-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.day-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px}
+.day-name{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px}
 .day-tema{font-size:13px;font-weight:600;margin-bottom:3px}
-.day-detalhe{font-size:12px;color:var(--muted);line-height:1.4}
-.day-tag{display:inline-block;margin-top:7px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
-.tip{background:var(--bg3);border-left:2px solid var(--blue);border-radius:0 8px 8px 0;
-  padding:12px 16px;font-size:13px;color:var(--muted);margin-top:10px}
+.day-detalhe{font-size:11px;color:var(--muted);line-height:1.4}
+.day-tag{display:inline-block;margin-top:6px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
+.tip{background:var(--bg3);border-left:2px solid var(--blue);border-radius:0 7px 7px 0;padding:10px 14px;font-size:13px;color:var(--muted);margin-top:9px}
 .tip strong{color:var(--text)}
-
-/* RESOURCES */
-.resources{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:14px 0}
-.res-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.resources{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:9px;margin:12px 0}
+.res-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:13px}
 .res-title{font-size:13px;font-weight:600;margin-bottom:3px}
 .res-desc{font-size:12px;color:var(--muted)}
-.res-free{display:inline-block;margin-top:7px;padding:2px 7px;border-radius:20px;font-size:10px;background:rgba(0,229,160,.1);color:var(--teal)}
-
-/* HEATMAP */
-.heatmap{display:flex;flex-wrap:wrap;gap:4px;padding:8px 0}
-.hm-day{width:14px;height:14px;border-radius:3px;background:rgba(255,255,255,.05)}
+.res-free{display:inline-block;margin-top:6px;padding:2px 6px;border-radius:20px;font-size:10px;background:rgba(0,229,160,.1);color:var(--teal)}
+.heatmap{display:flex;flex-wrap:wrap;gap:4px;padding:6px 0}
+.hm-day{width:13px;height:13px;border-radius:3px;background:rgba(255,255,255,.05)}
 .hm-day.studied{background:var(--teal);opacity:.8}
 .hm-day.hm-today{outline:1.5px solid var(--teal);outline-offset:1px}
-
-/* SYNC STATUS */
-.sync-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;
-  padding:3px 9px;border-radius:20px;margin-left:8px}
-.sync-ok{background:rgba(0,229,160,.1);color:var(--teal)}
-.sync-err{background:rgba(255,95,95,.1);color:var(--red)}
-.sync-ing{background:rgba(77,159,255,.1);color:var(--blue)}
-
-/* RESET */
-.btn-reset{background:none;border:1px solid rgba(255,95,95,.2);color:var(--red);
-  padding:8px 14px;border-radius:8px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
+.btn-reset{background:none;border:1px solid rgba(255,95,95,.2);color:var(--red);padding:7px 13px;border-radius:7px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
 .btn-reset:hover{background:rgba(255,95,95,.07)}
 
 @media(max-width:700px){
-  .header,.container{padding-left:16px;padding-right:16px}
+  .header,.container{padding-left:14px;padding-right:14px}
   .week-days,.week-grid{grid-template-columns:repeat(2,1fr)}
   .phases{grid-template-columns:1fr}
-  .footer{padding:18px 16px}
-  .nav-btn{padding:12px 10px;font-size:10px}
-  .login-card{padding:28px 20px}
+  .nav-btn{padding:11px 9px;font-size:10px}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-tag">Acesso restrito</div>
-    <div class="login-title">Roadmap<br><span>Analista de Infra</span></div>
-    <div class="login-sub">Entre com seu CPF e senha para acessar</div>
-
-    <div class="field">
-      <label>CPF</label>
-      <input type="text" id="input-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username"/>
-    </div>
-    <div class="field">
-      <label>Senha</label>
-      <input type="password" id="input-senha" placeholder="••••••••" autocomplete="current-password"/>
-    </div>
-    <button class="btn-login" id="btn-login" onclick="doLogin()">Entrar</button>
-    <div class="login-error" id="login-error"></div>
+<!-- LOGIN -->
+<div class="screen active" id="screen-login">
+  <div class="auth-card">
+    <div class="auth-tag">Acesso restrito</div>
+    <div class="auth-title">Roadmap<br><span>Analista de Infra</span></div>
+    <div class="auth-sub">Entre com seu CPF e senha para acessar</div>
+    <div class="field"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username"/></div>
+    <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password"/></div>
+    <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
+    <div class="auth-msg auth-error" id="l-error"></div>
+    <div class="auth-msg auth-warn" id="l-pending"></div>
   </div>
 </div>
 
-<!-- ═══════════════ APP ═══════════════ -->
-<div id="app">
+<!-- CONVITE -->
+<div class="screen" id="screen-invite">
+  <div class="auth-card">
+    <div class="auth-tag">Solicitação de acesso</div>
+    <div class="auth-title">Solicitar<br><span>Acesso</span></div>
+    <div class="auth-sub">Preencha seus dados — o administrador será notificado para aprovação</div>
+    <div class="field"><label>CPF</label><input type="text" id="i-cpf" placeholder="000.000.000-00" maxlength="14"/></div>
+    <div class="field"><label>Senha</label><input type="password" id="i-senha" placeholder="Mínimo 6 caracteres"/></div>
+    <div class="field"><label>Confirmar senha</label><input type="password" id="i-senha2" placeholder="Repita a senha"/></div>
+    <button class="btn-primary" id="btn-invite" onclick="doInviteSignup()">Enviar solicitação</button>
+    <div class="auth-msg auth-error" id="i-error"></div>
+    <div class="auth-msg auth-success" id="i-success">✓ Solicitação enviada! O administrador foi notificado e irá liberar seu acesso em breve.</div>
+  </div>
+</div>
 
+<!-- APP -->
+<div class="screen" id="screen-app">
 <nav class="nav">
   <button class="nav-btn active" onclick="showPage('progresso')">Progresso</button>
   <button class="nav-btn" onclick="showPage('semana')">Semana</button>
   <button class="nav-btn" onclick="showPage('checklist')">Checklist</button>
   <button class="nav-btn" onclick="showPage('roadmap')">Roadmap</button>
   <button class="nav-btn" onclick="showPage('cronograma')">Cronograma</button>
+  <button class="nav-btn nav-admin" id="nav-admin" onclick="showPage('admin')" style="display:none">⚙ Admin</button>
   <div class="nav-user">
     <span class="nav-cpf" id="nav-cpf"></span>
+    <span class="nav-role" id="nav-role"></span>
     <button class="btn-logout" onclick="doLogout()">Sair</button>
   </div>
 </nav>
@@ -324,47 +304,41 @@ hr{border:none;border-top:1px solid var(--border);margin:36px 0}
   </div>
 </div>
 
-<!-- PAGE: PROGRESSO -->
+<!-- PROGRESSO -->
 <div class="page active" id="page-progresso">
 <div class="container">
-  <div class="section-title">
-    Painel de evolução
-    <span class="sync-badge sync-ok" id="sync-status">● salvo</span>
-  </div>
+  <div class="section-title">Painel de evolução <span class="sync-badge sync-ok" id="sync-status">● salvo</span></div>
   <div class="pdash">
     <div class="pdash-header">
-      <div>
-        <div class="pdash-title">Progresso geral do roadmap</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px">Tarefas marcadas no checklist</div>
-      </div>
+      <div><div class="pdash-title">Progresso geral</div><div style="font-size:12px;color:var(--muted);margin-top:3px">Tarefas no checklist</div></div>
       <div class="pdash-pct"><span id="pct-num">0</span>%<span> concluído</span></div>
     </div>
     <div class="pbar-wrap"><div class="pbar-fill" id="pbar-geral" style="width:0%"></div></div>
     <div class="pstats">
-      <div class="pstat"><div class="pstat-val" id="ps-done" style="color:var(--teal)">0</div><div class="pstat-label">tarefas concluídas</div></div>
-      <div class="pstat"><div class="pstat-val" id="ps-total" style="color:var(--muted)">0</div><div class="pstat-label">total de tarefas</div></div>
+      <div class="pstat"><div class="pstat-val" id="ps-done" style="color:var(--teal)">0</div><div class="pstat-label">concluídas</div></div>
+      <div class="pstat"><div class="pstat-val" id="ps-total" style="color:var(--muted)">0</div><div class="pstat-label">total</div></div>
       <div class="pstat"><div class="pstat-val" id="ps-streak" style="color:var(--amber)">0 🔥</div><div class="pstat-label">dias seguidos</div></div>
       <div class="pstat"><div class="pstat-val" id="ps-dias" style="color:var(--blue)">0</div><div class="pstat-label">dias estudados</div></div>
-      <div class="pstat"><div class="pstat-val" id="ps-eta" style="color:var(--purple)">—</div><div class="pstat-label">estimativa de conclusão</div></div>
+      <div class="pstat"><div class="pstat-val" id="ps-eta" style="color:var(--purple)">—</div><div class="pstat-label">estimativa</div></div>
     </div>
   </div>
-  <div class="section-title">Progresso por fase</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px" id="phase-prog-wrap"></div>
-  <div class="section-title">Histórico — últimos 60 dias</div>
+  <div class="section-title">Por fase</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px" id="phase-prog-wrap"></div>
+  <div class="section-title">Histórico — 60 dias</div>
   <div class="heatmap" id="heatmap"></div>
-  <div style="margin-top:28px;display:flex;justify-content:flex-end">
-    <button class="btn-reset" onclick="confirmReset()">Resetar todo o progresso</button>
+  <div style="margin-top:24px;display:flex;justify-content:flex-end">
+    <button class="btn-reset" onclick="confirmReset()">Resetar progresso</button>
   </div>
 </div>
 </div>
 
-<!-- PAGE: SEMANA -->
+<!-- SEMANA -->
 <div class="page" id="page-semana">
 <div class="container">
   <div class="section-title">Semana de estudos</div>
   <div class="week-view">
     <div class="week-view-header">
-      <div class="week-view-title" id="wv-label">Carregando...</div>
+      <div class="week-view-title" id="wv-label">...</div>
       <div class="week-nav">
         <button onclick="weekOffset--;renderWeek()">← Anterior</button>
         <button onclick="weekOffset=0;renderWeek()">Hoje</button>
@@ -373,457 +347,438 @@ hr{border:none;border-top:1px solid var(--border);margin:36px 0}
     </div>
     <div class="week-days" id="week-days"></div>
   </div>
-  <div class="tip" style="margin-top:16px;border-left-color:var(--teal)">
-    Clique em qualquer dia para marcar como estudado. O progresso é salvo no Supabase automaticamente.
-  </div>
 </div>
 </div>
 
-<!-- PAGE: CHECKLIST -->
+<!-- CHECKLIST -->
 <div class="page" id="page-checklist">
 <div class="container">
   <div class="section-title">Checklist por fase</div>
-  <p style="font-size:13px;color:var(--muted);margin-bottom:22px">Clique em qualquer tarefa para marcar como concluída. Salvo automaticamente no banco de dados.</p>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Clique para marcar como concluído. Salvo automaticamente no banco.</p>
   <div class="cl-phases" id="cl-container"></div>
 </div>
 </div>
 
-<!-- PAGE: ROADMAP -->
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+<div class="container">
+  <div class="section-title">Painel master</div>
+  <div id="pending-banner"></div>
+
+  <div class="invite-box">
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px">Link de convite</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Compartilhe para alguém solicitar acesso</div>
+    <div class="invite-url" id="invite-url-txt"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-sm" onclick="copyLink()">Copiar link</button>
+      <button class="btn-sm teal" onclick="shareWhatsApp()">Enviar via WhatsApp</button>
+    </div>
+  </div>
+
+  <div class="section-title">Usuários</div>
+  <div class="admin-grid" id="admin-grid">
+    <div style="color:var(--muted);font-size:13px">Carregando...</div>
+  </div>
+</div>
+</div>
+
+<!-- ROADMAP -->
 <div class="page" id="page-roadmap">
 <div class="container">
   <div class="section-title">Visão geral — 4 fases</div>
   <div class="phases">
-    <div class="phase-card p0">
-      <div class="phase-num">Fase 0 — M1 a M4</div><div class="phase-name">Base sólida</div>
-      <div class="phase-period">Meses 1–4 · ~160h</div>
-      <ul class="phase-items"><li>Curso de redes (OSI, TCP/IP, VLANs)</li><li>Python — coddy.tech intermediário</li><li>Linux: bash, systemd, cron</li><li>SQL intermediário (JOINs, índices)</li><li>Git — primeiros commits</li></ul>
-      <div class="phase-hours">160h <span>total</span></div><span class="cert-badge">SEM CERT — BASE TÉCNICA</span>
-    </div>
-    <div class="phase-card p1">
-      <div class="phase-num">Fase 1 — M5 a M9</div><div class="phase-name">Cloud + Docker + Git</div>
-      <div class="phase-period">Meses 5–9 · ~200h</div>
-      <ul class="phase-items"><li>Azure — curso Udemy completo</li><li>Python para infra (Paramiko, requests)</li><li>Docker + docker-compose</li><li>Git + GitHub (portfólio)</li><li>Preparação AZ-900</li></ul>
-      <div class="phase-hours">200h <span>total</span></div><span class="cert-badge">META: AZ-900 NO MÊS 9</span>
-    </div>
-    <div class="phase-card p2">
-      <div class="phase-num">Fase 2 — M10 a M18</div><div class="phase-name">Especialização</div>
-      <div class="phase-period">Meses 10–18 · ~240h</div>
-      <ul class="phase-items"><li>AZ-104 — Azure Administrator</li><li>Terraform (IaC)</li><li>Ansible (automação de config)</li><li>CI/CD com GitHub Actions</li><li>Python avançado para infra</li></ul>
-      <div class="phase-hours">240h <span>total</span></div><span class="cert-badge">META: AZ-104 MÊS 17–18</span>
-    </div>
-    <div class="phase-card p3">
-      <div class="phase-num">Fase 3 — M19 a M24</div><div class="phase-name">Nível sênior</div>
-      <div class="phase-period">Meses 19–24 · ~200h</div>
-      <ul class="phase-items"><li>Kubernetes (AKS no Azure)</li><li>Observabilidade (Prometheus, Grafana)</li><li>Cloud security e IAM avançado</li><li>FinOps — otimização de custos</li><li>Preparação CKA ou AZ-305</li></ul>
-      <div class="phase-hours">200h <span>total</span></div><span class="cert-badge">META: CKA OU AZ-305</span>
-    </div>
+    <div class="phase-card p0"><div class="phase-num">Fase 0 — M1 a M4</div><div class="phase-name">Base sólida</div><div class="phase-period">Meses 1–4 · ~160h</div><ul class="phase-items"><li>Curso de redes (OSI, TCP/IP, VLANs)</li><li>Python — coddy.tech intermediário</li><li>Linux: bash, systemd, cron</li><li>SQL intermediário (JOINs, índices)</li><li>Git — primeiros commits</li></ul><div class="phase-hours">160h <span>total</span></div><span class="cert-badge">BASE TÉCNICA</span></div>
+    <div class="phase-card p1"><div class="phase-num">Fase 1 — M5 a M9</div><div class="phase-name">Cloud + Docker</div><div class="phase-period">Meses 5–9 · ~200h</div><ul class="phase-items"><li>Azure — curso Udemy completo</li><li>Python para infra (Paramiko, requests)</li><li>Docker + docker-compose</li><li>Git + GitHub (portfólio)</li><li>Preparação AZ-900</li></ul><div class="phase-hours">200h <span>total</span></div><span class="cert-badge">AZ-900 — MÊS 9</span></div>
+    <div class="phase-card p2"><div class="phase-num">Fase 2 — M10 a M18</div><div class="phase-name">Especialização</div><div class="phase-period">Meses 10–18 · ~240h</div><ul class="phase-items"><li>AZ-104 — Azure Administrator</li><li>Terraform (IaC)</li><li>Ansible (automação de config)</li><li>CI/CD com GitHub Actions</li><li>Python avançado para infra</li></ul><div class="phase-hours">240h <span>total</span></div><span class="cert-badge">AZ-104 — MÊS 17</span></div>
+    <div class="phase-card p3"><div class="phase-num">Fase 3 — M19 a M24</div><div class="phase-name">Nível sênior</div><div class="phase-period">Meses 19–24 · ~200h</div><ul class="phase-items"><li>Kubernetes (AKS no Azure)</li><li>Observabilidade (Prometheus, Grafana)</li><li>Cloud security e IAM avançado</li><li>FinOps — otimização de custos</li><li>Preparação CKA ou AZ-305</li></ul><div class="phase-hours">200h <span>total</span></div><span class="cert-badge">CKA OU AZ-305</span></div>
   </div>
   <div class="section-title">Trilhas contínuas</div>
   <div class="tracks">
     <div class="track"><div class="track-dot" style="background:var(--teal)"></div><div class="track-label">Python</div><div class="track-desc">Do básico ao avançado em automação — scripts, APIs, Paramiko, Ansible</div></div>
-    <div class="track"><div class="track-dot" style="background:var(--blue)"></div><div class="track-label">Git + GitHub</div><div class="track-desc">Portfólio público a partir do mês 5 — todo projeto prático publicado</div></div>
+    <div class="track"><div class="track-dot" style="background:var(--blue)"></div><div class="track-label">Git + GitHub</div><div class="track-desc">Portfólio público a partir do mês 5</div></div>
     <div class="track"><div class="track-dot" style="background:var(--amber)"></div><div class="track-label">Inglês técnico</div><div class="track-desc">10 min/dia Duolingo + leitura de docs com tradutor</div></div>
     <div class="track"><div class="track-dot" style="background:var(--purple)"></div><div class="track-label">Projetos práticos</div><div class="track-desc">VPS da Famart como laboratório real desde já</div></div>
   </div>
-  <div class="section-title">Linha de certificações</div>
+  <div class="section-title">Certificações</div>
   <div class="cert-row">
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.25)">AZ-900</span><span class="cert-month">Mês 9</span><span class="cert-name">Azure Fundamentals</span></div>
+    <div class="cert-item"><span class="cert-pill" style="background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.25)">AZ-900</span><span class="cert-month">Mês 9</span><span class="cert-name">Fundamentals</span></div>
     <div class="cert-connector"></div>
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.25)">AZ-104</span><span class="cert-month">Mês 17–18</span><span class="cert-name">Azure Administrator</span></div>
+    <div class="cert-item"><span class="cert-pill" style="background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.25)">AZ-104</span><span class="cert-month">Mês 17–18</span><span class="cert-name">Administrator</span></div>
     <div class="cert-connector"></div>
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">CKA</span><span class="cert-month">Mês 23–24</span><span class="cert-name">Kubernetes Admin</span></div>
+    <div class="cert-item"><span class="cert-pill" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">CKA</span><span class="cert-month">Mês 23–24</span><span class="cert-name">K8s Admin</span></div>
     <div class="cert-connector" style="min-width:20px"></div>
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">AZ-305</span><span class="cert-month">Mês 23–24</span><span class="cert-name">Solutions Architect</span></div>
+    <div class="cert-item"><span class="cert-pill" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">AZ-305</span><span class="cert-month">Mês 23–24</span><span class="cert-name">Architect</span></div>
   </div>
-  <div class="tip" style="border-left-color:var(--purple)">CKA e AZ-305 são <strong>alternativos</strong> — escolha no mês 19 conforme o mercado te puxar.</div>
 </div>
 </div>
 
-<!-- PAGE: CRONOGRAMA -->
+<!-- CRONOGRAMA -->
 <div class="page" id="page-cronograma">
 <div class="container">
-  <div class="section-title">Cronogramas semanais detalhados</div>
+  <div class="section-title">Cronogramas semanais</div>
   <div class="sched-block">
-    <div class="sched-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--teal);display:inline-block"></span> Fase 0 — Semana modelo (Meses 1–4)</div>
-    <div class="sched-desc">Repete por 16 semanas — ajuste os tópicos do curso de redes conforme avança</div>
+    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--teal);display:inline-block"></span> Fase 0 — Meses 1–4</div>
     <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Redes</div><div class="day-detalhe">Aula do curso + resumo escrito</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Python</div><div class="day-detalhe">Coddy.tech — 2 lições + exercícios</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Redes lab</div><div class="day-detalhe">Packet Tracer ou GNS3</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Linux</div><div class="day-detalhe">Terminal Kali: comandos, bash</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">SQL + revisão</div><div class="day-detalhe">HackerRank SQL + revisão</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Redes</div><div class="day-detalhe">Aula + resumo escrito</div><span class="day-tag t-teoria">teoria</span></div>
+      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Python</div><div class="day-detalhe">Coddy.tech 2 lições</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Redes lab</div><div class="day-detalhe">Packet Tracer / GNS3</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Linux</div><div class="day-detalhe">Terminal Kali: bash</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">SQL + revisão</div><div class="day-detalhe">HackerRank SQL</div><span class="day-tag t-lab">prática</span></div>
     </div>
-    <div class="tip">Meta: finalizar curso de redes · Python intermediário · Linux básico · SQL com JOINs</div>
+    <div class="tip">Meta: curso de redes · Python intermediário · Linux básico · SQL com JOINs</div>
   </div>
   <div class="sched-block">
-    <div class="sched-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--blue);display:inline-block"></span> Fase 1 — Meses 5–7 (Azure + Python + Git)</div>
+    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--blue);display:inline-block"></span> Fase 1 — Meses 5–9</div>
     <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Azure</div><div class="day-detalhe">Udemy: 1 módulo + anotações</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Python infra</div><div class="day-detalhe">Script com requests HTTP</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Azure lab</div><div class="day-detalhe">Portal Azure: VM, VNet, Storage</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Git</div><div class="day-detalhe">Commit, branch, merge, push</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">Projeto</div><div class="day-detalhe">Script Python no VPS → GitHub</div><span class="day-tag t-proj">projeto</span></div>
+      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Azure</div><div class="day-detalhe">Udemy 1 módulo</div><span class="day-tag t-teoria">teoria</span></div>
+      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Python infra</div><div class="day-detalhe">requests HTTP / config</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Azure lab</div><div class="day-detalhe">VM, VNet, Storage</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Docker</div><div class="day-detalhe">run, build, compose</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">Projeto</div><div class="day-detalhe">Publicar no GitHub</div><span class="day-tag t-proj">projeto</span></div>
     </div>
+    <div class="tip">Meta: <strong>AZ-900 aprovado</strong> · Docker funcionando · 2–3 projetos GitHub</div>
   </div>
   <div class="sched-block">
-    <div class="sched-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--blue);display:inline-block"></span> Fase 1 — Meses 8–9 (Docker + prep AZ-900)</div>
+    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--amber);display:inline-block"></span> Fase 2 — Meses 10–18</div>
     <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Docker teoria</div><div class="day-detalhe">Imagem, container, Dockerfile</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Docker lab</div><div class="day-detalhe">docker run, build, push</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">AZ-900 prep</div><div class="day-detalhe">Microsoft Learn — simulados</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Docker compose</div><div class="day-detalhe">App + banco com compose</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">Projeto GitHub</div><div class="day-detalhe">Publicar projeto Docker</div><span class="day-tag t-proj">projeto</span></div>
-    </div>
-    <div class="tip">Meta: <strong>AZ-900 aprovado</strong> · 2–3 projetos no GitHub · Docker funcionando</div>
-  </div>
-  <div class="sched-block">
-    <div class="sched-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--amber);display:inline-block"></span> Fase 2 — Meses 10–14 (AZ-104 + Terraform)</div>
-    <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">AZ-104</div><div class="day-detalhe">Módulo: VMs, Storage, IAM</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Terraform</div><div class="day-detalhe">HCL básico — VM na Azure</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Lab Azure</div><div class="day-detalhe">Reproduzir no portal</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Python infra</div><div class="day-detalhe">Paramiko — SSH automatizado</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">AZ-104</div><div class="day-detalhe">VMs, Storage, IAM</div><span class="day-tag t-teoria">teoria</span></div>
+      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Terraform</div><div class="day-detalhe">HCL — VM na Azure</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Ansible</div><div class="day-detalhe">Playbook servidor</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">CI/CD</div><div class="day-detalhe">GitHub Actions VPS</div><span class="day-tag t-lab">prática</span></div>
       <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">Simulado</div><div class="day-detalhe">20 questões AZ-104</div><span class="day-tag t-lab">prática</span></div>
     </div>
+    <div class="tip">Meta: <strong>AZ-104 aprovado</strong> · Portfólio Terraform+Ansible+CI/CD</div>
   </div>
   <div class="sched-block">
-    <div class="sched-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--amber);display:inline-block"></span> Fase 2 — Meses 15–18 (Ansible + CI/CD)</div>
+    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--purple);display:inline-block"></span> Fase 3 — Meses 19–24</div>
     <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Ansible</div><div class="day-detalhe">Playbook: configurar servidor</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">CI/CD</div><div class="day-detalhe">GitHub Actions: deploy no VPS</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Projeto IaC</div><div class="day-detalhe">Terraform + Ansible + Actions</div><span class="day-tag t-proj">projeto</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">AZ-104 prep</div><div class="day-detalhe">Simulados intensivos</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">Revisão geral</div><div class="day-detalhe">Revisar + atualizar GitHub</div><span class="day-tag t-lab">prática</span></div>
-    </div>
-    <div class="tip">Meta: <strong>AZ-104 aprovado</strong> · Portfólio Terraform+Ansible+CI/CD · Pronto para vagas</div>
-  </div>
-  <div class="sched-block">
-    <div class="sched-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--purple);display:inline-block"></span> Fase 3 — Meses 19–24 (K8s + Observabilidade)</div>
-    <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Kubernetes</div><div class="day-detalhe">Pods, Deployments, Services</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Kubernetes</div><div class="day-detalhe">Pods, Deploy, Services</div><span class="day-tag t-lab">prática</span></div>
       <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Observabilidade</div><div class="day-detalhe">Prometheus + Grafana</div><span class="day-tag t-lab">prática</span></div>
       <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Cloud security</div><div class="day-detalhe">IAM avançado, zero trust</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Projeto final</div><div class="day-detalhe">App K8s + monitoramento + CI/CD</div><span class="day-tag t-proj">projeto</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">CKA / AZ-305</div><div class="day-detalhe">Simulados da cert escolhida</div><span class="day-tag t-lab">prática</span></div>
+      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Projeto final</div><div class="day-detalhe">K8s + monitoramento</div><span class="day-tag t-proj">projeto</span></div>
+      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">CKA / AZ-305</div><div class="day-detalhe">Simulados intensivos</div><span class="day-tag t-lab">prática</span></div>
     </div>
     <div class="tip">Meta: <strong>CKA ou AZ-305</strong> · Profissional sênior completo</div>
   </div>
   <hr>
-  <div class="section-title">Recursos recomendados</div>
+  <div class="section-title">Recursos</div>
   <div class="resources">
-    <div class="res-card"><div class="res-title">Coddy.tech</div><div class="res-desc">Python do zero ao intermediário</div><span class="res-free">gratuito</span></div>
+    <div class="res-card"><div class="res-title">Coddy.tech</div><div class="res-desc">Python do zero</div><span class="res-free">gratuito</span></div>
     <div class="res-card"><div class="res-title">Azure Udemy</div><div class="res-desc">Curso que você já tem</div></div>
-    <div class="res-card"><div class="res-title">Microsoft Learn</div><div class="res-desc">Simulados AZ-900/AZ-104 em PT</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">HackerRank SQL</div><div class="res-desc">Desafios progressivos de SQL</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">Linux Survival</div><div class="res-desc">linuxsurvival.com — interativo</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">Docker Docs PT-BR</div><div class="res-desc">docs.docker.com em português</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">Git na prática</div><div class="res-desc">rogerdudler.github.io/git-guide</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">KillerCoda</div><div class="res-desc">Labs gratuitos de K8s no browser</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">TechWorld with Nana</div><div class="res-desc">YouTube — Docker, K8s, Terraform</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">Duolingo</div><div class="res-desc">10 min/dia de inglês técnico</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">VPS Famart</div><div class="res-desc">Seu laboratório real desde já</div></div>
+    <div class="res-card"><div class="res-title">Microsoft Learn</div><div class="res-desc">Simulados AZ-900/AZ-104</div><span class="res-free">gratuito</span></div>
+    <div class="res-card"><div class="res-title">HackerRank SQL</div><div class="res-desc">Desafios progressivos</div><span class="res-free">gratuito</span></div>
+    <div class="res-card"><div class="res-title">Docker Docs PT-BR</div><div class="res-desc">docs.docker.com</div><span class="res-free">gratuito</span></div>
+    <div class="res-card"><div class="res-title">KillerCoda</div><div class="res-desc">Labs K8s no browser</div><span class="res-free">gratuito</span></div>
+    <div class="res-card"><div class="res-title">TechWorld with Nana</div><div class="res-desc">YouTube Docker/K8s/Terraform</div><span class="res-free">gratuito</span></div>
+    <div class="res-card"><div class="res-title">VPS Famart</div><div class="res-desc">Laboratório real</div></div>
   </div>
 </div>
 </div>
 
-<div style="border-top:1px solid var(--border);padding:24px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-  <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">ROADMAP_ANALISTA_INFRA · v4 · Supabase</div>
+<div style="border-top:1px solid var(--border);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">ROADMAP_ANALISTA_INFRA · v5</div>
   <div style="font-size:12px;color:var(--muted)">2h/dia · Seg–Sex · ~800h · 24 meses</div>
 </div>
 
-</div><!-- /app -->
+</div><!-- /screen-app -->
 
 <script>
-// ═══════════════════════════════════════════════
-//  DADOS DO ROADMAP
-// ═══════════════════════════════════════════════
-const PHASES = [
-  { id:'p0', label:'Fase 0 — Base sólida', color:'#00e5a0', period:'Meses 1–4', items:[
-    {id:'p0_01',text:'Redes: modelo OSI e TCP/IP',tag:'teoria'},
-    {id:'p0_02',text:'Redes: endereçamento IP e sub-redes',tag:'teoria'},
-    {id:'p0_03',text:'Redes: VLANs, DNS e DHCP',tag:'teoria'},
-    {id:'p0_04',text:'Redes: roteamento e firewall',tag:'teoria'},
-    {id:'p0_05',text:'Python: variáveis, tipos, condicionais e loops',tag:'lab'},
-    {id:'p0_06',text:'Python: funções, listas e dicionários',tag:'lab'},
-    {id:'p0_07',text:'Python: leitura e escrita de arquivos',tag:'lab'},
-    {id:'p0_08',text:'Python: módulos e tratamento de erros',tag:'lab'},
-    {id:'p0_09',text:'Linux: navegação, permissões e usuários',tag:'lab'},
-    {id:'p0_10',text:'Linux: scripts bash, cron jobs e systemd',tag:'lab'},
-    {id:'p0_11',text:'SQL: SELECT, WHERE, GROUP BY e ORDER BY',tag:'lab'},
-    {id:'p0_12',text:'SQL: JOINs, subqueries e índices',tag:'lab'},
-    {id:'p0_13',text:'Criar conta no GitHub e publicar primeiro repositório',tag:'proj'},
-    {id:'p0_14',text:'Lab Packet Tracer: montar topologia de rede',tag:'lab'},
+const PHASES=[
+  {id:'p0',label:'Fase 0 — Base sólida',color:'#00e5a0',period:'Meses 1–4',items:[
+    {id:'p0_01',text:'Redes: modelo OSI e TCP/IP',tag:'teoria'},{id:'p0_02',text:'Redes: endereçamento IP e sub-redes',tag:'teoria'},
+    {id:'p0_03',text:'Redes: VLANs, DNS e DHCP',tag:'teoria'},{id:'p0_04',text:'Redes: roteamento e firewall',tag:'teoria'},
+    {id:'p0_05',text:'Python: variáveis, tipos, condicionais e loops',tag:'lab'},{id:'p0_06',text:'Python: funções, listas e dicionários',tag:'lab'},
+    {id:'p0_07',text:'Python: leitura e escrita de arquivos',tag:'lab'},{id:'p0_08',text:'Python: módulos e tratamento de erros',tag:'lab'},
+    {id:'p0_09',text:'Linux: navegação, permissões e usuários',tag:'lab'},{id:'p0_10',text:'Linux: scripts bash, cron jobs e systemd',tag:'lab'},
+    {id:'p0_11',text:'SQL: SELECT, WHERE, GROUP BY e ORDER BY',tag:'lab'},{id:'p0_12',text:'SQL: JOINs, subqueries e índices',tag:'lab'},
+    {id:'p0_13',text:'Criar conta no GitHub e publicar primeiro repositório',tag:'proj'},{id:'p0_14',text:'Lab Packet Tracer: montar topologia de rede',tag:'lab'},
   ]},
-  { id:'p1', label:'Fase 1 — Cloud + Docker', color:'#4d9fff', period:'Meses 5–9', items:[
-    {id:'p1_01',text:'Azure: criar conta free tier e explorar portal',tag:'lab'},
-    {id:'p1_02',text:'Azure: criar e configurar VM via SSH',tag:'lab'},
-    {id:'p1_03',text:'Azure: Virtual Networks, subnets e NSGs',tag:'lab'},
-    {id:'p1_04',text:'Azure: Storage Accounts e Blob Storage',tag:'lab'},
-    {id:'p1_05',text:'Azure: IAM — usuários, grupos e políticas',tag:'teoria'},
-    {id:'p1_06',text:'Azure: completar curso Udemy',tag:'lab'},
-    {id:'p1_07',text:'Python infra: script com request HTTP',tag:'lab'},
-    {id:'p1_08',text:'Python infra: automatizar tarefa no VPS da Famart',tag:'proj'},
-    {id:'p1_09',text:'Git: commit, branch, merge e pull request',tag:'lab'},
-    {id:'p1_10',text:'Git: publicar 2 projetos no GitHub com README',tag:'proj'},
-    {id:'p1_11',text:'Docker: entender imagens, containers e Dockerfile',tag:'teoria'},
-    {id:'p1_12',text:'Docker: docker run, build, push e registry',tag:'lab'},
-    {id:'p1_13',text:'Docker: criar docker-compose com app + banco',tag:'lab'},
-    {id:'p1_14',text:'Docker: publicar projeto Docker no GitHub',tag:'proj'},
-    {id:'p1_15',text:'AZ-900: completar módulos Microsoft Learn',tag:'teoria'},
-    {id:'p1_16',text:'AZ-900: simulados — atingir 85%+ de acerto',tag:'lab'},
+  {id:'p1',label:'Fase 1 — Cloud + Docker',color:'#4d9fff',period:'Meses 5–9',items:[
+    {id:'p1_01',text:'Azure: criar conta free tier e explorar portal',tag:'lab'},{id:'p1_02',text:'Azure: criar e configurar VM via SSH',tag:'lab'},
+    {id:'p1_03',text:'Azure: Virtual Networks, subnets e NSGs',tag:'lab'},{id:'p1_04',text:'Azure: Storage Accounts e Blob Storage',tag:'lab'},
+    {id:'p1_05',text:'Azure: IAM — usuários, grupos e políticas',tag:'teoria'},{id:'p1_06',text:'Azure: completar curso Udemy',tag:'lab'},
+    {id:'p1_07',text:'Python infra: script com request HTTP',tag:'lab'},{id:'p1_08',text:'Python infra: automatizar tarefa no VPS da Famart',tag:'proj'},
+    {id:'p1_09',text:'Git: commit, branch, merge e pull request',tag:'lab'},{id:'p1_10',text:'Git: publicar 2 projetos no GitHub com README',tag:'proj'},
+    {id:'p1_11',text:'Docker: entender imagens, containers e Dockerfile',tag:'teoria'},{id:'p1_12',text:'Docker: docker run, build, push e registry',tag:'lab'},
+    {id:'p1_13',text:'Docker: criar docker-compose com app + banco',tag:'lab'},{id:'p1_14',text:'Docker: publicar projeto Docker no GitHub',tag:'proj'},
+    {id:'p1_15',text:'AZ-900: completar módulos Microsoft Learn',tag:'teoria'},{id:'p1_16',text:'AZ-900: simulados — atingir 85%+ de acerto',tag:'lab'},
     {id:'p1_17',text:'AZ-900: agendar e realizar o exame ✓',tag:'cert'},
   ]},
-  { id:'p2', label:'Fase 2 — Especialização', color:'#ffb830', period:'Meses 10–18', items:[
-    {id:'p2_01',text:'Terraform: instalar e entender HCL básico',tag:'teoria'},
-    {id:'p2_02',text:'Terraform: provisionar VM e VNet na Azure',tag:'lab'},
-    {id:'p2_03',text:'Terraform: state, variáveis e módulos',tag:'lab'},
-    {id:'p2_04',text:'Terraform: projeto completo de infra versionada',tag:'proj'},
-    {id:'p2_05',text:'Ansible: instalar e criar primeiro playbook',tag:'lab'},
-    {id:'p2_06',text:'Ansible: configurar servidor com roles e handlers',tag:'lab'},
-    {id:'p2_07',text:'Ansible: inventário dinâmico com Azure',tag:'lab'},
-    {id:'p2_08',text:'Python avançado: Paramiko — SSH automatizado',tag:'lab'},
-    {id:'p2_09',text:'Python avançado: script de monitoramento de serviços',tag:'proj'},
-    {id:'p2_10',text:'CI/CD: pipeline GitHub Actions para deploy no VPS',tag:'lab'},
-    {id:'p2_11',text:'CI/CD: pipeline com lint, test e deploy automático',tag:'lab'},
-    {id:'p2_12',text:'AZ-104: VMs, armazenamento e redes',tag:'teoria'},
-    {id:'p2_13',text:'AZ-104: identidade, governança e monitoramento',tag:'teoria'},
-    {id:'p2_14',text:'AZ-104: simulados — atingir 85%+ de acerto',tag:'lab'},
-    {id:'p2_15',text:'AZ-104: agendar e realizar o exame ✓',tag:'cert'},
-    {id:'p2_16',text:'Portfólio: infra completa Terraform+Ansible+CI/CD',tag:'proj'},
+  {id:'p2',label:'Fase 2 — Especialização',color:'#ffb830',period:'Meses 10–18',items:[
+    {id:'p2_01',text:'Terraform: instalar e entender HCL básico',tag:'teoria'},{id:'p2_02',text:'Terraform: provisionar VM e VNet na Azure',tag:'lab'},
+    {id:'p2_03',text:'Terraform: state, variáveis e módulos',tag:'lab'},{id:'p2_04',text:'Terraform: projeto completo de infra versionada',tag:'proj'},
+    {id:'p2_05',text:'Ansible: instalar e criar primeiro playbook',tag:'lab'},{id:'p2_06',text:'Ansible: configurar servidor com roles e handlers',tag:'lab'},
+    {id:'p2_07',text:'Ansible: inventário dinâmico com Azure',tag:'lab'},{id:'p2_08',text:'Python avançado: Paramiko — SSH automatizado',tag:'lab'},
+    {id:'p2_09',text:'Python avançado: script de monitoramento',tag:'proj'},{id:'p2_10',text:'CI/CD: pipeline GitHub Actions para deploy no VPS',tag:'lab'},
+    {id:'p2_11',text:'CI/CD: pipeline com lint, test e deploy automático',tag:'lab'},{id:'p2_12',text:'AZ-104: VMs, armazenamento e redes',tag:'teoria'},
+    {id:'p2_13',text:'AZ-104: identidade, governança e monitoramento',tag:'teoria'},{id:'p2_14',text:'AZ-104: simulados — atingir 85%+ de acerto',tag:'lab'},
+    {id:'p2_15',text:'AZ-104: agendar e realizar o exame ✓',tag:'cert'},{id:'p2_16',text:'Portfólio: infra completa Terraform+Ansible+CI/CD',tag:'proj'},
   ]},
-  { id:'p3', label:'Fase 3 — Nível sênior', color:'#a78bfa', period:'Meses 19–24', items:[
-    {id:'p3_01',text:'Kubernetes: instalar Minikube e entender arquitetura',tag:'teoria'},
-    {id:'p3_02',text:'Kubernetes: Pods, Deployments e Services',tag:'lab'},
-    {id:'p3_03',text:'Kubernetes: Ingress, ConfigMaps e Secrets',tag:'lab'},
-    {id:'p3_04',text:'Kubernetes: cluster AKS no Azure',tag:'lab'},
-    {id:'p3_05',text:'Kubernetes: Helm charts e gestão de pacotes',tag:'lab'},
-    {id:'p3_06',text:'Observabilidade: Prometheus + Grafana no Docker',tag:'lab'},
-    {id:'p3_07',text:'Observabilidade: Azure Monitor e Log Analytics',tag:'lab'},
-    {id:'p3_08',text:'Observabilidade: criar dashboards de infra reais',tag:'proj'},
-    {id:'p3_09',text:'Cloud security: IAM avançado e zero trust',tag:'teoria'},
-    {id:'p3_10',text:'Cloud security: SIEM e compliance',tag:'teoria'},
-    {id:'p3_11',text:'FinOps: análise e otimização de custos cloud',tag:'teoria'},
-    {id:'p3_12',text:'Projeto final: app com K8s + monitoramento + CI/CD',tag:'proj'},
-    {id:'p3_13',text:'CKA ou AZ-305: simulados — 85%+ de acerto',tag:'lab'},
-    {id:'p3_14',text:'CKA ou AZ-305: agendar e realizar o exame ✓',tag:'cert'},
+  {id:'p3',label:'Fase 3 — Nível sênior',color:'#a78bfa',period:'Meses 19–24',items:[
+    {id:'p3_01',text:'Kubernetes: instalar Minikube e entender arquitetura',tag:'teoria'},{id:'p3_02',text:'Kubernetes: Pods, Deployments e Services',tag:'lab'},
+    {id:'p3_03',text:'Kubernetes: Ingress, ConfigMaps e Secrets',tag:'lab'},{id:'p3_04',text:'Kubernetes: cluster AKS no Azure',tag:'lab'},
+    {id:'p3_05',text:'Kubernetes: Helm charts e gestão de pacotes',tag:'lab'},{id:'p3_06',text:'Observabilidade: Prometheus + Grafana no Docker',tag:'lab'},
+    {id:'p3_07',text:'Observabilidade: Azure Monitor e Log Analytics',tag:'lab'},{id:'p3_08',text:'Observabilidade: criar dashboards de infra reais',tag:'proj'},
+    {id:'p3_09',text:'Cloud security: IAM avançado e zero trust',tag:'teoria'},{id:'p3_10',text:'Cloud security: SIEM e compliance',tag:'teoria'},
+    {id:'p3_11',text:'FinOps: análise e otimização de custos cloud',tag:'teoria'},{id:'p3_12',text:'Projeto final: app com K8s + monitoramento + CI/CD',tag:'proj'},
+    {id:'p3_13',text:'CKA ou AZ-305: simulados — 85%+ de acerto',tag:'lab'},{id:'p3_14',text:'CKA ou AZ-305: agendar e realizar o exame ✓',tag:'cert'},
   ]},
 ];
 
-const WEEK_SCHEDULE = [
-  {name:'Segunda', tema:'Redes / Teoria',  detalhe:'Aula do curso ou módulo teórico do dia'},
-  {name:'Terça',   tema:'Python / Lab',    detalhe:'Prática de código ou exercícios'},
-  {name:'Quarta',  tema:'Cloud / Lab',     detalhe:'Lab Azure, Docker ou ferramentas IaC'},
-  {name:'Quinta',  tema:'Linux / Infra',   detalhe:'Terminal, automação, scripts'},
-  {name:'Sexta',   tema:'Projeto',         detalhe:'Publicar algo concreto no GitHub'},
+const WEEK_SCHEDULE=[
+  {name:'Segunda',tema:'Redes / Teoria',detalhe:'Aula do curso ou módulo teórico do dia'},
+  {name:'Terça',tema:'Python / Lab',detalhe:'Prática de código ou exercícios'},
+  {name:'Quarta',tema:'Cloud / Lab',detalhe:'Lab Azure, Docker ou ferramentas IaC'},
+  {name:'Quinta',tema:'Linux / Infra',detalhe:'Terminal, automação, scripts'},
+  {name:'Sexta',tema:'Projeto',detalhe:'Publicar algo concreto no GitHub'},
 ];
 
-// ═══════════════════════════════════════════════
-//  SUPABASE
-// ═══════════════════════════════════════════════
-let sb = null;
-let currentUser = null;
-let userProgress = { checked: {}, studiedDays: [] };
+let sb=null,currentUser=null,isMaster=false,userProgress={checked:{},studiedDays:[]};
 
-function initSupabase() {
-  try {
-    sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    return true;
-  } catch(e) {
-    return false;
-  }
+function initSB(){try{sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);return true;}catch(e){return false;}}
+function cpfDigits(v){return v.replace(/\D/g,'');}
+function cpfToEmail(c){return c+'@roadmap.infra';}
+function fmtCpf(v){return v.replace(/\D/g,'').slice(0,11).replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');}
+function fmtCpfDisplay(c){return c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');}
+
+document.getElementById('l-cpf').addEventListener('input',function(){this.value=fmtCpf(this.value);});
+document.getElementById('l-senha').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+document.getElementById('i-cpf').addEventListener('input',function(){this.value=fmtCpf(this.value);});
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
 }
 
-// CPF formatado → usado como email fake: cpf@roadmap.infra
-function cpfToEmail(cpf) {
-  const digits = cpf.replace(/\D/g,'');
-  return digits + '@roadmap.infra';
+function showMsg(id,txt,type){
+  const el=document.getElementById(id);
+  el.className=`auth-msg auth-${type} show`;
+  el.textContent=txt;
+}
+function hideMsg(id){document.getElementById(id).classList.remove('show');}
+
+// CONVITE
+function checkInviteMode(){
+  const p=new URLSearchParams(window.location.search);
+  if(p.get('convite')===INVITE_TOKEN){showScreen('invite');return true;}
+  return false;
 }
 
-function formatCpf(v) {
-  return v.replace(/\D/g,'').slice(0,11)
-    .replace(/(\d{3})(\d)/,'$1.$2')
-    .replace(/(\d{3})(\d)/,'$1.$2')
-    .replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+async function doInviteSignup(){
+  const cpf=cpfDigits(document.getElementById('i-cpf').value);
+  const s1=document.getElementById('i-senha').value;
+  const s2=document.getElementById('i-senha2').value;
+  const btn=document.getElementById('btn-invite');
+  hideMsg('i-error'); hideMsg('i-success');
+
+  if(cpf.length!==11){showMsg('i-error','CPF inválido.','error');return;}
+  if(s1.length<6){showMsg('i-error','Senha deve ter ao menos 6 caracteres.','error');return;}
+  if(s1!==s2){showMsg('i-error','As senhas não coincidem.','error');return;}
+
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Enviando...';
+  initSB();
+
+  // Verifica se CPF já existe
+  const {data:exist}=await sb.from('solicitacoes').select('cpf').eq('cpf',cpf).single();
+  if(exist){showMsg('i-error','Este CPF já possui uma solicitação.','error');btn.disabled=false;btn.textContent='Enviar solicitação';return;}
+
+  // Cria usuário no Supabase Auth
+  const email=cpfToEmail(cpf);
+  const {error:regErr}=await sb.auth.signUp({email,password:s1,options:{data:{cpf}}});
+  if(regErr&&!regErr.message.includes('already registered')){
+    showMsg('i-error','Erro: '+regErr.message,'error');btn.disabled=false;btn.textContent='Enviar solicitação';return;
+  }
+
+  // Salva solicitação
+  await sb.from('solicitacoes').insert({cpf,status:'pendente',created_at:new Date().toISOString()});
+
+  // Notifica no WhatsApp
+  const msg=encodeURIComponent(`🔔 *Nova solicitação - Roadmap Infra*\n\nCPF: ${fmtCpfDisplay(cpf)}\nHorário: ${new Date().toLocaleString('pt-BR')}\n\nAcesse para aprovar:\nhttps://ghlacerda8-del.github.io/roadmap-infra`);
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank');
+
+  showMsg('i-success','✓ Solicitação enviada! Aguarde a aprovação do administrador.','success');
+  btn.disabled=true; btn.textContent='Solicitação enviada ✓';
 }
 
-// Auto-formatar CPF ao digitar
-document.getElementById('input-cpf').addEventListener('input', function() {
-  this.value = formatCpf(this.value);
-});
+// LOGIN
+async function doLogin(){
+  const cpf=cpfDigits(document.getElementById('l-cpf').value);
+  const senha=document.getElementById('l-senha').value;
+  const btn=document.getElementById('btn-login');
+  hideMsg('l-error'); hideMsg('l-pending');
 
-// Enter no campo senha aciona login
-document.getElementById('input-senha').addEventListener('keydown', function(e) {
-  if(e.key === 'Enter') doLogin();
-});
+  if(cpf.length!==11){showMsg('l-error','CPF inválido.','error');return;}
+  if(senha.length<6){showMsg('l-error','Senha deve ter ao menos 6 caracteres.','error');return;}
 
-async function doLogin() {
-  const cpfRaw = document.getElementById('input-cpf').value;
-  const senha  = document.getElementById('input-senha').value;
-  const errEl  = document.getElementById('login-error');
-  const btn    = document.getElementById('btn-login');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Entrando...';
+  initSB();
 
-  errEl.classList.remove('show');
-
-  const digits = cpfRaw.replace(/\D/g,'');
-  if(digits.length !== 11) {
-    errEl.textContent = 'CPF inválido. Digite os 11 dígitos.';
-    errEl.classList.add('show'); return;
-  }
-  if(senha.length < 6) {
-    errEl.textContent = 'A senha precisa ter pelo menos 6 caracteres.';
-    errEl.classList.add('show'); return;
-  }
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="login-spinner"></span>Entrando...';
-
-  if(!initSupabase() || SUPABASE_URL === 'COLE_SUA_URL_AQUI') {
-    // MODO DEMO — sem Supabase configurado ainda
-    currentUser = { cpf: digits, email: cpfToEmail(digits) };
-    loadProgressLocal();
-    showApp();
-    btn.disabled = false; btn.textContent = 'Entrar';
+  const masterDigits=MASTER_CPF.replace(/\D/g,'');
+  if(cpf===masterDigits){
+    await loginAuth(cpf,senha,true,btn);
     return;
   }
 
-  const email = cpfToEmail(digits);
-  // Tenta login — se falhar (novo usuário), cria conta
-  let { data, error } = await sb.auth.signInWithPassword({ email, password: senha });
+  const {data:sol}=await sb.from('solicitacoes').select('*').eq('cpf',cpf).single();
+  if(!sol){showMsg('l-error','CPF não encontrado. Solicite acesso pelo link de convite.','error');btn.disabled=false;btn.textContent='Entrar';return;}
+  if(sol.status==='pendente'){showMsg('l-pending','⏳ Sua conta está aguardando aprovação do administrador.','warn');btn.disabled=false;btn.textContent='Entrar';return;}
+  if(sol.status==='reprovado'){showMsg('l-error','Acesso negado pelo administrador.','error');btn.disabled=false;btn.textContent='Entrar';return;}
 
-  if(error && error.message.includes('Invalid login')) {
-    // Primeira vez: cria conta
-    const reg = await sb.auth.signUp({ email, password: senha,
-      options:{ data:{ cpf: digits } }
-    });
-    if(reg.error) {
-      errEl.textContent = 'Erro: ' + reg.error.message;
-      errEl.classList.add('show');
-      btn.disabled=false; btn.textContent='Entrar'; return;
+  await loginAuth(cpf,senha,false,btn);
+}
+
+async function loginAuth(cpf,senha,master,btn){
+  const email=cpfToEmail(cpf);
+  let {data,error}=await sb.auth.signInWithPassword({email,password:senha});
+
+  if(error){
+    // Tenta criar conta master se ainda não existe
+    if(master&&(error.message.includes('Invalid')||error.message.includes('invalid'))){
+      const {data:reg,error:re}=await sb.auth.signUp({email,password:senha,options:{data:{cpf}}});
+      if(re){showMsg('l-error','Erro: '+re.message,'error');btn.disabled=false;btn.textContent='Entrar';return;}
+      const {data:d2}=await sb.auth.signInWithPassword({email,password:senha});
+      if(!d2?.user){showMsg('l-error','Conta criada! Tente entrar novamente.','error');btn.disabled=false;btn.textContent='Entrar';return;}
+      data=d2;
+    } else {
+      showMsg('l-error','CPF ou senha incorretos.','error');btn.disabled=false;btn.textContent='Entrar';return;
     }
-    data = reg.data;
-  } else if(error) {
-    errEl.textContent = 'CPF ou senha incorretos.';
-    errEl.classList.add('show');
-    btn.disabled=false; btn.textContent='Entrar'; return;
   }
 
-  currentUser = { cpf: digits, email, id: data.user?.id };
+  currentUser={cpf,email,id:data.user?.id,master};
+  isMaster=master;
+  await sb.from('login_log').insert({user_cpf:cpf,logged_at:new Date().toISOString(),user_agent:navigator.userAgent.slice(0,200)}).catch(()=>{});
   await loadProgressFromDB();
-  await registerLoginAlert(digits);
   showApp();
   btn.disabled=false; btn.textContent='Entrar';
 }
 
-async function doLogout() {
+async function doLogout(){
   if(sb) await sb.auth.signOut();
-  currentUser = null;
-  userProgress = { checked:{}, studiedDays:[] };
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('input-cpf').value = '';
-  document.getElementById('input-senha').value = '';
+  currentUser=null; isMaster=false; userProgress={checked:{},studiedDays:[]};
+  showScreen('login');
 }
 
-function showApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  const cpfFmt = currentUser.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
-  document.getElementById('nav-cpf').textContent = cpfFmt;
-  buildChecklist();
-  renderProgress();
-  updateHeaderStats();
-}
-
-// ═══════════════════════════════════════════════
-//  PERSISTÊNCIA — DB e Local (fallback)
-// ═══════════════════════════════════════════════
-const LOCAL_KEY = 'roadmap_infra_v4';
-
-function loadProgressLocal() {
-  try {
-    const s = JSON.parse(localStorage.getItem(LOCAL_KEY));
-    if(s) userProgress = s;
-  } catch(e) {}
-}
-
-async function loadProgressFromDB() {
-  if(!sb || !currentUser?.id) { loadProgressLocal(); return; }
-  const { data, error } = await sb
-    .from('progresso')
-    .select('dados')
-    .eq('user_id', currentUser.id)
-    .single();
-  if(data?.dados) {
-    userProgress = data.dados;
+// APP
+function showApp(){
+  showScreen('app');
+  document.getElementById('nav-cpf').textContent=fmtCpfDisplay(currentUser.cpf);
+  const roleEl=document.getElementById('nav-role');
+  if(isMaster){
+    roleEl.textContent='MASTER'; roleEl.className='nav-role role-master';
+    document.getElementById('nav-admin').style.display='';
   } else {
-    loadProgressLocal();
+    roleEl.textContent='VIEWER'; roleEl.className='nav-role role-viewer';
+    document.getElementById('nav-admin').style.display='none';
   }
+  buildChecklist(); renderProgress(); updateHeaderStats();
 }
 
-let saveTimer = null;
-function scheduleSave() {
-  setSyncStatus('saving');
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveProgress, 1200);
-}
-
-async function saveProgress() {
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(userProgress));
-  if(!sb || !currentUser?.id) { setSyncStatus('ok'); return; }
-  const { error } = await sb.from('progresso').upsert({
-    user_id: currentUser.id,
-    dados: userProgress,
-    updated_at: new Date().toISOString()
-  }, { onConflict: 'user_id' });
-  setSyncStatus(error ? 'err' : 'ok');
-}
-
-function setSyncStatus(s) {
-  const el = document.getElementById('sync-status');
-  if(!el) return;
-  if(s==='ok')     { el.className='sync-badge sync-ok'; el.textContent='● salvo'; }
-  if(s==='saving') { el.className='sync-badge sync-ing'; el.textContent='↑ salvando...'; }
-  if(s==='err')    { el.className='sync-badge sync-err'; el.textContent='✕ erro ao salvar'; }
-}
-
-// ═══════════════════════════════════════════════
-//  ALERTA DE LOGIN — via Supabase Edge Function
-// ═══════════════════════════════════════════════
-async function registerLoginAlert(cpf) {
-  if(!sb) return;
-  try {
-    await sb.from('login_log').insert({
-      user_cpf: cpf,
-      logged_at: new Date().toISOString(),
-      user_agent: navigator.userAgent.slice(0,200)
-    });
-  } catch(e) {}
-}
-
-// ═══════════════════════════════════════════════
-//  NAV
-// ═══════════════════════════════════════════════
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.querySelector(`[onclick="showPage('${id}')"]`).classList.add('active');
   if(id==='semana') renderWeek();
   if(id==='progresso') renderProgress();
+  if(id==='admin') loadAdminPanel();
 }
 
-// ═══════════════════════════════════════════════
-//  CHECKLIST
-// ═══════════════════════════════════════════════
-function buildChecklist() {
-  const c = document.getElementById('cl-container');
-  c.innerHTML = '';
-  PHASES.forEach(phase => {
-    const done = phase.items.filter(i => userProgress.checked[i.id]).length;
-    const pct  = Math.round((done/phase.items.length)*100);
-    const div  = document.createElement('div');
-    div.className = 'cl-phase';
-    div.innerHTML = `
+// ADMIN
+async function loadAdminPanel(){
+  const grid=document.getElementById('admin-grid');
+  const banner=document.getElementById('pending-banner');
+  grid.innerHTML='<div style="color:var(--muted);font-size:13px">Carregando...</div>';
+
+  const inviteUrl=`${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
+  document.getElementById('invite-url-txt').textContent=inviteUrl;
+
+  const {data:sols}=await sb.from('solicitacoes').select('*').order('created_at',{ascending:false});
+  if(!sols||sols.length===0){grid.innerHTML='<div style="color:var(--muted);font-size:13px">Nenhuma solicitação ainda.</div>';banner.innerHTML='';return;}
+
+  const pendentes=sols.filter(s=>s.status==='pendente').length;
+  banner.innerHTML=pendentes>0?`<div class="pending-banner">⚠️ ${pendentes} solicitação(ões) aguardando aprovação</div>`:'';
+
+  const {data:progs}=await sb.from('progresso').select('user_cpf,dados');
+  const progMap={};
+  (progs||[]).forEach(p=>{if(p.user_cpf) progMap[p.user_cpf]=p.dados;});
+
+  const allItems=PHASES.flatMap(p=>p.items);
+  grid.innerHTML='';
+  sols.forEach(sol=>{
+    const dados=progMap[sol.cpf]||{checked:{}};
+    const done=allItems.filter(i=>dados.checked?.[i.id]).length;
+    const pct=Math.round((done/allItems.length)*100);
+    const initials=sol.cpf.slice(0,2).toUpperCase();
+
+    let actions='';
+    if(sol.status==='pendente') actions=`<button class="btn-approve" onclick="updateSol('${sol.cpf}','aprovado')">✓ Aprovar</button><button class="btn-reject" onclick="updateSol('${sol.cpf}','reprovado')">✕ Reprovar</button>`;
+    else if(sol.status==='aprovado') actions=`<button class="btn-revoke" onclick="updateSol('${sol.cpf}','reprovado')">Revogar acesso</button>`;
+    else actions=`<button class="btn-approve" onclick="updateSol('${sol.cpf}','aprovado')">Reativar</button>`;
+
+    const card=document.createElement('div'); card.className='user-card';
+    card.innerHTML=`
+      <div class="user-card-top">
+        <div class="user-avatar">${initials}</div>
+        <div>
+          <div class="user-cpf-label">${fmtCpfDisplay(sol.cpf)}</div>
+          <span class="status-badge sb-${sol.status}">${sol.status.toUpperCase()}</span>
+          <span style="font-size:11px;color:var(--muted);margin-left:6px">${new Date(sol.created_at).toLocaleDateString('pt-BR')}</span>
+        </div>
+      </div>
+      <div class="user-prog-bar"><div class="user-prog-fill" style="width:${pct}%"></div></div>
+      <div class="user-prog-lbl">${pct}% concluído · ${done}/${allItems.length} tarefas</div>
+      <div class="user-actions">${actions}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+async function updateSol(cpf,status){
+  await sb.from('solicitacoes').update({status}).eq('cpf',cpf);
+  loadAdminPanel();
+}
+
+function copyLink(){
+  const url=`${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
+  navigator.clipboard.writeText(url).then(()=>alert('Link copiado!'));
+}
+
+function shareWhatsApp(){
+  const url=`${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
+  const msg=encodeURIComponent(`Olá! Você foi convidado para acompanhar o Roadmap Analista de Infra.\n\nClique para solicitar acesso:\n${url}`);
+  window.open(`https://wa.me/?text=${msg}`,'_blank');
+}
+
+// PERSISTÊNCIA
+const LOC_KEY='roadmap_v5';
+async function loadProgressFromDB(){
+  if(!sb||!currentUser?.id){try{const s=JSON.parse(localStorage.getItem(LOC_KEY));if(s)userProgress=s;}catch(e){}return;}
+  const {data}=await sb.from('progresso').select('dados').eq('user_id',currentUser.id).single();
+  if(data?.dados) userProgress=data.dados;
+  else{try{const s=JSON.parse(localStorage.getItem(LOC_KEY));if(s)userProgress=s;}catch(e){}}
+}
+let saveTimer=null;
+function scheduleSave(){setSyncStatus('saving');clearTimeout(saveTimer);saveTimer=setTimeout(saveProgress,1200);}
+async function saveProgress(){
+  localStorage.setItem(LOC_KEY,JSON.stringify(userProgress));
+  if(!sb||!currentUser?.id){setSyncStatus('ok');return;}
+  const{error}=await sb.from('progresso').upsert({user_id:currentUser.id,user_cpf:currentUser.cpf,dados:userProgress,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+  setSyncStatus(error?'err':'ok');
+}
+function setSyncStatus(s){
+  const el=document.getElementById('sync-status');if(!el)return;
+  if(s==='ok'){el.className='sync-badge sync-ok';el.textContent='● salvo';}
+  if(s==='saving'){el.className='sync-badge sync-ing';el.textContent='↑ salvando...';}
+  if(s==='err'){el.className='sync-badge sync-err';el.textContent='✕ erro';}
+}
+
+// CHECKLIST
+function buildChecklist(){
+  const c=document.getElementById('cl-container');c.innerHTML='';
+  PHASES.forEach(phase=>{
+    const done=phase.items.filter(i=>userProgress.checked[i.id]).length;
+    const pct=Math.round((done/phase.items.length)*100);
+    const div=document.createElement('div');div.className='cl-phase';
+    div.innerHTML=`
       <div class="cl-phase-header" onclick="togglePhase('${phase.id}')">
         <div class="cl-dot" style="background:${phase.color}"></div>
         <div class="cl-phase-name">${phase.label}</div>
@@ -844,187 +799,92 @@ function buildChecklist() {
     c.appendChild(div);
   });
 }
+function toggleItem(id){userProgress.checked[id]=!userProgress.checked[id];buildChecklist();renderProgress();updateHeaderStats();scheduleSave();}
+function togglePhase(id){const el=document.getElementById('cl-items-'+id);el.style.display=el.style.display==='none'?'':'none';}
 
-function toggleItem(id) {
-  userProgress.checked[id] = !userProgress.checked[id];
-  buildChecklist();
-  renderProgress();
-  updateHeaderStats();
-  scheduleSave();
-}
-
-function togglePhase(id) {
-  const el = document.getElementById('cl-items-'+id);
-  el.style.display = el.style.display==='none' ? '' : 'none';
-}
-
-// ═══════════════════════════════════════════════
-//  SEMANA
-// ═══════════════════════════════════════════════
-let weekOffset = 0;
-
-function getWeekDates(offset) {
-  const today = new Date();
-  const dow = today.getDay();
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - (dow===0?6:dow-1) + (offset*7));
-  return Array.from({length:5},(_,i)=>{
-    const d = new Date(monday);
-    d.setDate(monday.getDate()+i);
-    return d;
-  });
-}
-
-function dateKey(d) { return d.toISOString().slice(0,10); }
-
-function renderWeek() {
-  const dates = getWeekDates(weekOffset);
-  const today = dateKey(new Date());
-  const fmt = d => d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
-  document.getElementById('wv-label').textContent =
-    `Semana: ${fmt(dates[0])} – ${fmt(dates[4])}${weekOffset===0?' (atual)':''}`;
-
-  const c = document.getElementById('week-days');
-  c.innerHTML = '';
+// SEMANA
+let weekOffset=0;
+function getWeekDates(off){const t=new Date(),dow=t.getDay(),mon=new Date(t);mon.setDate(t.getDate()-(dow===0?6:dow-1)+(off*7));return Array.from({length:5},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});}
+function dateKey(d){return d.toISOString().slice(0,10);}
+function renderWeek(){
+  const dates=getWeekDates(weekOffset),today=dateKey(new Date());
+  const fmt=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+  document.getElementById('wv-label').textContent=`Semana: ${fmt(dates[0])} – ${fmt(dates[4])}${weekOffset===0?' (atual)':''}`;
+  const c=document.getElementById('week-days');c.innerHTML='';
   dates.forEach((d,i)=>{
-    const key = dateKey(d);
-    const isToday = key===today;
-    const isDone  = (userProgress.studiedDays||[]).includes(key);
-    const info    = WEEK_SCHEDULE[i];
-    const card    = document.createElement('div');
-    card.className = `wdc${isDone?' done':''}${isToday?' today-card':''}`;
-    card.innerHTML = `
-      <div class="wdc-head">
-        <span class="wdc-name">${info.name}</span>
-        <span class="wdc-date">${d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</span>
-      </div>
-      <div class="wdc-tema">${info.tema}</div>
-      <div class="wdc-detalhe">${info.detalhe}</div>
-      <div class="wdc-btn">${isDone?'✓ Estudei este dia':'○ Marcar como estudado'}</div>`;
-    card.onclick = ()=>toggleStudyDay(key);
-    c.appendChild(card);
+    const key=dateKey(d),isToday=key===today,isDone=(userProgress.studiedDays||[]).includes(key);
+    const info=WEEK_SCHEDULE[i],card=document.createElement('div');
+    card.className=`wdc${isDone?' done':''}${isToday?' today-card':''}`;
+    card.innerHTML=`<div class="wdc-head"><span class="wdc-name">${info.name}</span><span class="wdc-date">${d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</span></div><div class="wdc-tema">${info.tema}</div><div class="wdc-detalhe">${info.detalhe}</div><div class="wdc-btn">${isDone?'✓ Estudei este dia':'○ Marcar como estudado'}</div>`;
+    card.onclick=()=>toggleStudyDay(key);c.appendChild(card);
   });
 }
-
-function toggleStudyDay(key) {
-  if(!userProgress.studiedDays) userProgress.studiedDays=[];
-  const idx = userProgress.studiedDays.indexOf(key);
-  if(idx>=0) userProgress.studiedDays.splice(idx,1);
-  else userProgress.studiedDays.push(key);
-  renderWeek();
-  renderProgress();
-  updateHeaderStats();
-  scheduleSave();
+function toggleStudyDay(key){
+  if(!userProgress.studiedDays)userProgress.studiedDays=[];
+  const idx=userProgress.studiedDays.indexOf(key);
+  if(idx>=0)userProgress.studiedDays.splice(idx,1);else userProgress.studiedDays.push(key);
+  renderWeek();renderProgress();updateHeaderStats();scheduleSave();
 }
 
-// ═══════════════════════════════════════════════
-//  PROGRESSO
-// ═══════════════════════════════════════════════
-function renderProgress() {
-  const all   = PHASES.flatMap(p=>p.items);
-  const total = all.length;
-  const done  = all.filter(i=>userProgress.checked[i.id]).length;
-  const pct   = total ? Math.round((done/total)*100) : 0;
-
-  document.getElementById('pct-num').textContent   = pct;
-  document.getElementById('pbar-geral').style.width = pct+'%';
-  document.getElementById('ps-done').textContent   = done;
-  document.getElementById('ps-total').textContent  = total;
-
-  const streak = calcStreak();
-  document.getElementById('ps-streak').textContent = streak+(streak>0?' 🔥':'');
-  const dias = (userProgress.studiedDays||[]).length;
-  document.getElementById('ps-dias').textContent   = dias;
-  document.getElementById('ps-eta').textContent    = calcETA(done,total);
-
-  // Por fase
-  const wrap = document.getElementById('phase-prog-wrap');
-  wrap.innerHTML = '';
+// PROGRESSO
+function renderProgress(){
+  const all=PHASES.flatMap(p=>p.items),total=all.length;
+  const done=all.filter(i=>userProgress.checked[i.id]).length;
+  const pct=total?Math.round((done/total)*100):0;
+  document.getElementById('pct-num').textContent=pct;
+  document.getElementById('pbar-geral').style.width=pct+'%';
+  document.getElementById('ps-done').textContent=done;
+  document.getElementById('ps-total').textContent=total;
+  const streak=calcStreak();
+  document.getElementById('ps-streak').textContent=streak+(streak>0?' 🔥':'');
+  document.getElementById('ps-dias').textContent=(userProgress.studiedDays||[]).length;
+  document.getElementById('ps-eta').textContent=calcETA(done,total);
+  const wrap=document.getElementById('phase-prog-wrap');wrap.innerHTML='';
   PHASES.forEach(p=>{
-    const pd = p.items.filter(i=>userProgress.checked[i.id]).length;
-    const pp = Math.round((pd/p.items.length)*100);
-    wrap.innerHTML += `
-      <div style="background:var(--bg3);border-radius:10px;padding:16px">
-        <div style="font-size:12px;font-weight:600;margin-bottom:3px;color:${p.color}">${p.label}</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">${p.period}</div>
-        <div style="background:rgba(255,255,255,.05);border-radius:4px;height:5px;margin-bottom:6px;overflow:hidden">
-          <div style="width:${pp}%;height:100%;border-radius:4px;background:${p.color};transition:width .4s"></div>
-        </div>
-        <div style="font-family:var(--mono);font-size:11px;color:${p.color}">${pp}% · ${pd}/${p.items.length} tarefas</div>
-      </div>`;
+    const pd=p.items.filter(i=>userProgress.checked[i.id]).length,pp=Math.round((pd/p.items.length)*100);
+    wrap.innerHTML+=`<div style="background:var(--bg3);border-radius:9px;padding:14px"><div style="font-size:12px;font-weight:600;margin-bottom:2px;color:${p.color}">${p.label}</div><div style="font-size:11px;color:var(--muted);margin-bottom:7px">${p.period}</div><div style="background:rgba(255,255,255,.05);border-radius:3px;height:4px;margin-bottom:5px;overflow:hidden"><div style="width:${pp}%;height:100%;border-radius:3px;background:${p.color};transition:width .4s"></div></div><div style="font-family:var(--mono);font-size:11px;color:${p.color}">${pp}% · ${pd}/${p.items.length}</div></div>`;
   });
-
   renderHeatmap();
 }
-
-function calcStreak() {
-  const days = userProgress.studiedDays||[];
-  if(!days.length) return 0;
-  const today     = dateKey(new Date());
-  const yesterday = dateKey(new Date(Date.now()-86400000));
-  if(!days.includes(today) && !days.includes(yesterday)) return 0;
-  let streak=0, check=new Date();
-  if(days.includes(yesterday) && !days.includes(today)) check.setDate(check.getDate()-1);
-  while(true){
-    if(!days.includes(dateKey(check))) break;
-    streak++;
-    check.setDate(check.getDate()-1);
-  }
+function calcStreak(){
+  const days=userProgress.studiedDays||[];if(!days.length)return 0;
+  const today=dateKey(new Date()),yest=dateKey(new Date(Date.now()-86400000));
+  if(!days.includes(today)&&!days.includes(yest))return 0;
+  let streak=0,check=new Date();
+  if(days.includes(yest)&&!days.includes(today))check.setDate(check.getDate()-1);
+  while(true){if(!days.includes(dateKey(check)))break;streak++;check.setDate(check.getDate()-1);}
   return streak;
 }
-
 function calcETA(done,total){
   const dias=(userProgress.studiedDays||[]).length;
-  if(done===0||dias<2) return 'Estude mais dias';
-  if(done===total) return 'Concluído! 🎉';
-  const rate=done/dias;
-  const daysLeft=Math.ceil((total-done)/rate);
-  const eta=new Date();
-  eta.setDate(eta.getDate()+daysLeft);
+  if(done===0||dias<2)return 'Estude mais dias';
+  if(done===total)return 'Concluído! 🎉';
+  const eta=new Date();eta.setDate(eta.getDate()+Math.ceil((total-done)/(done/dias)));
   return eta.toLocaleDateString('pt-BR',{month:'short',year:'numeric'});
 }
-
 function renderHeatmap(){
-  const wrap=document.getElementById('heatmap');
-  wrap.innerHTML='';
-  const today=new Date();
-  const days=userProgress.studiedDays||[];
-  for(let i=59;i>=0;i--){
-    const d=new Date(today); d.setDate(today.getDate()-i);
-    const key=dateKey(d);
-    const el=document.createElement('div');
-    el.className='hm-day'+(days.includes(key)?' studied':'')+(i===0?' hm-today':'');
-    el.title=d.toLocaleDateString('pt-BR')+(days.includes(key)?' ✓':'');
-    wrap.appendChild(el);
-  }
+  const wrap=document.getElementById('heatmap');wrap.innerHTML='';
+  const today=new Date(),days=userProgress.studiedDays||[];
+  for(let i=59;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const key=dateKey(d),el=document.createElement('div');el.className='hm-day'+(days.includes(key)?' studied':'')+(i===0?' hm-today':'');el.title=d.toLocaleDateString('pt-BR')+(days.includes(key)?' ✓':'');wrap.appendChild(el);}
 }
-
 function updateHeaderStats(){
-  const all=PHASES.flatMap(p=>p.items);
-  const done=all.filter(i=>userProgress.checked[i.id]).length;
-  const pct=Math.round((done/all.length)*100);
-  document.getElementById('h-pct').textContent=pct+'%';
+  const all=PHASES.flatMap(p=>p.items),done=all.filter(i=>userProgress.checked[i.id]).length;
+  document.getElementById('h-pct').textContent=Math.round((done/all.length)*100)+'%';
   document.getElementById('h-streak').textContent=calcStreak();
 }
+function confirmReset(){if(confirm('Apagar todo o progresso?')){userProgress={checked:{},studiedDays:[]};buildChecklist();renderProgress();updateHeaderStats();scheduleSave();}}
 
-function confirmReset(){
-  if(confirm('Isso vai apagar todo o progresso. Tem certeza?')){
-    userProgress={checked:{},studiedDays:[]};
-    buildChecklist(); renderProgress(); updateHeaderStats(); scheduleSave();
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  INIT — Verifica sessão salva
-// ═══════════════════════════════════════════════
+// INIT
 (async function init(){
-  if(SUPABASE_URL==='COLE_SUA_URL_AQUI') return; // Aguarda config
-
-  initSupabase();
-  const { data:{ session } } = await sb.auth.getSession();
+  if(checkInviteMode())return;
+  if(SUPABASE_URL.includes('COLE'))return;
+  initSB();
+  const{data:{session}}=await sb.auth.getSession();
   if(session?.user){
-    const cpf = session.user.user_metadata?.cpf || session.user.email.split('@')[0];
-    currentUser = { cpf, email: session.user.email, id: session.user.id };
+    const cpf=session.user.user_metadata?.cpf||session.user.email.split('@')[0];
+    const master=cpf===MASTER_CPF.replace(/\D/g,'');
+    currentUser={cpf,email:session.user.email,id:session.user.id,master};
+    isMaster=master;
     await loadProgressFromDB();
     showApp();
   }
