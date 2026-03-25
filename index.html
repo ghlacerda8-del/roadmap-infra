@@ -647,7 +647,7 @@ async function loginAuth(cpf,senha,master,btn){
 
   currentUser={cpf,email,id:data.user?.id,master};
   isMaster=master;
-  sb.from('login_log').insert({user_cpf:cpf,logged_at:new Date().toISOString(),user_agent:navigator.userAgent.slice(0,200)}).catch(()=>{});
+  try{ await sb.from('login_log').insert({user_cpf:cpf,logged_at:new Date().toISOString(),user_agent:navigator.userAgent.slice(0,200)}); }catch(e){}
   // Força reload completo para o init() carregar o app com a sessão
   setTimeout(()=>{ window.location.href=window.location.pathname; },300);
 }
