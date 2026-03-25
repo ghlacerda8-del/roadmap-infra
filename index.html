@@ -13,8 +13,8 @@
   const SUPABASE_URL    = 'https://hxosxvuiqugzgnwrvaxz.supabase.co';
   const SUPABASE_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4b3N4dnVpcXVnemdud3J2YXh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTU2NjksImV4cCI6MjA4OTk3MTY2OX0.Tub-6qeUprHTW6GFCgu3xayQEJo6iSwYq_LQH58AuCg';
   const MASTER_CPF      = '14317216620';             // aceita com ou sem pontos e traço
-  const INVITE_TOKEN    = 'roadmap_infra_2026'; // ex: infra2025gustavo
-  const WHATSAPP_NUMBER = '5531983391648';          // DDI+DDD+número, ex: 5531999998888
+  const INVITE_TOKEN    = 'roadmap_infra_2026'; // token de convite
+  const WHATSAPP_NUMBER = '5531983391648';          // WhatsApp com DDI+DDD
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -647,8 +647,13 @@ async function loginAuth(cpf,senha,master,btn){
 
   currentUser={cpf,email,id:data.user?.id,master};
   isMaster=master;
-  await sb.from('login_log').insert({user_cpf:cpf,logged_at:new Date().toISOString(),user_agent:navigator.userAgent.slice(0,200)}).catch(()=>{});
-  await loadProgressFromDB();
+  sb.from('login_log').insert({user_cpf:cpf,logged_at:new Date().toISOString(),user_agent:navigator.userAgent.slice(0,200)}).catch(()=>{});
+  try{
+    await Promise.race([
+      loadProgressFromDB(),
+      new Promise((_,r)=>setTimeout(()=>r('timeout'),5000))
+    ]);
+  }catch(e){ console.warn('Progresso local:', e); }
   showApp();
   btn.disabled=false; btn.textContent='Entrar';
 }
