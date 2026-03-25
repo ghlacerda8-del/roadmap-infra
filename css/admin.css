@@ -1,0 +1,25 @@
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;margin-top:16px}
+.user-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.user-card-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal);flex-shrink:0}
+.user-cpf-label{font-family:var(--mono);font-size:12px;font-weight:700}
+.status-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-family:var(--mono);font-size:10px;font-weight:700;margin-top:2px}
+.sb-0{background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
+.sb-1{background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.2)}
+.sb-2{background:rgba(255,95,95,.12);color:var(--red);border:1px solid rgba(255,95,95,.2)}
+.user-prog-bar{background:rgba(255,255,255,.05);border-radius:3px;height:4px;margin:10px 0 5px;overflow:hidden}
+.user-prog-fill{height:100%;border-radius:3px;background:var(--teal)}
+.user-prog-lbl{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.user-actions{display:flex;gap:7px;margin-top:12px}
+.btn-approve{flex:1;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--teal);padding:7px;border-radius:7px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
+.btn-approve:hover{background:rgba(0,229,160,.2)}
+.btn-reject{flex:1;background:rgba(255,95,95,.08);border:1px solid rgba(255,95,95,.15);color:var(--red);padding:7px;border-radius:7px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
+.btn-reject:hover{background:rgba(255,95,95,.15)}
+.btn-revoke{flex:1;background:rgba(255,184,48,.08);border:1px solid rgba(255,184,48,.15);color:var(--amber);padding:7px;border-radius:7px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:background .15s}
+.btn-revoke:hover{background:rgba(255,184,48,.15)}
+.pending-banner{background:rgba(255,184,48,.07);border:1px solid rgba(255,184,48,.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--amber);margin-bottom:16px}
+.invite-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px}
+.invite-url{font-family:var(--mono);font-size:12px;color:var(--teal);background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin:10px 0;word-break:break-all;line-height:1.5}
+.btn-sm{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:border-color .15s}
+.btn-sm:hover{border-color:var(--border2);color:var(--text)}
+.btn-sm.teal{color:var(--teal);border-color:rgba(0,229,160,.2)}

@@ -1,0 +1,22 @@
+.auth-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:420px;position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(0,229,160,.07) 0%,transparent 70%);pointer-events:none}
+.auth-tag{font-family:var(--mono);font-size:10px;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.auth-tag::before{content:'';display:inline-block;width:16px;height:1px;background:var(--teal)}
+.auth-title{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1.15;margin-bottom:6px}
+.auth-title span{color:var(--teal)}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase;font-family:var(--mono)}
+.field input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-family:var(--sans);font-size:14px;color:var(--text);transition:border-color .15s;outline:none}
+.field input:focus{border-color:rgba(0,229,160,.4)}
+.field input::placeholder{color:var(--muted)}
+.btn-primary{width:100%;background:var(--teal);border:none;border-radius:8px;padding:13px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;color:#000;cursor:pointer;transition:opacity .15s;margin-top:6px}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.auth-msg{border-radius:7px;padding:10px 14px;font-size:12px;margin-top:10px;display:none}
+.auth-msg.show{display:block}
+.auth-error{background:rgba(255,95,95,.08);border:1px solid rgba(255,95,95,.2);color:var(--red)}
+.auth-success{background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);color:var(--teal)}
+.auth-warn{background:rgba(255,184,48,.08);border:1px solid rgba(255,184,48,.2);color:var(--amber)}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}

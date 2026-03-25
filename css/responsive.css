@@ -1,0 +1,6 @@
+@media(max-width:700px){
+  .header,.container{padding-left:14px;padding-right:14px}
+  .week-days,.week-grid{grid-template-columns:repeat(2,1fr)}
+  .phases{grid-template-columns:1fr}
+  .nav-btn{padding:11px 9px;font-size:10px}
+}
