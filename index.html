@@ -1,275 +1,500 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roadmap — Analista de Infraestrutura</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<!-- CSS — ordem importa: variables primeiro, responsive por último -->
-<link rel="stylesheet" href="css/variables.css">
-<link rel="stylesheet" href="css/auth.css">
-<link rel="stylesheet" href="css/nav.css">
-<link rel="stylesheet" href="css/header.css">
-<link rel="stylesheet" href="css/progress.css">
-<link rel="stylesheet" href="css/week.css">
-<link rel="stylesheet" href="css/checklist.css">
-<link rel="stylesheet" href="css/admin.css">
-<link rel="stylesheet" href="css/roadmap-page.css">
-<link rel="stylesheet" href="css/schedule.css">
-<link rel="stylesheet" href="css/responsive.css">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap — Analista de Infraestrutura</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- CSS — ordem importa: variables primeiro, responsive por último -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/progress.css">
+  <link rel="stylesheet" href="css/week.css">
+  <link rel="stylesheet" href="css/checklist.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/roadmap-page.css">
+  <link rel="stylesheet" href="css/schedule.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div class="screen active" id="screen-login">
-  <div class="auth-card">
-    <div class="auth-tag">Acesso restrito</div>
-    <div class="auth-title">Roadmap<br><span>Analista de Infra</span></div>
-    <div class="auth-sub">Entre com seu CPF e senha para acessar</div>
-    <div class="field"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username"/></div>
-    <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password"/></div>
-    <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
-    <div class="auth-msg auth-error" id="l-error"></div>
-    <div class="auth-msg auth-warn" id="l-pending"></div>
-  </div>
-</div>
-
-<!-- CONVITE -->
-<div class="screen" id="screen-invite">
-  <div class="auth-card">
-    <div class="auth-tag">Solicitação de acesso</div>
-    <div class="auth-title">Solicitar<br><span>Acesso</span></div>
-    <div class="auth-sub">Preencha seus dados — o administrador será notificado para aprovação</div>
-    <div class="field"><label>CPF</label><input type="text" id="i-cpf" placeholder="000.000.000-00" maxlength="14"/></div>
-    <div class="field"><label>Senha</label><input type="password" id="i-senha" placeholder="Mínimo 6 caracteres"/></div>
-    <div class="field"><label>Confirmar senha</label><input type="password" id="i-senha2" placeholder="Repita a senha"/></div>
-    <button class="btn-primary" id="btn-invite" onclick="doInviteSignup()">Enviar solicitação</button>
-    <div class="auth-msg auth-error" id="i-error"></div>
-    <div class="auth-msg auth-success" id="i-success">✓ Solicitação enviada! O administrador foi notificado e irá liberar seu acesso em breve.</div>
-  </div>
-</div>
-
-<!-- APP -->
-<div class="screen" id="screen-app">
-<nav class="nav">
-  <button class="nav-btn active" onclick="showPage('progresso')">Progresso</button>
-  <button class="nav-btn" onclick="showPage('semana')">Semana</button>
-  <button class="nav-btn" onclick="showPage('checklist')">Checklist</button>
-  <button class="nav-btn" onclick="showPage('roadmap')">Roadmap</button>
-  <button class="nav-btn" onclick="showPage('cronograma')">Cronograma</button>
-  <button class="nav-btn nav-admin" id="nav-admin" onclick="showPage('admin')" style="display:none">⚙ Admin</button>
-  <div class="nav-user">
-    <span class="nav-cpf" id="nav-cpf"></span>
-    <span class="nav-role" id="nav-role"></span>
-    <button class="btn-logout" onclick="doLogout()">Sair</button>
-  </div>
-</nav>
-
-<div class="header">
-  <div class="header-tag">Plano de carreira</div>
-  <h1>Roadmap<br><span>Analista de Infra</span></h1>
-  <p class="header-sub">2h/dia · Segunda a Sexta · Cloud, Redes e Python para automação</p>
-  <div class="header-stats">
-    <div class="stat"><span class="stat-val" style="color:var(--teal)" id="h-pct">0%</span><span class="stat-label">concluído</span></div>
-    <div class="stat"><span class="stat-val" style="color:var(--amber)" id="h-streak">0</span><span class="stat-label">dias seguidos</span></div>
-    <div class="stat"><span class="stat-val">24</span><span class="stat-label">meses total</span></div>
-    <div class="stat"><span class="stat-val">~800h</span><span class="stat-label">carga total</span></div>
-  </div>
-</div>
-
-<!-- PROGRESSO -->
-<div class="page active" id="page-progresso">
-<div class="container">
-  <div class="section-title">Painel de evolução <span class="sync-badge sync-ok" id="sync-status">● salvo</span></div>
-  <div class="pdash">
-    <div class="pdash-header">
-      <div><div class="pdash-title">Progresso geral</div><div style="font-size:12px;color:var(--muted);margin-top:3px">Tarefas no checklist</div></div>
-      <div class="pdash-pct"><span id="pct-num">0</span>%<span> concluído</span></div>
-    </div>
-    <div class="pbar-wrap"><div class="pbar-fill" id="pbar-geral" style="width:0%"></div></div>
-    <div class="pstats">
-      <div class="pstat"><div class="pstat-val" id="ps-done" style="color:var(--teal)">0</div><div class="pstat-label">concluídas</div></div>
-      <div class="pstat"><div class="pstat-val" id="ps-total" style="color:var(--muted)">0</div><div class="pstat-label">total</div></div>
-      <div class="pstat"><div class="pstat-val" id="ps-streak" style="color:var(--amber)">0 🔥</div><div class="pstat-label">dias seguidos</div></div>
-      <div class="pstat"><div class="pstat-val" id="ps-dias" style="color:var(--blue)">0</div><div class="pstat-label">dias estudados</div></div>
-      <div class="pstat"><div class="pstat-val" id="ps-eta" style="color:var(--purple)">—</div><div class="pstat-label">estimativa</div></div>
+  <!-- LOGIN -->
+  <div class="screen active" id="screen-login">
+    <div class="auth-card">
+      <div class="auth-tag">Acesso restrito</div>
+      <div class="auth-title">Roadmap<br><span>Analista de Infra</span></div>
+      <div class="auth-sub">Entre com seu CPF e senha para acessar</div>
+      <div class="field"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14"
+          autocomplete="username" /></div>
+      <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••"
+          autocomplete="current-password" /></div>
+      <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
+      <div class="auth-msg auth-error" id="l-error"></div>
+      <div class="auth-msg auth-warn" id="l-pending"></div>
     </div>
   </div>
-  <div class="section-title">Por fase</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px" id="phase-prog-wrap"></div>
-  <div class="section-title">Histórico — 60 dias</div>
-  <div class="heatmap" id="heatmap"></div>
-  <div style="margin-top:24px;display:flex;justify-content:flex-end">
-    <button class="btn-reset" onclick="confirmReset()">Resetar progresso</button>
-  </div>
-</div>
-</div>
 
-<!-- SEMANA -->
-<div class="page" id="page-semana">
-<div class="container">
-  <div class="section-title">Semana de estudos</div>
-  <div class="week-view">
-    <div class="week-view-header">
-      <div class="week-view-title" id="wv-label">...</div>
-      <div class="week-nav">
-        <button onclick="weekOffset--;renderWeek()">← Anterior</button>
-        <button onclick="weekOffset=0;renderWeek()">Hoje</button>
-        <button onclick="weekOffset++;renderWeek()">Próxima →</button>
+  <!-- CONVITE -->
+  <div class="screen" id="screen-invite">
+    <div class="auth-card">
+      <div class="auth-tag">Solicitação de acesso</div>
+      <div class="auth-title">Solicitar<br><span>Acesso</span></div>
+      <div class="auth-sub">Preencha seus dados — o administrador será notificado para aprovação</div>
+      <div class="field"><label>CPF</label><input type="text" id="i-cpf" placeholder="000.000.000-00" maxlength="14" />
+      </div>
+      <div class="field"><label>Senha</label><input type="password" id="i-senha" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <div class="field"><label>Confirmar senha</label><input type="password" id="i-senha2"
+          placeholder="Repita a senha" /></div>
+      <button class="btn-primary" id="btn-invite" onclick="doInviteSignup()">Enviar solicitação</button>
+      <div class="auth-msg auth-error" id="i-error"></div>
+      <div class="auth-msg auth-success" id="i-success">✓ Solicitação enviada! O administrador foi notificado e irá
+        liberar seu acesso em breve.</div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="screen" id="screen-app">
+    <nav class="nav">
+      <button class="nav-btn active" onclick="showPage('progresso')">Progresso</button>
+      <button class="nav-btn" onclick="showPage('semana')">Semana</button>
+      <button class="nav-btn" onclick="showPage('checklist')">Checklist</button>
+      <button class="nav-btn" onclick="showPage('roadmap')">Roadmap</button>
+      <button class="nav-btn" onclick="showPage('cronograma')">Cronograma</button>
+      <button class="nav-btn nav-admin" id="nav-admin" onclick="showPage('admin')" style="display:none">⚙ Admin</button>
+      <div class="nav-user">
+        <span class="nav-cpf" id="nav-cpf"></span>
+        <span class="nav-role" id="nav-role"></span>
+        <button class="btn-logout" onclick="doLogout()">Sair</button>
+      </div>
+    </nav>
+
+    <div class="header">
+      <div class="header-tag">Plano de carreira</div>
+      <h1>Roadmap<br><span>Analista de Infra</span></h1>
+      <p class="header-sub">2h/dia · Segunda a Sexta · Cloud, Redes e Python para automação</p>
+      <div class="header-stats">
+        <div class="stat"><span class="stat-val" style="color:var(--teal)" id="h-pct">0%</span><span
+            class="stat-label">concluído</span></div>
+        <div class="stat"><span class="stat-val" style="color:var(--amber)" id="h-streak">0</span><span
+            class="stat-label">dias seguidos</span></div>
+        <div class="stat"><span class="stat-val">24</span><span class="stat-label">meses total</span></div>
+        <div class="stat"><span class="stat-val">800h</span><span class="stat-label">carga total</span></div>
       </div>
     </div>
-    <div class="week-days" id="week-days"></div>
-  </div>
-</div>
-</div>
 
-<!-- CHECKLIST -->
-<div class="page" id="page-checklist">
-<div class="container">
-  <div class="section-title">Checklist por fase</div>
-  <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Clique para marcar como concluído. Salvo automaticamente no banco.</p>
-  <div class="cl-phases" id="cl-container"></div>
-</div>
-</div>
-
-<!-- ADMIN -->
-<div class="page" id="page-admin">
-<div class="container">
-  <div class="section-title">Painel master</div>
-  <div id="pending-banner"></div>
-  <div class="invite-box">
-    <div style="font-size:13px;font-weight:600;margin-bottom:4px">Link de convite</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Compartilhe para alguém solicitar acesso · clique na URL para copiar</div>
-    <div class="invite-url" id="invite-url-txt" onclick="copyLink()" style="cursor:pointer;user-select:all" title="Clique para copiar"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-      <button class="btn-sm teal" onclick="copyLink()"> Copiar link</button>
-      <button class="btn-sm teal" onclick="shareWhatsApp()"> Enviar via WhatsApp</button>
+    <!-- PROGRESSO -->
+    <div class="page active" id="page-progresso">
+      <div class="container">
+        <div class="section-title">Painel de evolução <span class="sync-badge sync-ok" id="sync-status">● salvo</span>
+        </div>
+        <div class="pdash">
+          <div class="pdash-header">
+            <div>
+              <div class="pdash-title">Progresso geral</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px">Tarefas no checklist</div>
+            </div>
+            <div class="pdash-pct"><span id="pct-num">0</span>%<span> concluído</span></div>
+          </div>
+          <div class="pbar-wrap">
+            <div class="pbar-fill" id="pbar-geral" style="width:0%"></div>
+          </div>
+          <div class="pstats">
+            <div class="pstat">
+              <div class="pstat-val" id="ps-done" style="color:var(--teal)">0</div>
+              <div class="pstat-label">concluídas</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-val" id="ps-total" style="color:var(--muted)">0</div>
+              <div class="pstat-label">total</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-val" id="ps-streak" style="color:var(--amber)">0 🔥</div>
+              <div class="pstat-label">dias seguidos</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-val" id="ps-dias" style="color:var(--blue)">0</div>
+              <div class="pstat-label">dias estudados</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-val" id="ps-eta" style="color:var(--purple)">—</div>
+              <div class="pstat-label">estimativa</div>
+            </div>
+          </div>
+        </div>
+        <div class="section-title">Por fase</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px" id="phase-prog-wrap">
+        </div>
+        <div class="section-title">Histórico — 60 dias</div>
+        <div class="heatmap" id="heatmap"></div>
+        <div style="margin-top:24px;display:flex;justify-content:flex-end">
+          <button class="btn-reset" onclick="confirmReset()">Resetar progresso</button>
+        </div>
+      </div>
     </div>
-    <div id="copy-confirm" style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:6px;display:none">✓ Link copiado!</div>
-  </div>
-  <div class="section-title">Usuários</div>
-  <div class="admin-grid" id="admin-grid">
-    <div style="color:var(--muted);font-size:13px">Carregando...</div>
-  </div>
-</div>
-</div>
 
-<!-- ROADMAP -->
-<div class="page" id="page-roadmap">
-<div class="container">
-  <div class="section-title">Visão geral — 4 fases</div>
-  <div class="phases">
-    <div class="phase-card p0"><div class="phase-num">Fase 0 — M1 a M4</div><div class="phase-name">Base sólida</div><div class="phase-period">Meses 1–4 · ~160h</div><ul class="phase-items"><li>Curso de redes (OSI, TCP/IP, VLANs)</li><li>Python — coddy.tech intermediário</li><li>Linux: bash, systemd, cron</li><li>SQL intermediário (JOINs, índices)</li><li>Git — primeiros commits</li></ul><div class="phase-hours">160h <span>total</span></div><span class="cert-badge">BASE TÉCNICA</span></div>
-    <div class="phase-card p1"><div class="phase-num">Fase 1 — M5 a M9</div><div class="phase-name">Cloud + Docker</div><div class="phase-period">Meses 5–9 · ~200h</div><ul class="phase-items"><li>Azure — curso Udemy completo</li><li>Python para infra (Paramiko, requests)</li><li>Docker + docker-compose</li><li>Git + GitHub (portfólio)</li><li>Preparação AZ-900</li></ul><div class="phase-hours">200h <span>total</span></div><span class="cert-badge">AZ-900 — MÊS 9</span></div>
-    <div class="phase-card p2"><div class="phase-num">Fase 2 — M10 a M18</div><div class="phase-name">Especialização</div><div class="phase-period">Meses 10–18 · ~240h</div><ul class="phase-items"><li>AZ-104 — Azure Administrator</li><li>Terraform (IaC)</li><li>Ansible (automação de config)</li><li>CI/CD com GitHub Actions</li><li>Python avançado para infra</li></ul><div class="phase-hours">240h <span>total</span></div><span class="cert-badge">AZ-104 — MÊS 17</span></div>
-    <div class="phase-card p3"><div class="phase-num">Fase 3 — M19 a M24</div><div class="phase-name">Nível sênior</div><div class="phase-period">Meses 19–24 · ~200h</div><ul class="phase-items"><li>Kubernetes (AKS no Azure)</li><li>Observabilidade (Prometheus, Grafana)</li><li>Cloud security e IAM avançado</li><li>FinOps — otimização de custos</li><li>Preparação CKA ou AZ-305</li></ul><div class="phase-hours">200h <span>total</span></div><span class="cert-badge">CKA OU AZ-305</span></div>
-  </div>
-  <div class="section-title">Trilhas contínuas</div>
-  <div class="tracks">
-    <div class="track"><div class="track-dot" style="background:var(--teal)"></div><div class="track-label">Python</div><div class="track-desc">Do básico ao avançado em automação — scripts, APIs, Paramiko, Ansible</div></div>
-    <div class="track"><div class="track-dot" style="background:var(--blue)"></div><div class="track-label">Git + GitHub</div><div class="track-desc">Portfólio público a partir do mês 5</div></div>
-    <div class="track"><div class="track-dot" style="background:var(--amber)"></div><div class="track-label">Inglês técnico</div><div class="track-desc">10 min/dia Duolingo + leitura de docs com tradutor</div></div>
-    <div class="track"><div class="track-dot" style="background:var(--purple)"></div><div class="track-label">Projetos práticos</div><div class="track-desc">VPS da Famart como laboratório real desde já</div></div>
-  </div>
-  <div class="section-title">Certificações</div>
-  <div class="cert-row">
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.25)">AZ-900</span><span class="cert-month">Mês 9</span><span class="cert-name">Fundamentals</span></div>
-    <div class="cert-connector"></div>
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.25)">AZ-104</span><span class="cert-month">Mês 17–18</span><span class="cert-name">Administrator</span></div>
-    <div class="cert-connector"></div>
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">CKA</span><span class="cert-month">Mês 23–24</span><span class="cert-name">K8s Admin</span></div>
-    <div class="cert-connector" style="min-width:20px"></div>
-    <div class="cert-item"><span class="cert-pill" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">AZ-305</span><span class="cert-month">Mês 23–24</span><span class="cert-name">Architect</span></div>
-  </div>
-</div>
-</div>
-
-<!-- CRONOGRAMA -->
-<div class="page" id="page-cronograma">
-<div class="container">
-  <div class="section-title">Cronogramas semanais</div>
-  <div class="sched-block">
-    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--teal);display:inline-block"></span> Fase 0 — Meses 1–4</div>
-    <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Redes</div><div class="day-detalhe">Aula + resumo escrito</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Python</div><div class="day-detalhe">Coddy.tech 2 lições</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Redes lab</div><div class="day-detalhe">Packet Tracer / GNS3</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Linux</div><div class="day-detalhe">Terminal Kali: bash</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">SQL + revisão</div><div class="day-detalhe">HackerRank SQL</div><span class="day-tag t-lab">prática</span></div>
+    <!-- SEMANA -->
+    <div class="page" id="page-semana">
+      <div class="container">
+        <div class="section-title">Semana de estudos</div>
+        <div class="week-view">
+          <div class="week-view-header">
+            <div class="week-view-title" id="wv-label">...</div>
+            <div class="week-nav">
+              <button onclick="weekOffset--;renderWeek()">← Anterior</button>
+              <button onclick="weekOffset=0;renderWeek()">Hoje</button>
+              <button onclick="weekOffset++;renderWeek()">Próxima →</button>
+            </div>
+          </div>
+          <div class="week-days" id="week-days"></div>
+        </div>
+      </div>
     </div>
-    <div class="tip">Meta: curso de redes · Python intermediário · Linux básico · SQL com JOINs</div>
-  </div>
-  <div class="sched-block">
-    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--blue);display:inline-block"></span> Fase 1 — Meses 5–9</div>
-    <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Azure</div><div class="day-detalhe">Udemy 1 módulo</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Python infra</div><div class="day-detalhe">requests HTTP / config</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Azure lab</div><div class="day-detalhe">VM, VNet, Storage</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Docker</div><div class="day-detalhe">run, build, compose</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">Projeto</div><div class="day-detalhe">Publicar no GitHub</div><span class="day-tag t-proj">projeto</span></div>
-    </div>
-    <div class="tip">Meta: <strong>AZ-900 aprovado</strong> · Docker funcionando · 2–3 projetos GitHub</div>
-  </div>
-  <div class="sched-block">
-    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--amber);display:inline-block"></span> Fase 2 — Meses 10–18</div>
-    <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">AZ-104</div><div class="day-detalhe">VMs, Storage, IAM</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Terraform</div><div class="day-detalhe">HCL — VM na Azure</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Ansible</div><div class="day-detalhe">Playbook servidor</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">CI/CD</div><div class="day-detalhe">GitHub Actions VPS</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">Simulado</div><div class="day-detalhe">20 questões AZ-104</div><span class="day-tag t-lab">prática</span></div>
-    </div>
-    <div class="tip">Meta: <strong>AZ-104 aprovado</strong> · Portfólio Terraform+Ansible+CI/CD</div>
-  </div>
-  <div class="sched-block">
-    <div class="sched-title"><span style="width:9px;height:9px;border-radius:50%;background:var(--purple);display:inline-block"></span> Fase 3 — Meses 19–24</div>
-    <div class="week-grid">
-      <div class="day-card"><div class="day-name">Segunda</div><div class="day-tema">Kubernetes</div><div class="day-detalhe">Pods, Deploy, Services</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Terça</div><div class="day-tema">Observabilidade</div><div class="day-detalhe">Prometheus + Grafana</div><span class="day-tag t-lab">prática</span></div>
-      <div class="day-card"><div class="day-name">Quarta</div><div class="day-tema">Cloud security</div><div class="day-detalhe">IAM avançado, zero trust</div><span class="day-tag t-teoria">teoria</span></div>
-      <div class="day-card"><div class="day-name">Quinta</div><div class="day-tema">Projeto final</div><div class="day-detalhe">K8s + monitoramento</div><span class="day-tag t-proj">projeto</span></div>
-      <div class="day-card"><div class="day-name">Sexta</div><div class="day-tema">CKA / AZ-305</div><div class="day-detalhe">Simulados intensivos</div><span class="day-tag t-lab">prática</span></div>
-    </div>
-    <div class="tip">Meta: <strong>CKA ou AZ-305</strong> · Profissional sênior completo</div>
-  </div>
-  <hr>
-  <div class="section-title">Recursos</div>
-  <div class="resources">
-    <div class="res-card"><div class="res-title">Coddy.tech</div><div class="res-desc">Python do zero</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">Azure Udemy</div><div class="res-desc">Curso que você já tem</div></div>
-    <div class="res-card"><div class="res-title">Microsoft Learn</div><div class="res-desc">Simulados AZ-900/AZ-104</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">HackerRank SQL</div><div class="res-desc">Desafios progressivos</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">Docker Docs PT-BR</div><div class="res-desc">docs.docker.com</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">KillerCoda</div><div class="res-desc">Labs K8s no browser</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">TechWorld with Nana</div><div class="res-desc">YouTube Docker/K8s/Terraform</div><span class="res-free">gratuito</span></div>
-    <div class="res-card"><div class="res-title">VPS Famart</div><div class="res-desc">Laboratório real</div></div>
-  </div>
-</div>
-</div>
 
-<div style="border-top:1px solid var(--border);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-  <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">ROADMAP_ANALISTA_INFRA · v6</div>
-  <div style="font-size:12px;color:var(--muted)">2h/dia · Seg–Sex · ~800h · 24 meses</div>
-</div>
+    <!-- CHECKLIST -->
+    <div class="page" id="page-checklist">
+      <div class="container">
+        <div class="section-title">Checklist por fase</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Clique para marcar como concluído. Salvo
+          automaticamente no banco.</p>
+        <div class="cl-phases" id="cl-container"></div>
+      </div>
+    </div>
 
-</div><!-- /screen-app -->
+    <!-- ADMIN -->
+    <div class="page" id="page-admin">
+      <div class="container">
+        <div class="section-title">Painel master</div>
+        <div id="pending-banner"></div>
+        <div class="invite-box">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Link de convite</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Compartilhe para alguém solicitar acesso ·
+            clique na URL para copiar</div>
+          <div class="invite-url" id="invite-url-txt" onclick="copyLink()" style="cursor:pointer;user-select:all"
+            title="Clique para copiar"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn-sm teal" onclick="copyLink()"> Copiar link</button>
+            <button class="btn-sm teal" onclick="shareWhatsApp()"> Enviar via WhatsApp</button>
+          </div>
+          <div id="copy-confirm"
+            style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:6px;display:none">✓ Link copiado!
+          </div>
+        </div>
+        <div class="section-title">Usuários</div>
+        <div class="admin-grid" id="admin-grid">
+          <div style="color:var(--muted);font-size:13px">Carregando...</div>
+        </div>
+      </div>
+    </div>
 
-<!-- JS — CDN primeiro, depois módulos em ordem de dependência -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/config.js"></script>
-<script src="js/data.js"></script>
-<script src="js/supabase-client.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/persistence.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/checklist.js"></script>
-<script src="js/week.js"></script>
-<script src="js/progress.js"></script>
-<script src="js/admin.js"></script>
-<script src="js/app.js"></script>
-<script src="js/init.js"></script>
+    <!-- ROADMAP -->
+    <div class="page" id="page-roadmap">
+      <div class="container">
+        <div class="section-title">Visão geral — 4 fases</div>
+        <div class="phases">
+          <div class="phase-card p0">
+            <div class="phase-num">Fase 0 — M1 a M4</div>
+            <div class="phase-name">Base sólida</div>
+            <div class="phase-period">Meses 1–4 · ~160h</div>
+            <ul class="phase-items">
+              <li>Curso de redes (OSI, TCP/IP, VLANs)</li>
+              <li>Python — coddy.tech intermediário</li>
+              <li>Linux: bash, systemd, cron</li>
+              <li>SQL intermediário (JOINs, índices)</li>
+              <li>Git — primeiros commits</li>
+            </ul>
+            <div class="phase-hours">160h <span>total</span></div><span class="cert-badge">BASE TÉCNICA</span>
+          </div>
+          <div class="phase-card p1">
+            <div class="phase-num">Fase 1 — M5 a M9</div>
+            <div class="phase-name">Cloud + Docker</div>
+            <div class="phase-period">Meses 5–9 · ~200h</div>
+            <ul class="phase-items">
+              <li>Azure — curso Udemy completo</li>
+              <li>Python para infra (Paramiko, requests)</li>
+              <li>Docker + docker-compose</li>
+              <li>Git + GitHub (portfólio)</li>
+              <li>Preparação AZ-900</li>
+            </ul>
+            <div class="phase-hours">200h <span>total</span></div><span class="cert-badge">AZ-900 — MÊS 9</span>
+          </div>
+          <div class="phase-card p2">
+            <div class="phase-num">Fase 2 — M10 a M18</div>
+            <div class="phase-name">Especialização</div>
+            <div class="phase-period">Meses 10–18 · ~240h</div>
+            <ul class="phase-items">
+              <li>AZ-104 — Azure Administrator</li>
+              <li>Terraform (IaC)</li>
+              <li>Ansible (automação de config)</li>
+              <li>CI/CD com GitHub Actions</li>
+              <li>Python avançado para infra</li>
+            </ul>
+            <div class="phase-hours">240h <span>total</span></div><span class="cert-badge">AZ-104 — MÊS 17</span>
+          </div>
+          <div class="phase-card p3">
+            <div class="phase-num">Fase 3 — M19 a M24</div>
+            <div class="phase-name">Nível sênior</div>
+            <div class="phase-period">Meses 19–24 · ~200h</div>
+            <ul class="phase-items">
+              <li>Kubernetes (AKS no Azure)</li>
+              <li>Observabilidade (Prometheus, Grafana)</li>
+              <li>Cloud security e IAM avançado</li>
+              <li>FinOps — otimização de custos</li>
+              <li>Preparação CKA ou AZ-305</li>
+            </ul>
+            <div class="phase-hours">200h <span>total</span></div><span class="cert-badge">CKA OU AZ-305</span>
+          </div>
+        </div>
+        <div class="section-title">Trilhas contínuas</div>
+        <div class="tracks">
+          <div class="track">
+            <div class="track-dot" style="background:var(--teal)"></div>
+            <div class="track-label">Python</div>
+            <div class="track-desc">Do básico ao avançado em automação — scripts, APIs, Paramiko, Ansible</div>
+          </div>
+          <div class="track">
+            <div class="track-dot" style="background:var(--blue)"></div>
+            <div class="track-label">Git + GitHub</div>
+            <div class="track-desc">Portfólio público a partir do mês 5</div>
+          </div>
+          <div class="track">
+            <div class="track-dot" style="background:var(--amber)"></div>
+            <div class="track-label">Inglês técnico</div>
+            <div class="track-desc">10 min/dia Duolingo + leitura de docs com tradutor</div>
+          </div>
+          <div class="track">
+            <div class="track-dot" style="background:var(--purple)"></div>
+            <div class="track-label">Projetos práticos</div>
+            <div class="track-desc">VPS da Famart como laboratório real desde já</div>
+          </div>
+        </div>
+        <div class="section-title">Certificações</div>
+        <div class="cert-row">
+          <div class="cert-item"><span class="cert-pill"
+              style="background:rgba(0,229,160,.12);color:var(--teal);border:1px solid rgba(0,229,160,.25)">AZ-900</span><span
+              class="cert-month">Mês 9</span><span class="cert-name">Fundamentals</span></div>
+          <div class="cert-connector"></div>
+          <div class="cert-item"><span class="cert-pill"
+              style="background:rgba(255,184,48,.12);color:var(--amber);border:1px solid rgba(255,184,48,.25)">AZ-104</span><span
+              class="cert-month">Mês 17–18</span><span class="cert-name">Administrator</span></div>
+          <div class="cert-connector"></div>
+          <div class="cert-item"><span class="cert-pill"
+              style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">CKA</span><span
+              class="cert-month">Mês 23–24</span><span class="cert-name">K8s Admin</span></div>
+          <div class="cert-connector" style="min-width:20px"></div>
+          <div class="cert-item"><span class="cert-pill"
+              style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25)">AZ-305</span><span
+              class="cert-month">Mês 23–24</span><span class="cert-name">Architect</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRONOGRAMA -->
+    <div class="page" id="page-cronograma">
+      <div class="container">
+        <div class="section-title">Cronogramas semanais</div>
+        <div class="sched-block">
+          <div class="sched-title"><span
+              style="width:9px;height:9px;border-radius:50%;background:var(--teal);display:inline-block"></span> Fase 0
+            — Meses 1–4</div>
+          <div class="week-grid">
+            <div class="day-card">
+              <div class="day-name">Segunda</div>
+              <div class="day-tema">Redes</div>
+              <div class="day-detalhe">Aula + resumo escrito</div><span class="day-tag t-teoria">teoria</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Terça</div>
+              <div class="day-tema">Python</div>
+              <div class="day-detalhe">Coddy.tech 2 lições</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quarta</div>
+              <div class="day-tema">Redes lab</div>
+              <div class="day-detalhe">Packet Tracer / GNS3</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quinta</div>
+              <div class="day-tema">Linux</div>
+              <div class="day-detalhe">Terminal Kali: bash</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Sexta</div>
+              <div class="day-tema">SQL + revisão</div>
+              <div class="day-detalhe">HackerRank SQL</div><span class="day-tag t-lab">prática</span>
+            </div>
+          </div>
+          <div class="tip">Meta: curso de redes · Python intermediário · Linux básico · SQL com JOINs</div>
+        </div>
+        <div class="sched-block">
+          <div class="sched-title"><span
+              style="width:9px;height:9px;border-radius:50%;background:var(--blue);display:inline-block"></span> Fase 1
+            — Meses 5–9</div>
+          <div class="week-grid">
+            <div class="day-card">
+              <div class="day-name">Segunda</div>
+              <div class="day-tema">Azure</div>
+              <div class="day-detalhe">Udemy 1 módulo</div><span class="day-tag t-teoria">teoria</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Terça</div>
+              <div class="day-tema">Python infra</div>
+              <div class="day-detalhe">requests HTTP / config</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quarta</div>
+              <div class="day-tema">Azure lab</div>
+              <div class="day-detalhe">VM, VNet, Storage</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quinta</div>
+              <div class="day-tema">Docker</div>
+              <div class="day-detalhe">run, build, compose</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Sexta</div>
+              <div class="day-tema">Projeto</div>
+              <div class="day-detalhe">Publicar no GitHub</div><span class="day-tag t-proj">projeto</span>
+            </div>
+          </div>
+          <div class="tip">Meta: <strong>AZ-900 aprovado</strong> · Docker funcionando · 2–3 projetos GitHub</div>
+        </div>
+        <div class="sched-block">
+          <div class="sched-title"><span
+              style="width:9px;height:9px;border-radius:50%;background:var(--amber);display:inline-block"></span> Fase 2
+            — Meses 10–18</div>
+          <div class="week-grid">
+            <div class="day-card">
+              <div class="day-name">Segunda</div>
+              <div class="day-tema">AZ-104</div>
+              <div class="day-detalhe">VMs, Storage, IAM</div><span class="day-tag t-teoria">teoria</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Terça</div>
+              <div class="day-tema">Terraform</div>
+              <div class="day-detalhe">HCL — VM na Azure</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quarta</div>
+              <div class="day-tema">Ansible</div>
+              <div class="day-detalhe">Playbook servidor</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quinta</div>
+              <div class="day-tema">CI/CD</div>
+              <div class="day-detalhe">GitHub Actions VPS</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Sexta</div>
+              <div class="day-tema">Simulado</div>
+              <div class="day-detalhe">20 questões AZ-104</div><span class="day-tag t-lab">prática</span>
+            </div>
+          </div>
+          <div class="tip">Meta: <strong>AZ-104 aprovado</strong> · Portfólio Terraform+Ansible+CI/CD</div>
+        </div>
+        <div class="sched-block">
+          <div class="sched-title"><span
+              style="width:9px;height:9px;border-radius:50%;background:var(--purple);display:inline-block"></span> Fase
+            3 — Meses 19–24</div>
+          <div class="week-grid">
+            <div class="day-card">
+              <div class="day-name">Segunda</div>
+              <div class="day-tema">Kubernetes</div>
+              <div class="day-detalhe">Pods, Deploy, Services</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Terça</div>
+              <div class="day-tema">Observabilidade</div>
+              <div class="day-detalhe">Prometheus + Grafana</div><span class="day-tag t-lab">prática</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quarta</div>
+              <div class="day-tema">Cloud security</div>
+              <div class="day-detalhe">IAM avançado, zero trust</div><span class="day-tag t-teoria">teoria</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Quinta</div>
+              <div class="day-tema">Projeto final</div>
+              <div class="day-detalhe">K8s + monitoramento</div><span class="day-tag t-proj">projeto</span>
+            </div>
+            <div class="day-card">
+              <div class="day-name">Sexta</div>
+              <div class="day-tema">CKA / AZ-305</div>
+              <div class="day-detalhe">Simulados intensivos</div><span class="day-tag t-lab">prática</span>
+            </div>
+          </div>
+          <div class="tip">Meta: <strong>CKA ou AZ-305</strong> · Profissional sênior completo</div>
+        </div>
+        <hr>
+        <div class="section-title">Recursos</div>
+        <div class="resources">
+          <div class="res-card">
+            <div class="res-title">Coddy.tech</div>
+            <div class="res-desc">Python do zero</div><span class="res-free">gratuito</span>
+          </div>
+          <div class="res-card">
+            <div class="res-title">Azure Udemy</div>
+            <div class="res-desc">Curso que você já tem</div>
+          </div>
+          <div class="res-card">
+            <div class="res-title">Microsoft Learn</div>
+            <div class="res-desc">Simulados AZ-900/AZ-104</div><span class="res-free">gratuito</span>
+          </div>
+          <div class="res-card">
+            <div class="res-title">HackerRank SQL</div>
+            <div class="res-desc">Desafios progressivos</div><span class="res-free">gratuito</span>
+          </div>
+          <div class="res-card">
+            <div class="res-title">Docker Docs PT-BR</div>
+            <div class="res-desc">docs.docker.com</div><span class="res-free">gratuito</span>
+          </div>
+          <div class="res-card">
+            <div class="res-title">KillerCoda</div>
+            <div class="res-desc">Labs K8s no browser</div><span class="res-free">gratuito</span>
+          </div>
+          <div class="res-card">
+            <div class="res-title">TechWorld with Nana</div>
+            <div class="res-desc">YouTube Docker/K8s/Terraform</div><span class="res-free">gratuito</span>
+          </div>
+          <div class="res-card">
+            <div class="res-title">VPS Famart</div>
+            <div class="res-desc">Laboratório real</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="border-top:1px solid var(--border);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">ROADMAP_ANALISTA_INFRA · v6</div>
+      <div style="font-size:12px;color:var(--muted)">2h/dia · Seg–Sex · ~800h · 24 meses</div>
+    </div>
+
+  </div><!-- /screen-app -->
+
+  <!-- JS — CDN primeiro, depois módulos em ordem de dependência -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/persistence.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/checklist.js"></script>
+  <script src="js/week.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/init.js"></script>
 
 </body>
+
 </html>
