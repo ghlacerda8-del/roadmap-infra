@@ -648,14 +648,8 @@ async function loginAuth(cpf,senha,master,btn){
   currentUser={cpf,email,id:data.user?.id,master};
   isMaster=master;
   sb.from('login_log').insert({user_cpf:cpf,logged_at:new Date().toISOString(),user_agent:navigator.userAgent.slice(0,200)}).catch(()=>{});
-  try{
-    await Promise.race([
-      loadProgressFromDB(),
-      new Promise((_,r)=>setTimeout(()=>r('timeout'),5000))
-    ]);
-  }catch(e){ console.warn('Progresso local:', e); }
-  showApp();
-  btn.disabled=false; btn.textContent='Entrar';
+  // Recarrega a página — o init() detecta a sessão e entra automaticamente
+  window.location.reload();
 }
 
 async function doLogout(){
