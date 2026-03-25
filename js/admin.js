@@ -75,3 +75,18 @@ function shareWhatsApp() {
   );
   window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
 }
+
+function toggleAdminUsers() {
+  const grid = document.getElementById('admin-grid');
+  const toggleBtn = document.getElementById('admin-users-toggle');
+  if (!grid || !toggleBtn) return;
+  
+  if (grid.style.display === 'none') {
+    grid.style.display = '';
+    toggleBtn.textContent = '▼ Ocultar';
+  } else {
+    grid.style.display = 'none';
+    toggleBtn.textContent = '▶ Mostrar';
+  }
+}
+

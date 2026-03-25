@@ -188,7 +188,10 @@
             style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:6px;display:none">✓ Link copiado!
           </div>
         </div>
-        <div class="section-title">Usuários</div>
+        <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none" onclick="toggleAdminUsers()">
+          <div>Usuários</div>
+          <div id="admin-users-toggle" style="font-size:11px;color:var(--muted);font-weight:normal">▼ Ocultar</div>
+        </div>
         <div class="admin-grid" id="admin-grid">
           <div style="color:var(--muted);font-size:13px">Carregando...</div>
         </div>
