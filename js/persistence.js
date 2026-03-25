@@ -19,12 +19,22 @@ function scheduleSave() {
 }
 
 async function saveProgress() {
+  console.log('=== SAVE ===', {
+    sb: !!sb,
+    userId: currentUser?.id,
+    cpf: currentUser?.cpf
+  });
   localStorage.setItem(LOC_KEY, JSON.stringify(userProgress));
-  if (!sb || !currentUser?.id) { setSyncStatus('ok'); return; }
+  if (!sb || !currentUser?.id) {
+    console.warn('Salvando só no localStorage — currentUser.id ausente');
+    setSyncStatus('ok');
+    return;
+  }
   const { error } = await sb.from('progresso').upsert(
     { user_id: currentUser.id, user_cpf: currentUser.cpf, dados: userProgress, updated_at: new Date().toISOString() },
     { onConflict: 'user_id' }
   );
+  console.log('Resultado upsert:', error ? error.message : 'OK');
   setSyncStatus(error ? 'err' : 'ok');
 }
 
