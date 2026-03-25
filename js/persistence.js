@@ -4,12 +4,12 @@ const LOC_KEY = 'roadmap_v5';
 
 async function loadProgressFromDB() {
   if (!sb || !currentUser?.id) {
-    try { const s = JSON.parse(localStorage.getItem(LOC_KEY)); if (s) userProgress = s; } catch(e) {}
+    try { const s = JSON.parse(localStorage.getItem(LOC_KEY)); if (s) userProgress = s; } catch (e) { }
     return;
   }
   const { data } = await sb.from('progresso').select('dados').eq('user_id', currentUser.id).single();
   if (data?.dados) userProgress = data.dados;
-  else { try { const s = JSON.parse(localStorage.getItem(LOC_KEY)); if (s) userProgress = s; } catch(e) {} }
+  else { try { const s = JSON.parse(localStorage.getItem(LOC_KEY)); if (s) userProgress = s; } catch (e) { } }
 }
 
 function scheduleSave() {
@@ -29,8 +29,9 @@ async function saveProgress() {
 }
 
 function setSyncStatus(s) {
-  const el = document.getElementById('sync-status'); if (!el) return;
-  if (s === 'ok')     { el.className = 'sync-badge sync-ok';  el.textContent = '● salvo'; }
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  if (s === 'ok') { el.className = 'sync-badge sync-ok'; el.textContent = '● salvo'; }
   if (s === 'saving') { el.className = 'sync-badge sync-ing'; el.textContent = '↑ salvando...'; }
-  if (s === 'err')    { el.className = 'sync-badge sync-err'; el.textContent = '✕ erro'; }
+  if (s === 'err') { el.className = 'sync-badge sync-err'; el.textContent = '✕ erro'; }
 }
