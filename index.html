@@ -34,12 +34,15 @@
       <div class="auth-sub" id="l-sub">Acompanhe minha jornada rumo a Analista de Infraestrutura</div>
       <!-- Campos de acesso administrativo (ocultos por padrão) -->
       <div id="l-admin-fields" style="display:none">
-        <div class="field"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username" /></div>
-        <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password" /></div>
+        <div class="field"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14"
+            autocomplete="username" /></div>
+        <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••"
+            autocomplete="current-password" /></div>
         <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
       </div>
       <button class="btn-visitor btn-portfolio" onclick="doVisitorLogin()">Acessar Portfólio →</button>
-      <div class="auth-toggle"><a href="#" onclick="toggleLoginMode(event)" id="admin-toggle-link">Acesso administrativo →</a></div>
+      <div class="auth-toggle"><a href="#" onclick="toggleLoginMode(event)" id="admin-toggle-link">Acesso administrativo
+          →</a></div>
       <div class="auth-msg auth-error" id="l-error"></div>
       <div class="auth-msg auth-warn" id="l-pending"></div>
     </div>
@@ -65,7 +68,6 @@
     <div class="header">
       <div class="header-tag">Plano de carreira</div>
       <h1>Roadmap<br><span>Analista de Infra</span></h1>
-      <p class="header-sub">2h/dia · Segunda a Sexta · Cloud, Redes e Python para automação</p>
       <div class="header-stats">
         <div class="stat"><span class="stat-val" style="color:var(--teal)" id="h-pct">0%</span><span
             class="stat-label">concluído</span></div>
@@ -120,11 +122,13 @@
         </div>
         <div class="section-title">Histórico — 60 dias</div>
         <div class="heatmap" id="heatmap"></div>
-        <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.05);padding-top:20px;">
+        <div
+          style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.05);padding-top:20px;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="font-size:13px;color:var(--muted); font-weight: 500;">Horário do Lembrete:</div>
             <div style="display:flex;align-items:center;">
-              <input type="number" id="reminder-hour" min="0" max="23" placeholder="19" onchange="updateReminderHour()" style="background:#13161e;color:#e8eaf0;border:1px solid rgba(255,255,255,.1);padding:8px;border-radius:6px;font-family:inherit;font-size:13px;outline:none;width:56px;text-align:center;">
+              <input type="number" id="reminder-hour" min="0" max="23" placeholder="19" onchange="updateReminderHour()"
+                style="background:#13161e;color:#e8eaf0;border:1px solid rgba(255,255,255,.1);padding:8px;border-radius:6px;font-family:inherit;font-size:13px;outline:none;width:56px;text-align:center;">
               <span style="font-size:13px;color:var(--muted);margin-left:6px;">h</span>
             </div>
           </div>
@@ -180,7 +184,9 @@
             style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:6px;display:none">✓ Link copiado!
           </div>
         </div>
-        <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none" onclick="toggleAdminUsers()">
+        <div class="section-title"
+          style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none"
+          onclick="toggleAdminUsers()">
           <div>Usuários</div>
           <div id="admin-users-toggle" style="font-size:11px;color:var(--muted);font-weight:normal">▼ Ocultar</div>
         </div>
@@ -480,8 +486,10 @@
               <span class="cv-contact-item">📍 Belo Horizonte, MG</span>
               <span class="cv-contact-item">📞 (31) 98339-1648</span>
               <span class="cv-contact-item">📧 <a href="mailto:ghlacerda8@gmail.com">ghlacerda8@gmail.com</a></span>
-              <span class="cv-contact-item">🔗 <a href="https://www.linkedin.com/in/gustavo-henriquedcl/" target="_blank">LinkedIn</a></span>
-              <span class="cv-contact-item">💻 <a href="https://github.com/ghlacerda8-del" target="_blank">GitHub</a></span>
+              <span class="cv-contact-item">🔗 <a href="https://www.linkedin.com/in/gustavo-henriquedcl/"
+                  target="_blank">LinkedIn</a></span>
+              <span class="cv-contact-item">💻 <a href="https://github.com/ghlacerda8-del"
+                  target="_blank">GitHub</a></span>
             </div>
           </div>
         </div>
@@ -489,7 +497,10 @@
         <div class="cv-section">
           <div class="cv-section-title">Resumo Profissional</div>
           <div class="cv-text">
-            Profissional de TI com experiência consolidada em suporte help desk, manutenção de hardware e administração de sistemas Windows e Linux. Especialista em infraestrutura de redes e monitoramento, com foco no uso de Python para automação de tarefas cotidianas e otimização de processos. Experiência em manipulação de bancos de dados SQL para suporte a sistemas e geração de relatórios técnicos.
+            Profissional de TI com experiência consolidada em suporte help desk, manutenção de hardware e administração
+            de sistemas Windows e Linux. Especialista em infraestrutura de redes e monitoramento, com foco no uso de
+            Python para automação de tarefas cotidianas e otimização de processos. Experiência em manipulação de bancos
+            de dados SQL para suporte a sistemas e geração de relatórios técnicos.
           </div>
         </div>
 
@@ -539,13 +550,16 @@
           <div class="cv-section-title">Experiência Profissional</div>
           <div class="cv-timeline">
 
-            <div class="cv-entry">
+            <div class="cv-entry cv-entry-clickable" onclick="openExpModal('famart')">
               <div class="cv-entry-header">
                 <div>
                   <div class="cv-entry-title">Suporte ao Usuário e Infraestrutura</div>
                   <div class="cv-entry-company">Faculdade Famart · Belo Horizonte, MG</div>
                 </div>
-                <div class="cv-entry-period">05/2025 – Atual</div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="cv-entry-period">05/2025 – Atual</div>
+                  <span class="cv-entry-expand">↗</span>
+                </div>
               </div>
               <ul class="cv-entry-list">
                 <li>Suporte técnico direto ao usuário, resolvendo incidentes de hardware e software.</li>
@@ -555,13 +569,16 @@
               </ul>
             </div>
 
-            <div class="cv-entry">
+            <div class="cv-entry cv-entry-clickable" onclick="openExpModal('si')">
               <div class="cv-entry-header">
                 <div>
                   <div class="cv-entry-title">Técnico de Suporte e Redes</div>
                   <div class="cv-entry-company">SI – Automação Comercial · Belo Horizonte, MG</div>
                 </div>
-                <div class="cv-entry-period">05/2024 – 05/2025</div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="cv-entry-period">05/2024 – 05/2025</div>
+                  <span class="cv-entry-expand">↗</span>
+                </div>
               </div>
               <ul class="cv-entry-list">
                 <li>Manutenção de equipamentos de TI, incluindo impressoras térmicas e hardware diverso.</li>
@@ -571,13 +588,16 @@
               </ul>
             </div>
 
-            <div class="cv-entry">
+            <div class="cv-entry cv-entry-clickable" onclick="openExpModal('aec')">
               <div class="cv-entry-header">
                 <div>
                   <div class="cv-entry-title">Atendimento Técnico</div>
                   <div class="cv-entry-company">AeC – Centro de Contatos · Belo Horizonte, MG</div>
                 </div>
-                <div class="cv-entry-period">11/2021 – 04/2024</div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="cv-entry-period">11/2021 – 04/2024</div>
+                  <span class="cv-entry-expand">↗</span>
+                </div>
               </div>
               <ul class="cv-entry-list">
                 <li>Suporte ao cliente via telefone, e-mail e chat, garantindo resolução eficaz de chamados.</li>
@@ -608,21 +628,24 @@
           <div class="cv-section-title">Certificações em Andamento</div>
           <div class="cv-cert-row">
             <div class="cv-cert-item">
-              <span class="cv-cert-badge" style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">AZ-900</span>
+              <span class="cv-cert-badge"
+                style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">AZ-900</span>
               <div class="cv-cert-info">
                 <div class="cv-cert-name">Azure Fundamentals</div>
                 <div class="cv-cert-status">Em andamento · Previsão: Mês 9</div>
               </div>
             </div>
             <div class="cv-cert-item">
-              <span class="cv-cert-badge" style="background:rgba(255,184,48,.12);color:var(--amber);border-color:rgba(255,184,48,.25)">AZ-104</span>
+              <span class="cv-cert-badge"
+                style="background:rgba(255,184,48,.12);color:var(--amber);border-color:rgba(255,184,48,.25)">AZ-104</span>
               <div class="cv-cert-info">
                 <div class="cv-cert-name">Azure Administrator</div>
                 <div class="cv-cert-status">Planejado · Mês 17–18</div>
               </div>
             </div>
             <div class="cv-cert-item">
-              <span class="cv-cert-badge" style="background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.25)">CKA</span>
+              <span class="cv-cert-badge"
+                style="background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.25)">CKA</span>
               <div class="cv-cert-info">
                 <div class="cv-cert-name">Kubernetes Administrator</div>
                 <div class="cv-cert-status">Planejado · Mês 23–24</div>
@@ -636,7 +659,9 @@
           <div class="cv-projects">
             <div class="cv-project-card">
               <div class="cv-project-title">Roadmap Infra — Portfólio Interativo</div>
-              <div class="cv-project-desc">Aplicação web para acompanhamento do plano de carreira em infraestrutura. Frontend em HTML/CSS/JS puro com backend FastAPI (Python), banco Supabase (PostgreSQL) e notificações por e-mail.</div>
+              <div class="cv-project-desc">Aplicação web para acompanhamento do plano de carreira em infraestrutura.
+                Frontend em HTML/CSS/JS puro com backend FastAPI (Python), banco Supabase (PostgreSQL) e notificações
+                por e-mail.</div>
               <div class="cv-tags" style="margin-top:8px">
                 <span class="cv-tag cv-tag-teal">HTML/CSS/JS</span>
                 <span class="cv-tag cv-tag-teal">Python</span>
@@ -646,7 +671,8 @@
             </div>
             <div class="cv-project-card">
               <div class="cv-project-title">VPN Linux Local</div>
-              <div class="cv-project-desc">Configuração de servidor VPN em máquina Linux local para acesso remoto seguro com IP fixo, incluindo configuração de firewall, rotas e autenticação.</div>
+              <div class="cv-project-desc">Configuração de servidor VPN em máquina Linux local para acesso remoto seguro
+                com IP fixo, incluindo configuração de firewall, rotas e autenticação.</div>
               <div class="cv-tags" style="margin-top:8px">
                 <span class="cv-tag cv-tag-amber">Linux</span>
                 <span class="cv-tag cv-tag-amber">VPN</span>
@@ -664,7 +690,9 @@
               <div style="display:flex;align-items:center;gap:16px">
                 <span style="font-size:13px;font-weight:600;color:var(--text)">Inglês</span>
                 <span class="cv-entry-period">Básico</span>
-                <div class="cv-lang-bar"><div class="cv-lang-fill" style="width:25%"></div></div>
+                <div class="cv-lang-bar">
+                  <div class="cv-lang-fill" style="width:25%"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -676,7 +704,6 @@
     <div
       style="border-top:1px solid var(--border);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">ROADMAP_ANALISTA_INFRA · v6</div>
-      <div style="font-size:12px;color:var(--muted)">2h/dia · Seg–Sex · ~800h · 24 meses</div>
     </div>
 
   </div><!-- /screen-app -->
@@ -707,6 +734,7 @@
   <script src="js/week.js"></script>
   <script src="js/progress.js"></script>
   <script src="js/admin.js"></script>
+  <script src="js/curriculo.js"></script>
   <script src="js/app.js"></script>
   <script src="js/init.js"></script>
 
