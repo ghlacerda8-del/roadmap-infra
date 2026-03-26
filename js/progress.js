@@ -27,6 +27,8 @@ function renderProgress() {
       </div>`;
   });
   renderHeatmap();
+  const rh = document.getElementById('reminder-hour');
+  if (rh) rh.value = userProgress.reminderHour || 19;
 }
 
 function calcStreak() {
@@ -69,7 +71,16 @@ function updateHeaderStats() {
 
 function confirmReset() {
   if (confirm('Apagar todo o progresso?')) {
-    userProgress = { checked: {}, studiedDays: [] };
+    const currentRh = userProgress.reminderHour || 19;
+    userProgress = { checked: {}, studiedDays: [], reminderHour: currentRh };
     buildChecklist(); renderProgress(); updateHeaderStats(); scheduleSave();
+  }
+}
+
+function updateReminderHour() {
+  const rh = document.getElementById('reminder-hour');
+  if (rh) {
+    userProgress.reminderHour = parseInt(rh.value, 10) || 19;
+    scheduleSave();
   }
 }
