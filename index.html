@@ -138,23 +138,10 @@
         <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.05);padding-top:20px;">
           <div style="display:flex;align-items:center;gap:12px;">
             <div style="font-size:13px;color:var(--muted); font-weight: 500;">Horário do Lembrete:</div>
-            <select id="reminder-hour" onchange="updateReminderHour()" style="background:#13161e;color:#e8eaf0;border:1px solid rgba(255,255,255,.1);padding:8px 12px;border-radius:6px;font-family:inherit;font-size:13px;outline:none;cursor:pointer;">
-              <option value="8">08:00</option>
-              <option value="9">09:00</option>
-              <option value="10">10:00</option>
-              <option value="11">11:00</option>
-              <option value="12">12:00</option>
-              <option value="13">13:00</option>
-              <option value="14">14:00</option>
-              <option value="15">15:00</option>
-              <option value="16">16:00</option>
-              <option value="17">17:00</option>
-              <option value="18">18:00</option>
-              <option value="19" selected>19:00</option>
-              <option value="20">20:00</option>
-              <option value="21">21:00</option>
-              <option value="22">22:00</option>
-            </select>
+            <div style="display:flex;align-items:center;">
+              <input type="number" id="reminder-hour" min="0" max="23" placeholder="19" onchange="updateReminderHour()" style="background:#13161e;color:#e8eaf0;border:1px solid rgba(255,255,255,.1);padding:8px;border-radius:6px;font-family:inherit;font-size:13px;outline:none;width:56px;text-align:center;">
+              <span style="font-size:13px;color:var(--muted);margin-left:6px;">h</span>
+            </div>
           </div>
           <button class="btn-reset" onclick="confirmReset()">Resetar progresso</button>
         </div>
@@ -223,7 +210,7 @@
       <div class="container">
         <div class="section-title">Visão geral — 4 fases</div>
         <div class="phases">
-          <div class="phase-card p0">
+          <div class="phase-card p0" onclick="openPhaseModal('p0')">
             <div class="phase-num">Fase 0 — M1 a M4</div>
             <div class="phase-name">Base sólida</div>
             <div class="phase-period">Meses 1–4 · ~160h</div>
@@ -236,7 +223,7 @@
             </ul>
             <div class="phase-hours">160h <span>total</span></div><span class="cert-badge">BASE TÉCNICA</span>
           </div>
-          <div class="phase-card p1">
+          <div class="phase-card p1" onclick="openPhaseModal('p1')">
             <div class="phase-num">Fase 1 — M5 a M9</div>
             <div class="phase-name">Cloud + Docker</div>
             <div class="phase-period">Meses 5–9 · ~200h</div>
@@ -249,7 +236,7 @@
             </ul>
             <div class="phase-hours">200h <span>total</span></div><span class="cert-badge">AZ-900 — MÊS 9</span>
           </div>
-          <div class="phase-card p2">
+          <div class="phase-card p2" onclick="openPhaseModal('p2')">
             <div class="phase-num">Fase 2 — M10 a M18</div>
             <div class="phase-name">Especialização</div>
             <div class="phase-period">Meses 10–18 · ~240h</div>
@@ -262,7 +249,7 @@
             </ul>
             <div class="phase-hours">240h <span>total</span></div><span class="cert-badge">AZ-104 — MÊS 17</span>
           </div>
-          <div class="phase-card p3">
+          <div class="phase-card p3" onclick="openPhaseModal('p3')">
             <div class="phase-num">Fase 3 — M19 a M24</div>
             <div class="phase-name">Nível sênior</div>
             <div class="phase-period">Meses 19–24 · ~200h</div>
@@ -502,6 +489,19 @@
     </div>
 
   </div><!-- /screen-app -->
+
+  <!-- PHASE MODAL -->
+  <div class="phase-modal-overlay" id="phase-modal" onclick="closePhaseModal(event)">
+    <div class="phase-modal" onclick="event.stopPropagation()">
+      <div class="pm-header" id="pm-header">
+        <button class="pm-close" onclick="closePhaseModal(event)">✕</button>
+        <div class="pm-phase" id="pm-phase">Fase</div>
+        <div class="pm-title" id="pm-title">Carregando...</div>
+        <div class="pm-period" id="pm-period">---</div>
+      </div>
+      <div class="pm-body" id="pm-body"></div>
+    </div>
+  </div>
 
   <!-- JS — CDN primeiro, depois módulos em ordem de dependência -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
