@@ -12,12 +12,12 @@ function showApp() {
       const btn = document.querySelector(`[onclick="showPage('${page}')"]`);
       if (btn) btn.style.display = 'none';
     });
-    showPage('roadmap');
+    showPage('curriculo');
     return;
   }
 
   // Garante que todos os botões de nav estejam visíveis (para usuários que retornam após visitor)
-  ['progresso', 'semana', 'checklist', 'roadmap', 'cronograma'].forEach(page => {
+  ['progresso', 'semana', 'checklist', 'roadmap', 'cronograma', 'curriculo'].forEach(page => {
     const btn = document.querySelector(`[onclick="showPage('${page}')"]`);
     if (btn) btn.style.display = '';
   });

@@ -23,7 +23,6 @@ function showPage(id) {
 }
 
 document.getElementById('l-cpf').addEventListener('input', function() { this.value = fmtCpf(this.value); });
-document.getElementById('l-email').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
 document.getElementById('l-senha').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
 
 function openPhaseModal(pid) {

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roadmap — Analista de Infraestrutura</title>
+  <title>Gustavo Lacerda — Portfólio Infra</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet">
@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/admin.css">
   <link rel="stylesheet" href="css/roadmap-page.css">
   <link rel="stylesheet" href="css/schedule.css">
+  <link rel="stylesheet" href="css/curriculo.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 
@@ -28,36 +29,19 @@
   <!-- LOGIN -->
   <div class="screen active" id="screen-login">
     <div class="auth-card">
-      <div class="auth-tag">Acesso restrito</div>
+      <div class="auth-tag">Portfólio</div>
       <div class="auth-title">Roadmap<br><span>Analista de Infra</span></div>
-      <div class="auth-sub" id="l-sub">Entre com seu e-mail e senha para acessar</div>
-      <div class="field" id="l-email-field"><label>E-mail</label><input type="email" id="l-email" placeholder="seu@email.com" autocomplete="username" /></div>
-      <div class="field" id="l-cpf-field" style="display:none"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username" /></div>
-      <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••"
-          autocomplete="current-password" /></div>
-      <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
-      <button class="btn-visitor" onclick="doVisitorLogin()">Entrar como Visitante</button>
-      <div class="auth-toggle"><a href="#" onclick="toggleLoginMode(event)">Acesso administrativo →</a></div>
+      <div class="auth-sub" id="l-sub">Acompanhe minha jornada rumo a Analista de Infraestrutura</div>
+      <!-- Campos de acesso administrativo (ocultos por padrão) -->
+      <div id="l-admin-fields" style="display:none">
+        <div class="field"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username" /></div>
+        <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password" /></div>
+        <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
+      </div>
+      <button class="btn-visitor btn-portfolio" onclick="doVisitorLogin()">Acessar Portfólio →</button>
+      <div class="auth-toggle"><a href="#" onclick="toggleLoginMode(event)" id="admin-toggle-link">Acesso administrativo →</a></div>
       <div class="auth-msg auth-error" id="l-error"></div>
       <div class="auth-msg auth-warn" id="l-pending"></div>
-    </div>
-  </div>
-
-  <!-- CONVITE -->
-  <div class="screen" id="screen-invite">
-    <div class="auth-card">
-      <div class="auth-tag">Solicitação de acesso</div>
-      <div class="auth-title">Solicitar<br><span>Acesso</span></div>
-      <div class="auth-sub">Preencha seus dados — o administrador será notificado para aprovação</div>
-      <div class="field"><label>E-mail</label><input type="email" id="i-email" placeholder="seu@email.com" /></div>
-      <div class="field"><label>Senha</label><input type="password" id="i-senha" placeholder="Mínimo 6 caracteres" />
-      </div>
-      <div class="field"><label>Confirmar senha</label><input type="password" id="i-senha2"
-          placeholder="Repita a senha" /></div>
-      <button class="btn-primary" id="btn-invite" onclick="doInviteSignup()">Enviar solicitação</button>
-      <div class="auth-msg auth-error" id="i-error"></div>
-      <div class="auth-msg auth-success" id="i-success">✓ Solicitação enviada! O administrador foi notificado e irá
-        liberar seu acesso em breve.</div>
     </div>
   </div>
 
@@ -69,6 +53,7 @@
       <button class="nav-btn" onclick="showPage('checklist')">Checklist</button>
       <button class="nav-btn" onclick="showPage('roadmap')">Roadmap</button>
       <button class="nav-btn" onclick="showPage('cronograma')">Cronograma</button>
+      <button class="nav-btn" id="nav-curriculo" onclick="showPage('curriculo')">Currículo</button>
       <button class="nav-btn nav-admin" id="nav-admin" onclick="showPage('admin')" style="display:none">⚙ Admin</button>
       <div class="nav-user">
         <span class="nav-cpf" id="nav-cpf"></span>
@@ -479,6 +464,212 @@
             <div class="res-desc">Laboratório real</div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- CURRÍCULO -->
+    <div class="page" id="page-curriculo">
+      <div class="container">
+
+        <div class="cv-hero">
+          <div class="cv-avatar">GH</div>
+          <div class="cv-hero-info">
+            <div class="cv-name">Gustavo Henrique Da Cruz Lacerda</div>
+            <div class="cv-title">Suporte Técnico · Infraestrutura de Redes · Automação com Python</div>
+            <div class="cv-contacts">
+              <span class="cv-contact-item">📍 Belo Horizonte, MG</span>
+              <span class="cv-contact-item">📞 (31) 98339-1648</span>
+              <span class="cv-contact-item">📧 <a href="mailto:ghlacerda8@gmail.com">ghlacerda8@gmail.com</a></span>
+              <span class="cv-contact-item">🔗 <a href="https://www.linkedin.com/in/gustavo-henriquedcl/" target="_blank">LinkedIn</a></span>
+              <span class="cv-contact-item">💻 <a href="https://github.com/ghlacerda8-del" target="_blank">GitHub</a></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Resumo Profissional</div>
+          <div class="cv-text">
+            Profissional de TI com experiência consolidada em suporte help desk, manutenção de hardware e administração de sistemas Windows e Linux. Especialista em infraestrutura de redes e monitoramento, com foco no uso de Python para automação de tarefas cotidianas e otimização de processos. Experiência em manipulação de bancos de dados SQL para suporte a sistemas e geração de relatórios técnicos.
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Principais Competências</div>
+          <div class="cv-skills-grid">
+            <div class="cv-skill-group">
+              <div class="cv-skill-label">Automação &amp; Scripting</div>
+              <div class="cv-tags">
+                <span class="cv-tag cv-tag-teal">Python</span>
+                <span class="cv-tag cv-tag-teal">Scripts de TI</span>
+                <span class="cv-tag cv-tag-teal">Git</span>
+                <span class="cv-tag cv-tag-teal">FastAPI</span>
+              </div>
+            </div>
+            <div class="cv-skill-group">
+              <div class="cv-skill-label">Redes &amp; Infraestrutura</div>
+              <div class="cv-tags">
+                <span class="cv-tag cv-tag-blue">TCP/IP</span>
+                <span class="cv-tag cv-tag-blue">VLANs</span>
+                <span class="cv-tag cv-tag-blue">VPN</span>
+                <span class="cv-tag cv-tag-blue">Racks</span>
+                <span class="cv-tag cv-tag-blue">Cabeamento</span>
+              </div>
+            </div>
+            <div class="cv-skill-group">
+              <div class="cv-skill-label">Sistemas Operacionais</div>
+              <div class="cv-tags">
+                <span class="cv-tag cv-tag-amber">Linux</span>
+                <span class="cv-tag cv-tag-amber">Windows Server</span>
+                <span class="cv-tag cv-tag-amber">Bash</span>
+              </div>
+            </div>
+            <div class="cv-skill-group">
+              <div class="cv-skill-label">Dados &amp; Suporte</div>
+              <div class="cv-tags">
+                <span class="cv-tag cv-tag-purple">SQL</span>
+                <span class="cv-tag cv-tag-purple">PostgreSQL</span>
+                <span class="cv-tag cv-tag-purple">Help Desk N1/N2</span>
+                <span class="cv-tag cv-tag-purple">ITSM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Experiência Profissional</div>
+          <div class="cv-timeline">
+
+            <div class="cv-entry">
+              <div class="cv-entry-header">
+                <div>
+                  <div class="cv-entry-title">Suporte ao Usuário e Infraestrutura</div>
+                  <div class="cv-entry-company">Faculdade Famart · Belo Horizonte, MG</div>
+                </div>
+                <div class="cv-entry-period">05/2025 – Atual</div>
+              </div>
+              <ul class="cv-entry-list">
+                <li>Suporte técnico direto ao usuário, resolvendo incidentes de hardware e software.</li>
+                <li>Implementação de automações com Python para otimização do fluxo de trabalho e suporte.</li>
+                <li>Manutenção e monitoramento dos ativos de rede e da infraestrutura de TI.</li>
+                <li>Consultas em banco de dados SQL para suporte aos sistemas internos da faculdade.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry-header">
+                <div>
+                  <div class="cv-entry-title">Técnico de Suporte e Redes</div>
+                  <div class="cv-entry-company">SI – Automação Comercial · Belo Horizonte, MG</div>
+                </div>
+                <div class="cv-entry-period">05/2024 – 05/2025</div>
+              </div>
+              <ul class="cv-entry-list">
+                <li>Manutenção de equipamentos de TI, incluindo impressoras térmicas e hardware diverso.</li>
+                <li>Montagem e estruturação de racks de redes e organização de cabeamento estruturado.</li>
+                <li>Configuração e manutenção de servidores e estações de trabalho em Windows e Linux.</li>
+                <li>Suporte técnico focado na rápida identificação e resolução de problemas críticos.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry-header">
+                <div>
+                  <div class="cv-entry-title">Atendimento Técnico</div>
+                  <div class="cv-entry-company">AeC – Centro de Contatos · Belo Horizonte, MG</div>
+                </div>
+                <div class="cv-entry-period">11/2021 – 04/2024</div>
+              </div>
+              <ul class="cv-entry-list">
+                <li>Suporte ao cliente via telefone, e-mail e chat, garantindo resolução eficaz de chamados.</li>
+                <li>Colaboração em equipe para criar soluções eficientes para problemas técnicos recorrentes.</li>
+                <li>Manutenção de registros detalhados das interações para melhoria contínua dos processos.</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Formação Acadêmica</div>
+          <div class="cv-timeline">
+            <div class="cv-entry">
+              <div class="cv-entry-header">
+                <div>
+                  <div class="cv-entry-title">Análise e Desenvolvimento de Sistemas</div>
+                  <div class="cv-entry-company">Universidade Estácio de Sá · Graduação</div>
+                </div>
+                <div class="cv-entry-period">Concluído em 2024.2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Certificações em Andamento</div>
+          <div class="cv-cert-row">
+            <div class="cv-cert-item">
+              <span class="cv-cert-badge" style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">AZ-900</span>
+              <div class="cv-cert-info">
+                <div class="cv-cert-name">Azure Fundamentals</div>
+                <div class="cv-cert-status">Em andamento · Previsão: Mês 9</div>
+              </div>
+            </div>
+            <div class="cv-cert-item">
+              <span class="cv-cert-badge" style="background:rgba(255,184,48,.12);color:var(--amber);border-color:rgba(255,184,48,.25)">AZ-104</span>
+              <div class="cv-cert-info">
+                <div class="cv-cert-name">Azure Administrator</div>
+                <div class="cv-cert-status">Planejado · Mês 17–18</div>
+              </div>
+            </div>
+            <div class="cv-cert-item">
+              <span class="cv-cert-badge" style="background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.25)">CKA</span>
+              <div class="cv-cert-info">
+                <div class="cv-cert-name">Kubernetes Administrator</div>
+                <div class="cv-cert-status">Planejado · Mês 23–24</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Projetos</div>
+          <div class="cv-projects">
+            <div class="cv-project-card">
+              <div class="cv-project-title">Roadmap Infra — Portfólio Interativo</div>
+              <div class="cv-project-desc">Aplicação web para acompanhamento do plano de carreira em infraestrutura. Frontend em HTML/CSS/JS puro com backend FastAPI (Python), banco Supabase (PostgreSQL) e notificações por e-mail.</div>
+              <div class="cv-tags" style="margin-top:8px">
+                <span class="cv-tag cv-tag-teal">HTML/CSS/JS</span>
+                <span class="cv-tag cv-tag-teal">Python</span>
+                <span class="cv-tag cv-tag-blue">FastAPI</span>
+                <span class="cv-tag cv-tag-purple">Supabase</span>
+              </div>
+            </div>
+            <div class="cv-project-card">
+              <div class="cv-project-title">VPN Linux Local</div>
+              <div class="cv-project-desc">Configuração de servidor VPN em máquina Linux local para acesso remoto seguro com IP fixo, incluindo configuração de firewall, rotas e autenticação.</div>
+              <div class="cv-tags" style="margin-top:8px">
+                <span class="cv-tag cv-tag-amber">Linux</span>
+                <span class="cv-tag cv-tag-amber">VPN</span>
+                <span class="cv-tag cv-tag-blue">Redes</span>
+                <span class="cv-tag cv-tag-blue">Firewall</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Idiomas</div>
+          <div class="cv-timeline">
+            <div class="cv-entry" style="padding:12px 20px">
+              <div style="display:flex;align-items:center;gap:16px">
+                <span style="font-size:13px;font-weight:600;color:var(--text)">Inglês</span>
+                <span class="cv-entry-period">Básico</span>
+                <div class="cv-lang-bar"><div class="cv-lang-fill" style="width:25%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 

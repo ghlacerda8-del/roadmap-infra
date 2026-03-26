@@ -1,5 +1,4 @@
 (async function init() {
-  if (checkInviteMode()) return;
   if (SUPABASE_URL.includes('COLE')) return;
   initSB();
   try {
