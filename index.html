@@ -528,7 +528,7 @@
               <span class="cv-contact-item">💻 <a href="https://github.com/ghlacerda8-del" target="_blank">GitHub</a></span>
             </div>
           </div>
-          <button class="cv-print-btn" onclick="window.print()" title="Salvar como PDF">⬇ Salvar PDF</button>
+          <button class="cv-print-btn" id="cv-pdf-btn" onclick="exportCvPdf()" title="Salvar como PDF">⬇ Salvar PDF</button>
         </div>
 
         <div class="cv-section">
@@ -810,6 +810,7 @@
   </div>
 
   <!-- JS — CDN primeiro, depois módulos em ordem de dependência -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/data.js"></script>

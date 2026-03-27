@@ -80,6 +80,44 @@ async function loadCvSettings() {
   } catch(e) {}
 }
 
+function exportCvPdf() {
+  const btn = document.getElementById('cv-pdf-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando PDF...'; }
+
+  const root = document.documentElement;
+  const lightVars = {
+    '--bg':      '#ffffff',
+    '--bg2':     '#f8f9fa',
+    '--bg3':     '#f0f2f5',
+    '--text':    '#111111',
+    '--muted':   '#555555',
+    '--border':  '#e0e0e0',
+    '--border2': '#cccccc',
+  };
+  Object.entries(lightVars).forEach(([k, v]) => root.style.setProperty(k, v));
+
+  const hideEls = [
+    ...document.querySelectorAll('.cv-entry-expand'),
+    ...document.querySelectorAll('.cv-cta-section'),
+    btn,
+  ].filter(Boolean);
+  hideEls.forEach(el => { el.dataset.pdfHidden = el.style.display; el.style.display = 'none'; });
+
+  const el = document.getElementById('page-curriculo');
+  html2pdf().set({
+    margin:      [8, 10, 8, 10],
+    filename:    'Gustavo-Lacerda-CV.pdf',
+    image:       { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
+    jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak:   { mode: ['css', 'legacy'], before: ['#cv-section-experiencia', '#cv-section-formacao'] },
+  }).from(el).save().then(() => {
+    Object.keys(lightVars).forEach(k => root.style.removeProperty(k));
+    hideEls.forEach(el => { el.style.display = el.dataset.pdfHidden || ''; delete el.dataset.pdfHidden; });
+    if (btn) { btn.disabled = false; btn.textContent = '⬇ Salvar PDF'; }
+  });
+}
+
 function openExpModal(id) {
   const exp = EXPERIENCES.find(e => e.id === id);
   if (!exp) return;
