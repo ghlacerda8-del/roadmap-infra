@@ -20,6 +20,7 @@ function showPage(id) {
   if (id === 'semana')    renderWeek();
   if (id === 'progresso') renderProgress();
   if (id === 'admin')     loadAdminPanel();
+  if (id === 'curriculo') loadCvSettings();
 }
 
 document.getElementById('l-cpf').addEventListener('input', function() { this.value = fmtCpf(this.value); });

@@ -196,7 +196,106 @@ def template_admin_notify(cpf: str, admin_nome: str, approve_url: str) -> str:
 </div>
 </body></html>"""
 
+# ── TEMPLATE RESUMO PESSOAL ──────────────────────────────────
+
+def template_weekly_personal(nome: str, prog: dict) -> str:
+    pct  = prog["pct"]
+    done = prog["done"]
+    dias = prog["dias"]
+    cor  = "#00e5a0" if pct >= 50 else "#ffb830" if pct >= 20 else "#ff5f5f"
+    return f"""
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8">
+<style>
+  body{{margin:0;padding:0;background:#0d0f14;font-family:'Segoe UI',Arial,sans-serif;color:#e8eaf0}}
+  .wrap{{max-width:560px;margin:0 auto;padding:32px 16px}}
+  .card{{background:#13161e;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden}}
+  .header{{padding:28px 32px 20px;border-bottom:1px solid rgba(255,255,255,.06)}}
+  .tag{{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ffb830;margin-bottom:10px}}
+  .title{{font-size:22px;font-weight:700;color:#e8eaf0}}
+  .title span{{color:#ffb830}}
+  .body{{padding:24px 32px}}
+  .stat-row{{display:flex;gap:12px;margin-bottom:20px}}
+  .stat-box{{flex:1;background:#1a1e28;border-radius:10px;padding:16px;text-align:center}}
+  .stat-val{{font-size:24px;font-weight:700;color:{cor};margin-bottom:4px}}
+  .stat-lbl{{font-size:11px;color:#7a7f94;text-transform:uppercase;letter-spacing:.08em}}
+  .progress-wrap{{margin-bottom:20px}}
+  .progress-label{{font-size:12px;color:#7a7f94;margin-bottom:6px;display:flex;justify-content:space-between}}
+  .progress-bar{{background:rgba(255,255,255,.06);border-radius:6px;height:8px;overflow:hidden}}
+  .progress-fill{{background:{cor};height:100%;border-radius:6px}}
+  .btn{{display:block;text-align:center;background:#ffb830;color:#000;font-weight:700;font-size:13px;padding:13px;border-radius:8px;text-decoration:none;letter-spacing:.04em}}
+  .footer{{padding:16px 32px;font-size:11px;color:#7a7f94;text-align:center;border-top:1px solid rgba(255,255,255,.06)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="tag">— Resumo semanal</div>
+      <div class="title">Roadmap<br><span>Analista de Infra</span></div>
+    </div>
+    <div class="body">
+      <p style="font-size:14px;color:#7a7f94;margin:0 0 20px">Olá {nome}! Aqui está seu progresso desta semana:</p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-val">{pct}%</div>
+          <div class="stat-lbl">Concluído</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:#e8eaf0">{done}/{TOTAL_TASKS}</div>
+          <div class="stat-lbl">Tarefas</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:#e8eaf0">{dias}</div>
+          <div class="stat-lbl">Dias estudados</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Progresso geral</span>
+          <span style="color:{cor};font-weight:600">{pct}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:{pct}%"></div>
+        </div>
+      </div>
+      <a href="https://ghlacerda8-del.github.io/roadmap-infra" class="btn">Abrir Roadmap →</a>
+    </div>
+    <div class="footer">Roadmap Analista de Infra · Resumo toda sexta-feira</div>
+  </div>
+</div>
+</body></html>"""
+
 # ── FUNÇÕES DE ENVIO ──────────────────────────────────────────
+
+async def send_daily_reminder_direct(email: str, dados: dict):
+    """Envia lembrete diário para um email específico, com dados de progresso já obtidos."""
+    prog = calc_progress(dados)
+    dia_nome, tema, detalhe = get_day_info()
+    try:
+        resend.Emails.send({
+            "from":    FROM_EMAIL,
+            "to":      [email],
+            "subject": f"📚 {dia_nome} — Hora de estudar! ({prog['pct']}% concluído)",
+            "html":    template_reminder("", dia_nome, tema, detalhe, prog["pct"])
+        })
+        logger.info(f"Lembrete enviado para {email}")
+    except Exception as e:
+        logger.error(f"Erro ao enviar lembrete para {email}: {e}")
+
+async def send_weekly_personal(email: str, nome: str, prog: dict):
+    """Envia resumo semanal pessoal (sem tabela de múltiplos usuários)."""
+    try:
+        resend.Emails.send({
+            "from":    FROM_EMAIL,
+            "to":      [email],
+            "subject": f"📊 Resumo semanal — {prog['pct']}% concluído · {prog['done']}/{TOTAL_TASKS} tarefas",
+            "html":    template_weekly_personal(nome, prog)
+        })
+        logger.info(f"Resumo semanal enviado para {email}")
+    except Exception as e:
+        logger.error(f"Erro ao enviar resumo para {email}: {e}")
 
 async def send_daily_reminder(user: dict):
     email = user.get("email")

@@ -7,19 +7,16 @@ function toggleLoginMode(e) {
   if (e) e.preventDefault();
   adminMode = !adminMode;
   const adminFields  = document.getElementById('l-admin-fields');
+  const landingMain  = document.getElementById('landing-main');
   const toggleLink   = document.getElementById('admin-toggle-link');
-  const sub          = document.getElementById('l-sub');
-  const portfolioBtn = document.querySelector('.btn-portfolio');
   if (adminMode) {
-    adminFields.style.display  = '';
-    portfolioBtn.style.display = 'none';
-    sub.textContent            = 'Acesso administrativo via CPF';
-    toggleLink.textContent     = '← Voltar';
+    adminFields.style.display = '';
+    landingMain.style.display = 'none';
+    toggleLink.textContent    = '← Voltar';
   } else {
-    adminFields.style.display  = 'none';
-    portfolioBtn.style.display = '';
-    sub.textContent            = 'Acompanhe minha jornada rumo a Analista de Infraestrutura';
-    toggleLink.textContent     = 'Acesso administrativo →';
+    adminFields.style.display = 'none';
+    landingMain.style.display = '';
+    toggleLink.textContent    = '⚙ Acesso administrativo';
   }
   hideMsg('l-error'); hideMsg('l-pending');
 }
@@ -74,13 +71,11 @@ async function doLogout() {
   currentUser = null; isMaster = false; isVisitor = false; adminMode = false;
   userProgress = { checked: {}, studiedDays: [] };
   // Reset login form
-  const adminFields  = document.getElementById('l-admin-fields');
-  const portfolioBtn = document.querySelector('.btn-portfolio');
-  const sub          = document.getElementById('l-sub');
-  const toggleLink   = document.getElementById('admin-toggle-link');
-  if (adminFields)  adminFields.style.display  = 'none';
-  if (portfolioBtn) portfolioBtn.style.display = '';
-  if (sub)          sub.textContent            = 'Acompanhe minha jornada rumo a Analista de Infraestrutura';
-  if (toggleLink)   toggleLink.textContent     = 'Acesso administrativo →';
+  const adminFields = document.getElementById('l-admin-fields');
+  const landingMain = document.getElementById('landing-main');
+  const toggleLink  = document.getElementById('admin-toggle-link');
+  if (adminFields) adminFields.style.display = 'none';
+  if (landingMain) landingMain.style.display = '';
+  if (toggleLink)  toggleLink.textContent    = '⚙ Acesso administrativo';
   showScreen('login');
 }

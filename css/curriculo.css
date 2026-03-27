@@ -9,6 +9,7 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
 .cv-avatar {
@@ -289,6 +290,141 @@
   color: #000 !important;
 }
 
+/* ── Skill bars ─────────────────────────────────────────────── */
+
+.cv-skills-main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.cv-skill-row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.cv-skill-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cv-skill-name {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.cv-skill-lvl {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid;
+}
+
+.cv-lvl-av  { background: rgba(0,229,160,.1);   color: var(--teal);   border-color: rgba(0,229,160,.25); }
+.cv-lvl-int { background: rgba(77,159,255,.1);  color: var(--blue);   border-color: rgba(77,159,255,.25); }
+.cv-lvl-bas { background: rgba(167,139,250,.1); color: var(--purple); border-color: rgba(167,139,250,.25); }
+
+.cv-skill-bar {
+  height: 5px;
+  background: rgba(255,255,255,.06);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.cv-skill-fill {
+  height: 100%;
+  border-radius: 5px;
+}
+
+.cv-skills-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding-top: 6px;
+}
+
+/* ── Botão imprimir ─────────────────────────────────────────── */
+
+.cv-print-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+
+.cv-print-btn:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+/* ── CTA de contato ─────────────────────────────────────────── */
+
+.cv-cta-section {
+  margin-top: 40px;
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(0,229,160,.06), rgba(0,229,160,.02));
+  border: 1px solid rgba(0,229,160,.15);
+  border-radius: 14px;
+  text-align: center;
+}
+
+.cv-cta-title {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.cv-cta-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.cv-cta-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cv-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-decoration: none;
+  border: 1px solid;
+  transition: opacity .15s, transform .15s;
+}
+
+.cv-cta-btn:hover { opacity: .85; transform: translateY(-1px); }
+
+.cv-cta-email { background: rgba(0,229,160,.1);   color: var(--teal);   border-color: rgba(0,229,160,.25); }
+.cv-cta-wpp   { background: rgba(77,159,255,.1);  color: var(--blue);   border-color: rgba(77,159,255,.25); }
+.cv-cta-li    { background: rgba(167,139,250,.1); color: var(--purple); border-color: rgba(167,139,250,.25); }
+
 /* ── Cards clicáveis (experiência) ─────────────────────────── */
 
 .cv-entry-clickable {
@@ -347,4 +483,84 @@
     flex-direction: column;
     gap: 6px;
   }
+
+  .cv-print-btn {
+    align-self: center;
+    margin-top: 8px;
+  }
+}
+
+/* ── Print / Salvar PDF ─────────────────────────────────────── */
+
+@media print {
+  @page { size: A4 portrait; margin: 14mm 16mm; }
+
+  #screen-login, .nav, .header,
+  #page-progresso, #page-semana, #page-checklist,
+  #page-roadmap, #page-cronograma, #page-admin,
+  .cv-print-btn, .cv-cta-section,
+  .phase-modal-overlay { display: none !important; }
+
+  body, #screen-app { background: #fff !important; color: #111 !important; }
+  .page { display: none !important; }
+  #page-curriculo { display: block !important; }
+  .container { padding: 0 !important; max-width: 100% !important; }
+
+  /* Remover visual de "card" — aparência CV limpa */
+  .cv-hero, .cv-entry, .cv-skill-group,
+  .cv-project-card, .cv-cert-item {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  .cv-entry         { border-bottom: 1px solid #eee !important; padding-bottom: 8px !important; }
+  .cv-cert-item     { border: 1px solid #ddd !important; padding: 8px 12px !important; border-radius: 6px !important; }
+  .cv-project-card  { border: 1px solid #ddd !important; padding: 10px 12px !important; border-radius: 6px !important; }
+  .cv-section       { margin-bottom: 16px !important; }
+  .cv-timeline      { gap: 10px !important; }
+  .cv-cert-row      { gap: 8px !important; }
+  .cv-hero          { gap: 16px !important; margin-bottom: 16px !important; }
+
+  .cv-section-title {
+    font-size: 10px !important;
+    color: #009966 !important;
+    border-bottom: 1px solid #ccc !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Tipografia */
+  .cv-name          { font-size: 20px !important; color: #111 !important; }
+  .cv-title         { font-size: 13px !important; color: #009966 !important; margin-bottom: 8px !important; }
+  .cv-text          { font-size: 12px !important; color: #333 !important; opacity: 1 !important; line-height: 1.5 !important; }
+  .cv-entry-title   { font-size: 13px !important; color: #111 !important; font-weight: 600 !important; margin-bottom: 2px !important; }
+  .cv-entry-company { font-size: 11px !important; color: #555 !important; }
+  .cv-entry-period  { font-size: 10px !important; color: #009966 !important;
+    background: rgba(0,153,102,.07) !important; border: 1px solid rgba(0,153,102,.2) !important; }
+  .cv-entry-list li { font-size: 12px !important; color: #333 !important; opacity: 1 !important; line-height: 1.5 !important; }
+  .cv-contact-item  { font-size: 11px !important; color: #555 !important; }
+  .cv-contact-item a { color: #009966 !important; }
+  .cv-skill-name    { font-size: 12px !important; color: #111 !important; }
+  .cv-skill-bar     { background: #eee !important; height: 4px !important; }
+  .cv-skill-fill    { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .cv-lvl-av        { background: rgba(0,153,102,.1) !important; color: #009966 !important; border-color: rgba(0,153,102,.2) !important; }
+  .cv-lvl-int       { background: rgba(0,80,200,.1) !important;  color: #0050c8 !important; border-color: rgba(0,80,200,.2) !important; }
+  .cv-lvl-bas       { background: rgba(100,60,200,.1) !important; color: #643cc8 !important; border-color: rgba(100,60,200,.2) !important; }
+  .cv-avatar        { border-color: #009966 !important; color: #009966 !important; background: transparent !important; }
+  .cv-cert-status, .cv-muted { color: #777 !important; }
+  .cv-entry-expand  { display: none !important; }
+  .cv-project-title { font-size: 13px !important; color: #111 !important; }
+  .cv-project-desc  { font-size: 12px !important; color: #555 !important; }
+  .cv-cert-name     { font-size: 12px !important; color: #111 !important; }
+
+  /* Page breaks: 3 páginas */
+  #cv-section-experiencia { page-break-before: always !important; }
+  #cv-section-formacao    { page-break-before: always !important; }
+
+  /* Evitar quebra no meio de entradas */
+  .cv-entry, .cv-cert-item, .cv-project-card { page-break-inside: avoid !important; }
+
+  a { color: inherit !important; text-decoration: none !important; }
 }

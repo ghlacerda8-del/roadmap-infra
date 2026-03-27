@@ -39,6 +39,47 @@ const EXPERIENCES = [
   }
 ];
 
+const LEVEL_MAP = {
+  'Avançado':      { cls: 'cv-lvl-av',  color: 'var(--teal)' },
+  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)' },
+  'Básico':        { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+  'Em estudo':     { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+};
+
+async function loadCvSettings() {
+  if (!sb) return;
+  try {
+    const { data } = await sb.from('cv_settings').select('key,value');
+    if (!data || data.length === 0) return;
+    const map = Object.fromEntries(data.map(r => [r.key, r.value]));
+
+    if (map.resumo) {
+      const el = document.getElementById('cv-resumo-text');
+      if (el) el.textContent = map.resumo;
+    }
+
+    if (map.skills && Array.isArray(map.skills)) {
+      const container = document.querySelector('.cv-skills-main');
+      if (container) {
+        container.innerHTML = map.skills.map(sk => {
+          const lv = LEVEL_MAP[sk.level] || LEVEL_MAP['Básico'];
+          const label = sk.label || sk.name;
+          return `
+            <div class="cv-skill-row" data-skill="${sk.name}">
+              <div class="cv-skill-meta">
+                <span class="cv-skill-name">${label}</span>
+                <span class="cv-skill-lvl ${lv.cls}">${sk.level}</span>
+              </div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:${sk.pct}%;background:${lv.color}"></div>
+              </div>
+            </div>`;
+        }).join('');
+      }
+    }
+  } catch(e) {}
+}
+
 function openExpModal(id) {
   const exp = EXPERIENCES.find(e => e.id === id);
   if (!exp) return;

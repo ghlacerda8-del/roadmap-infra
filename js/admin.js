@@ -1,92 +1,140 @@
-async function loadAdminPanel() {
-  const grid   = document.getElementById('admin-grid');
-  const banner = document.getElementById('pending-banner');
-  grid.innerHTML = '<div style="color:var(--muted);font-size:13px">Carregando...</div>';
+const CV_SKILLS_DEFAULT = [
+  { name: 'suporte',   label: 'Suporte Técnico N1/N2', level: 'Avançado',      pct: 85 },
+  { name: 'hardware',  label: 'Hardware & Manutenção',  level: 'Avançado',      pct: 80 },
+  { name: 'linux',     label: 'Linux',                  level: 'Intermediário', pct: 65 },
+  { name: 'winserver', label: 'Windows Server',         level: 'Intermediário', pct: 65 },
+  { name: 'redes',     label: 'Redes & Infraestrutura', level: 'Intermediário', pct: 60 },
+  { name: 'python',    label: 'Python',                 level: 'Básico',        pct: 25 },
+  { name: 'sql',       label: 'SQL',                    level: 'Intermediário', pct: 55 },
+  { name: 'azure',     label: 'Azure',                  level: 'Em estudo',     pct: 30 },
+  { name: 'docker',    label: 'Docker & Kubernetes',    level: 'Em estudo',     pct: 25 },
+];
 
-  const inviteUrl = `${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
-  document.getElementById('invite-url-txt').textContent = inviteUrl;
+const LEVEL_OPTIONS = ['Avançado', 'Intermediário', 'Básico', 'Em estudo'];
 
-  const { data: sols } = await sb.from('solicitacoes').select('*').order('created_at', { ascending: false });
-  if (!sols || sols.length === 0) {
-    grid.innerHTML = '<div style="color:var(--muted);font-size:13px">Nenhuma solicitação ainda.</div>';
-    banner.innerHTML = ''; return;
+const ROW_STYLE = 'display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap';
+const INPUT_STYLE = 'background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text);font-family:var(--mono)';
+
+function buildSkillRow(sk) {
+  const levelOpts = LEVEL_OPTIONS.map(l =>
+    `<option value="${l}"${sk.level === l ? ' selected' : ''}>${l}</option>`
+  ).join('');
+  return `
+    <div class="cv-admin-skill-row" data-skill-name="${sk.name}" style="${ROW_STYLE}">
+      <input class="cv-skill-label-input" type="text" value="${sk.label}" placeholder="Nome da skill"
+        style="${INPUT_STYLE};min-width:140px;flex:1">
+      <select data-cv-field="level" style="${INPUT_STYLE}">${levelOpts}</select>
+      <input type="number" min="0" max="100" value="${sk.pct}" data-cv-field="pct"
+        style="${INPUT_STYLE};width:56px">
+      <span style="font-size:11px;color:var(--muted)">%</span>
+      <button onclick="deleteSkillRow(this)"
+        style="background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);
+               font-size:13px;line-height:1;padding:4px 8px;cursor:pointer"
+        title="Remover skill">✕</button>
+    </div>`;
+}
+
+function addSkillRow() {
+  const container = document.getElementById('cv-skills-admin-list');
+  if (!container) return;
+  const newSk = { name: '', label: '', level: 'Básico', pct: 50 };
+  container.insertAdjacentHTML('beforeend', buildSkillRow(newSk));
+}
+
+function deleteSkillRow(btn) {
+  btn.closest('.cv-admin-skill-row').remove();
+}
+
+async function buildCvAdminSection() {
+  const section = document.getElementById('cv-admin-section');
+  if (!section) return;
+
+  let resumo = '';
+  let skills = CV_SKILLS_DEFAULT.map(s => ({ ...s }));
+  try {
+    const { data } = await sb.from('cv_settings').select('key,value');
+    if (data) {
+      const map = Object.fromEntries(data.map(r => [r.key, r.value]));
+      if (map.resumo) resumo = map.resumo;
+      if (Array.isArray(map.skills) && map.skills.length > 0) {
+        skills = map.skills.map(sk => ({
+          name:  sk.name  || '',
+          label: sk.label || CV_SKILLS_DEFAULT.find(d => d.name === sk.name)?.label || sk.name,
+          level: sk.level || 'Básico',
+          pct:   sk.pct   ?? 0,
+        }));
+      }
+    }
+  } catch(e) {}
+
+  const skillRows = skills.map(buildSkillRow).join('');
+
+  section.innerHTML = `
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px">Resumo Profissional</div>
+      <textarea id="cv-admin-resumo" rows="4"
+        style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--text);font-family:var(--sans);resize:vertical;box-sizing:border-box">${resumo}</textarea>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:14px">Skills — Nível e Porcentagem</div>
+      <div id="cv-skills-admin-list">${skillRows}</div>
+      <button onclick="addSkillRow()"
+        style="margin-top:6px;background:transparent;border:1px dashed var(--border);border-radius:6px;
+               color:var(--teal);font-family:var(--mono);font-size:11px;padding:6px 14px;cursor:pointer;width:100%">
+        ＋ Adicionar skill
+      </button>
+    </div>
+    <button onclick="saveCvSettings()" class="btn-sm teal" style="padding:9px 20px">&#10003; Salvar currículo</button>
+    <span id="cv-save-confirm" style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-left:10px;display:none">&#10003; Salvo!</span>
+  `;
+}
+
+async function saveCvSettings() {
+  const resumo = (document.getElementById('cv-admin-resumo')?.value || '').trim();
+
+  const skills = Array.from(document.querySelectorAll('.cv-admin-skill-row')).map(row => {
+    const label = row.querySelector('.cv-skill-label-input')?.value.trim() || '';
+    const existingName = row.dataset.skillName;
+    const name = existingName
+      || label.toLowerCase().replace(/[\s&\/]+/g, '_').replace(/[^a-z0-9_]/g, '')
+         + '_' + Math.random().toString(36).slice(2, 5);
+    return {
+      name,
+      label,
+      level: row.querySelector('[data-cv-field="level"]')?.value || 'Básico',
+      pct:   Math.max(0, Math.min(100, parseInt(row.querySelector('[data-cv-field="pct"]')?.value) || 0)),
+    };
+  }).filter(s => s.label);
+
+  try {
+    await sb.from('cv_settings').upsert(
+      [{ key: 'resumo', value: resumo }, { key: 'skills', value: skills }],
+      { onConflict: 'key' }
+    );
+    const confirm = document.getElementById('cv-save-confirm');
+    if (confirm) { confirm.style.display = 'inline'; setTimeout(() => confirm.style.display = 'none', 2500); }
+    loadCvSettings();
+  } catch(e) {
+    alert('Erro ao salvar: ' + e.message);
   }
-
-  const pendentes = sols.filter(s => s.status === 0).length;
-  banner.innerHTML = pendentes > 0
-    ? `<div class="pending-banner">⚠️ ${pendentes} solicitação(ões) aguardando aprovação</div>` : '';
-
-  const { data: progs } = await sb.from('progresso').select('user_cpf,dados');
-  const progMap = {};
-  (progs || []).forEach(p => { if (p.user_cpf) progMap[p.user_cpf] = p.dados; });
-
-  const allItems = PHASES.flatMap(p => p.items);
-  grid.innerHTML = '';
-  sols.forEach(sol => {
-    const dados  = progMap[sol.cpf] || { checked: {} };
-    const done   = allItems.filter(i => dados.checked?.[i.id]).length;
-    const pct    = Math.round((done / allItems.length) * 100);
-    const isEmail  = sol.cpf.includes('@');
-    const initials = sol.cpf.slice(0, 2).toUpperCase();
-    const display  = isEmail ? sol.cpf : fmtCpfDisplay(sol.cpf);
-    const statusLabel = { 0: 'PENDENTE', 1: 'ATIVO', 2: 'INATIVO' };
-    const sk = sol.status;
-    let actions = '';
-    if (sk === 0) actions = `<button class="btn-approve" onclick="updateSol('${sol.cpf}',1)">✓ Aprovar</button><button class="btn-reject" onclick="updateSol('${sol.cpf}',2)">✕ Reprovar</button>`;
-    else if (sk===1) actions = `<button class="btn-revoke" onclick="updateSol('${sol.cpf}',2)">⏸ Inativar</button>`;
-    else actions = `<button class="btn-approve" onclick="updateSol('${sol.cpf}',1)">▶ Reativar</button>`;
-
-    const card = document.createElement('div'); card.className = 'user-card';
-    card.innerHTML = `
-      <div class="user-card-top">
-        <div class="user-avatar">${initials}</div>
-        <div>
-          <div class="user-cpf-label">${display}</div>
-          <span class="status-badge sb-${sk}">${statusLabel[sk]}</span>
-          <span style="font-size:11px;color:var(--muted);margin-left:6px">${new Date(sol.created_at).toLocaleDateString('pt-BR')}</span>
-          ${sol.senha_hint ? `<span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:6px">senha: ${sol.senha_hint}</span>` : ''}
-        </div>
-      </div>
-      <div class="user-prog-bar"><div class="user-prog-fill" style="width:${pct}%"></div></div>
-      <div class="user-prog-lbl">${pct}% concluído · ${done}/${allItems.length} tarefas</div>
-      <div class="user-actions">${actions}</div>`;
-    grid.appendChild(card);
-  });
 }
 
-async function updateSol(cpf, status) {
-  await sb.from('solicitacoes').update({ status, updated_at: new Date().toISOString() }).eq('cpf', cpf);
-  loadAdminPanel();
+async function loadAdminPanel() {
+  const urlEl = document.getElementById('portfolio-url-txt');
+  if (urlEl) urlEl.textContent = location.origin + location.pathname;
+  buildCvAdminSection();
 }
 
-function copyLink() {
-  const url = `${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
+function copyPortfolioLink() {
+  const url = location.origin + location.pathname;
   navigator.clipboard.writeText(url).then(() => {
     const el = document.getElementById('copy-confirm');
     if (el) { el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 2500); }
   }).catch(() => { prompt('Copie o link abaixo:', url); });
 }
 
-function shareWhatsApp() {
-  const url = `${location.origin}${location.pathname}?convite=${INVITE_TOKEN}`;
-  const msg = encodeURIComponent(
-    `Olá! Você foi convidado para acompanhar o Roadmap Analista de Infra.\n\n` +
-    `Para solicitar acesso, clique no link abaixo:\n${url}`
-  );
+function sharePortfolioWhatsApp() {
+  const url = location.origin + location.pathname;
+  const msg = encodeURIComponent(`Olá! Confira o portfólio de TI e Infraestrutura:\n${url}`);
   window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
 }
-
-function toggleAdminUsers() {
-  const grid = document.getElementById('admin-grid');
-  const toggleBtn = document.getElementById('admin-users-toggle');
-  if (!grid || !toggleBtn) return;
-  
-  if (grid.style.display === 'none') {
-    grid.style.display = '';
-    toggleBtn.textContent = '▼ Ocultar';
-  } else {
-    grid.style.display = 'none';
-    toggleBtn.textContent = '▶ Mostrar';
-  }
-}
-

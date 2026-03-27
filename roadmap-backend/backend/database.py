@@ -55,3 +55,10 @@ async def get_user_progress(cpf: str) -> dict:
     except Exception as e:
         logger.error(f"Erro ao buscar progresso de {cpf}: {e}")
         return {"checked": {}, "studiedDays": []}
+
+async def get_admin_progress() -> dict:
+    """Retorna o progresso do admin configurado em ADMIN_CPF."""
+    cpf = os.getenv("ADMIN_CPF", "")
+    if not cpf:
+        return {"checked": {}, "studiedDays": []}
+    return await get_user_progress(cpf)
