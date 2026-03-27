@@ -40,51 +40,135 @@ const EXPERIENCES = [
 ];
 
 const LEVEL_MAP = {
-  'Avançado':      { cls: 'cv-lvl-av',  color: 'var(--teal)' },
-  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)' },
+  'Avançado':      { cls: 'cv-lvl-av',  color: 'var(--teal)'   },
+  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)'   },
   'Básico':        { cls: 'cv-lvl-bas', color: 'var(--purple)' },
   'Em estudo':     { cls: 'cv-lvl-bas', color: 'var(--purple)' },
 };
 
+// Module-level state – populated by loadCvSettings, read by PDF export + modal
+let _cvExp      = [];
+let _cvFormacao = [];
+let _cvIdiomas  = [];
+
+function _expFromLegacy() {
+  return EXPERIENCES.map(e => ({
+    role:     e.role,
+    company:  e.company,
+    location: 'Belo Horizonte, MG',
+    period:   e.period.replace(' · Belo Horizonte, MG', ''),
+    items:    e.items.map(i => i.text),
+  }));
+}
+
+function _renderFormacao() {
+  const el = document.getElementById('cv-formacao-list');
+  if (!el) return;
+  const data = _cvFormacao.length ? _cvFormacao : CV_FORMACAO_DEFAULT;
+  el.innerHTML = data.map(f => `
+    <div class="cv-entry">
+      <div class="cv-entry-header">
+        <div>
+          <div class="cv-entry-title">${f.course}</div>
+          <div class="cv-entry-company">${f.institution}${f.type ? ' · ' + f.type : ''}</div>
+        </div>
+        <div class="cv-entry-period">${f.period}</div>
+      </div>
+    </div>`).join('');
+}
+
+function _renderIdiomas() {
+  const el = document.getElementById('cv-idiomas-list');
+  if (!el) return;
+  const data = _cvIdiomas.length ? _cvIdiomas : CV_IDIOMAS_DEFAULT;
+  el.innerHTML = data.map(lang => `
+    <div class="cv-entry" style="padding:12px 20px">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span style="font-size:13px;font-weight:600;color:var(--text)">${lang.name}</span>
+        <span class="cv-entry-period">${lang.level}</span>
+        <div class="cv-lang-bar">
+          <div class="cv-lang-fill" style="width:${lang.pct}%"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function _renderExp() {
+  const el = document.getElementById('cv-exp-list');
+  if (!el) return;
+  el.innerHTML = _cvExp.map((exp, idx) => `
+    <div class="cv-entry cv-entry-clickable" onclick="openExpModal(${idx})">
+      <div class="cv-entry-header">
+        <div>
+          <div class="cv-entry-title">${exp.role}</div>
+          <div class="cv-entry-company">${exp.company}${exp.location ? ' · ' + exp.location : ''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="cv-entry-period">${exp.period}</div>
+          <span class="cv-entry-expand">↗</span>
+        </div>
+      </div>
+      <ul class="cv-entry-list">
+        ${exp.items.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    </div>`).join('');
+}
+
 async function loadCvSettings() {
-  if (!sb) return;
+  // Set defaults before async call so page renders immediately
+  _cvExp      = _expFromLegacy();
+  _cvFormacao = CV_FORMACAO_DEFAULT.map(f => ({ ...f }));
+  _cvIdiomas  = CV_IDIOMAS_DEFAULT.map(l => ({ ...l }));
+
+  if (!sb) {
+    _renderFormacao(); _renderIdiomas(); _renderExp();
+    return;
+  }
   try {
     const { data } = await sb.from('cv_settings').select('key,value');
-    if (!data || data.length === 0) return;
-    const map = Object.fromEntries(data.map(r => [r.key, r.value]));
+    if (data && data.length > 0) {
+      const map = Object.fromEntries(data.map(r => [r.key, r.value]));
 
-    if (map.resumo) {
-      const el = document.getElementById('cv-resumo-text');
-      if (el) el.textContent = map.resumo;
-    }
-
-    if (map.skills && Array.isArray(map.skills)) {
-      const container = document.querySelector('.cv-skills-main');
-      if (container) {
-        container.innerHTML = map.skills.map(sk => {
-          const lv = LEVEL_MAP[sk.level] || LEVEL_MAP['Básico'];
-          const label = sk.label || sk.name;
-          return `
-            <div class="cv-skill-row" data-skill="${sk.name}">
-              <div class="cv-skill-meta">
-                <span class="cv-skill-name">${label}</span>
-                <span class="cv-skill-lvl ${lv.cls}">${sk.level}</span>
-              </div>
-              <div class="cv-skill-bar">
-                <div class="cv-skill-fill" style="width:${sk.pct}%;background:${lv.color}"></div>
-              </div>
-            </div>`;
-        }).join('');
+      if (map.resumo) {
+        const el = document.getElementById('cv-resumo-text');
+        if (el) el.textContent = map.resumo;
       }
+
+      if (Array.isArray(map.skills) && map.skills.length > 0) {
+        const container = document.querySelector('.cv-skills-main');
+        if (container) {
+          container.innerHTML = map.skills.map(sk => {
+            const lv    = LEVEL_MAP[sk.level] || LEVEL_MAP['Básico'];
+            const label = sk.label || sk.name;
+            return `
+              <div class="cv-skill-row" data-skill="${sk.name}">
+                <div class="cv-skill-meta">
+                  <span class="cv-skill-name">${label}</span>
+                  <span class="cv-skill-lvl ${lv.cls}">${sk.level}</span>
+                </div>
+                <div class="cv-skill-bar">
+                  <div class="cv-skill-fill" style="width:${sk.pct}%;background:${lv.color}"></div>
+                </div>
+              </div>`;
+          }).join('');
+        }
+      }
+
+      if (Array.isArray(map.experiencias) && map.experiencias.length > 0) _cvExp      = map.experiencias;
+      if (Array.isArray(map.formacao)     && map.formacao.length     > 0) _cvFormacao = map.formacao;
+      if (Array.isArray(map.idiomas)      && map.idiomas.length      > 0) _cvIdiomas  = map.idiomas;
     }
   } catch(e) {}
+
+  _renderFormacao();
+  _renderIdiomas();
+  _renderExp();
 }
 
 function exportCvPdf() {
   const btn = document.getElementById('cv-pdf-btn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando PDF...'; }
 
-  // Ler dados atuais do DOM (já carregados pelo loadCvSettings)
   const resumo = document.getElementById('cv-resumo-text')?.textContent?.trim() || '';
 
   const DEFAULT_LABELS = {
@@ -93,13 +177,26 @@ function exportCvPdf() {
     python: 'Python', sql: 'SQL', azure: 'Azure', docker: 'Docker & Kubernetes',
   };
 
-  const skillsList = Array.from(document.querySelectorAll('.cv-skills-main .cv-skill-row')).map(row => {
-    const key  = row.dataset.skill || '';
-    const raw  = row.querySelector('.cv-skill-name')?.textContent?.trim() || '';
-    const name = (raw.length > 3 && raw !== key) ? raw : (DEFAULT_LABELS[key] || raw);
-    const level = row.querySelector('.cv-skill-lvl')?.textContent?.trim() || '';
-    return { name, level };
-  });
+  const LEVEL_RANK = { 'Avançado': 4, 'Intermediário': 3, 'Básico': 2, 'Em estudo': 1 };
+
+  const skillsList = Array.from(document.querySelectorAll('.cv-skills-main .cv-skill-row'))
+    .map(row => {
+      const key   = row.dataset.skill || '';
+      const raw   = row.querySelector('.cv-skill-name')?.textContent?.trim() || '';
+      const name  = (raw.length > 3 && raw !== key) ? raw : (DEFAULT_LABELS[key] || raw);
+      const level = row.querySelector('.cv-skill-lvl')?.textContent?.trim() || '';
+      return { name, level };
+    })
+    .filter(s => s.level !== 'Em estudo')                          // remove "Em estudo"
+    .reduce((acc, s) => {                                          // deduplica pelo nome
+      const existing = acc.find(a => a.name.toLowerCase() === s.name.toLowerCase());
+      if (!existing) {
+        acc.push(s);
+      } else if ((LEVEL_RANK[s.level] || 0) > (LEVEL_RANK[existing.level] || 0)) {
+        existing.level = s.level;                                  // mantém o nível mais alto
+      }
+      return acc;
+    }, []);
 
   const skRow = (a, b) => `
     <tr>
@@ -134,6 +231,30 @@ function exportCvPdf() {
         </div>`).join('')}
     </div>`;
 
+  // Use dynamic data (populated by loadCvSettings) with fallbacks
+  const fData = _cvFormacao.length ? _cvFormacao : CV_FORMACAO_DEFAULT;
+  const formacaoHtml = fData.map(f =>
+    `<div style="font-size:9.5pt;font-weight:700;color:#0d1421">${f.course}</div>
+     <div style="font-size:8pt;color:#555;margin-top:1px">${f.institution}${f.type ? ' &nbsp;·&nbsp; ' + f.type : ''} &nbsp;·&nbsp; ${f.period}</div>`
+  ).join('');
+
+  const iData = _cvIdiomas.length ? _cvIdiomas : CV_IDIOMAS_DEFAULT;
+  const idiomasHtml = iData.map(lang =>
+    `<div style="font-size:9pt;color:#333;margin-bottom:3px;padding-left:13px;position:relative">
+       <span style="position:absolute;left:0;color:#00c47a;font-size:7.5pt">●</span>${lang.name} — ${lang.level}
+     </div>`
+  ).join('');
+
+  const expData = _cvExp.length ? _cvExp : _expFromLegacy();
+  const experienciasHtml = expData.map(exp =>
+    expBlock(
+      exp.role,
+      exp.period,
+      exp.company + (exp.location ? ' &nbsp;·&nbsp; ' + exp.location : ''),
+      exp.items
+    )
+  ).join('');
+
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -162,35 +283,18 @@ function exportCvPdf() {
   </div>
 
   <div style="margin-bottom:12px">
-    ${secTitle('Educação')}
-    <div style="font-size:9.5pt;font-weight:700;color:#0d1421">Análise e Desenvolvimento de Sistemas</div>
-    <div style="font-size:8pt;color:#555;margin-top:1px">Universidade Estácio de Sá &nbsp;·&nbsp; Graduação &nbsp;·&nbsp; Concluído em 2024.2</div>
+    ${secTitle('Formação')}
+    ${formacaoHtml}
   </div>
 
   <div style="margin-bottom:12px">
     ${secTitle('Idiomas')}
-    <div style="font-size:9pt;color:#333;margin-bottom:3px;padding-left:13px;position:relative"><span style="position:absolute;left:0;color:#00c47a;font-size:7.5pt">●</span>Português — Nativo</div>
-    <div style="font-size:9pt;color:#333;margin-bottom:3px;padding-left:13px;position:relative"><span style="position:absolute;left:0;color:#00c47a;font-size:7.5pt">●</span>Inglês — Básico</div>
+    ${idiomasHtml}
   </div>
 
   <div>
     ${secTitle('Experiência Profissional')}
-    ${expBlock('Suporte ao Usuário e Infraestrutura', '05/2025 – Atual', 'Faculdade Famart &nbsp;·&nbsp; Belo Horizonte, MG', [
-      'Atendo chamados N1/N2, solucionando incidentes de hardware, software e conectividade com foco em first-call resolution.',
-      'Desenvolvi scripts Python para automação de tarefas operacionais, reduzindo tempo de execução de processos manuais.',
-      'Realizo monitoramento preventivo da infraestrutura de rede e ativos de TI, garantindo alta disponibilidade dos serviços.',
-      'Executo consultas SQL para diagnóstico e suporte aos sistemas acadêmicos internos.',
-    ])}
-    ${expBlock('Técnico de Suporte e Redes', '05/2024 – 05/2025', 'SI – Automação Comercial &nbsp;·&nbsp; Belo Horizonte, MG', [
-      'Realizei manutenção corretiva e preventiva de equipamentos de TI, impressoras térmicas e periféricos.',
-      'Executei montagem de racks, cabeamento Cat5e/Cat6 e configuração de servidores Windows Server e Linux.',
-      'Participei da implantação de novos equipamentos garantindo integração segura à infraestrutura existente.',
-      'Prestei suporte técnico on-site com priorização de chamados críticos e cumprimento de SLA.',
-    ])}
-    ${expBlock('Atendimento Técnico', '11/2021 – 04/2024', 'AeC – Centro de Contatos &nbsp;·&nbsp; Belo Horizonte, MG', [
-      'Realizei atendimento multicanal (telefone, e-mail e chat) com foco em resolução no primeiro contato.',
-      'Documentei chamados de forma estruturada, contribuindo para a base de conhecimento e melhoria de processos.',
-    ])}
+    ${experienciasHtml}
   </div>
 
 </div>
@@ -211,7 +315,7 @@ function exportCvPdf() {
         clonedDoc.querySelectorAll('.nav, .header, .modal-overlay').forEach(el => el.remove());
       },
     },
-    jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
   }).from(html).save().then(() => {
     if (btn) { btn.disabled = false; btn.textContent = '⬇ Salvar PDF'; }
   }).catch(err => {
@@ -220,26 +324,27 @@ function exportCvPdf() {
   });
 }
 
-function openExpModal(id) {
-  const exp = EXPERIENCES.find(e => e.id === id);
+function openExpModal(idx) {
+  const exp = _cvExp[idx];
   if (!exp) return;
 
+  const colors = ['var(--teal)', 'var(--blue)', 'var(--amber)'];
+  const color  = colors[idx] || 'var(--teal)';
+
   document.getElementById('pm-phase').textContent  = exp.company;
-  document.getElementById('pm-phase').style.color  = exp.color;
+  document.getElementById('pm-phase').style.color  = color;
   document.getElementById('pm-title').textContent  = exp.role;
-  document.getElementById('pm-period').textContent = exp.period;
+  document.getElementById('pm-period').textContent = exp.period + (exp.location ? ' · ' + exp.location : '');
 
   let html = '';
-  exp.items.forEach((item, idx) => {
+  exp.items.forEach((item, i) => {
     html += `
       <div class="pm-item">
-        <div class="pm-item-icon" style="color:${exp.color}">${idx + 1}</div>
+        <div class="pm-item-icon" style="color:${color}">${i + 1}</div>
         <div class="pm-item-content">
-          <div class="pm-item-text">${item.text}</div>
-          <div class="pm-item-tag">${item.tag.toUpperCase()}</div>
+          <div class="pm-item-text">${item}</div>
         </div>
-      </div>
-    `;
+      </div>`;
   });
   document.getElementById('pm-body').innerHTML = html;
 

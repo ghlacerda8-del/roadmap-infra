@@ -352,24 +352,26 @@
 /* ── Botão imprimir ─────────────────────────────────────────── */
 
 .cv-print-btn {
-  background: transparent;
-  border: 1px solid var(--border2);
-  color: var(--muted);
+  background: rgba(0, 229, 160, 0.08);
+  border: 1px solid rgba(0, 229, 160, 0.35);
+  color: var(--teal);
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: .05em;
-  padding: 7px 14px;
+  letter-spacing: .06em;
+  padding: 7px 16px;
   border-radius: 8px;
   cursor: pointer;
   white-space: nowrap;
-  transition: all .15s;
+  transition: all .2s;
   flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0, 229, 160, 0.1);
 }
 
 .cv-print-btn:hover {
+  background: rgba(0, 229, 160, 0.15);
   border-color: var(--teal);
-  color: var(--teal);
+  box-shadow: 0 0 16px rgba(0, 229, 160, 0.22);
 }
 
 /* ── CTA de contato ─────────────────────────────────────────── */

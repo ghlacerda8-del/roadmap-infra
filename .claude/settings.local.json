@@ -15,7 +15,11 @@
       "Bash(git branch:*)",
       "Bash(python3 -c \":*)",
       "Bash(py -3 -c \":*)",
-      "Bash(py -3 -m pip install pdfplumber -q)"
+      "Bash(py -3 -m pip install pdfplumber -q)",
+      "Bash(grep -n \"sb\\\\.from\" /d/roadmap-infra/js/*.js)",
+      "Bash(grep -n \"currentUser\\\\|doLogin\\\\|toggleLoginMode\" /d/roadmap-infra/js/*.js)",
+      "Bash(grep -n \"const MASTER_CPF\\\\|cpfToEmail\\\\|EXPERIENCES\" /d/roadmap-infra/js/*.js)",
+      "Bash(grep -o \"sb\\\\.from\\(''''[^'''']*''''\\)\" /d/roadmap-infra/js/*.js)"
     ]
   }
 }
