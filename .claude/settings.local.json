@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(grep -n \"cv-print-btn\\\\|@media.*print\" /d/roadmap-infra/css/*.css)",
+      "Bash(grep -n \"notify-admin\\\\|send-reminder\\\\|send-weekly\" /d/roadmap-infra/js/*.js)",
+      "Bash(xargs ls:*)",
+      "Bash(find /d -maxdepth 3 -name \"roadmap-infra-backend\" -type d)",
+      "Read(//c/Users/**)",
+      "Bash(find /c /d /e 2)",
+      "Bash(/dev/null -maxdepth 5 -name main.py -path */roadmap*)",
+      "Bash(git subtree:*)",
+      "Bash(git branch:*)"
+    ]
+  }
+}

@@ -87,12 +87,20 @@ function exportCvPdf() {
   // Ler dados atuais do DOM (já carregados pelo loadCvSettings)
   const resumo = document.getElementById('cv-resumo-text')?.textContent?.trim() || '';
 
+  const DEFAULT_LABELS = {
+    suporte: 'Suporte Técnico N1/N2', hardware: 'Hardware & Manutenção',
+    linux: 'Linux', winserver: 'Windows Server', redes: 'Redes & Infraestrutura',
+    python: 'Python', sql: 'SQL', azure: 'Azure', docker: 'Docker & Kubernetes',
+  };
+
   const lvlCls   = { 'Avançado': 'lv-av', 'Intermediário': 'lv-int', 'Básico': 'lv-bas', 'Em estudo': 'lv-bas' };
   const lvlColor = { 'Avançado': '#00c47a', 'Intermediário': '#3a8ee6', 'Básico': '#8b6fe0', 'Em estudo': '#8b6fe0' };
 
   const skillsHtml = Array.from(document.querySelectorAll('.cv-skills-main .cv-skill-row')).map(row => {
-    const name  = row.querySelector('.cv-skill-name')?.textContent || '';
-    const level = row.querySelector('.cv-skill-lvl')?.textContent || 'Básico';
+    const key   = row.dataset.skill || '';
+    const raw   = row.querySelector('.cv-skill-name')?.textContent?.trim() || '';
+    const name  = (raw.length > 3 && raw !== key) ? raw : (DEFAULT_LABELS[key] || raw);
+    const level = row.querySelector('.cv-skill-lvl')?.textContent?.trim() || 'Básico';
     const fill  = row.querySelector('.cv-skill-fill');
     const pct   = fill ? parseInt(fill.style.width) || 0 : 0;
     const cls   = lvlCls[level]   || 'lv-bas';
@@ -109,64 +117,68 @@ function exportCvPdf() {
 
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;font-size:9.5px;color:#111;background:#fff;width:794px}
-.hd{background:#0d0f14;color:#fff;padding:24px 28px;display:flex;justify-content:space-between;align-items:flex-start}
-.hd-name{font-size:24px;font-weight:800;letter-spacing:-.3px;line-height:1.15;text-transform:uppercase;color:#fff}
-.hd-title{font-size:10px;color:#00e5a0;font-weight:500;margin-top:6px;letter-spacing:.1em;text-transform:uppercase}
-.hd-info{text-align:right;font-size:8.5px;color:rgba(255,255,255,.7);line-height:2}
-.hd-info span{color:#00e5a0}
-.accent{height:3px;background:#00e5a0}
+html{background:#0d0f14}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:9.5px;color:#111;background:#fff;width:794px;line-height:1.7;overflow:hidden}
+.hd{background:#0d0f14;color:#fff;padding:22px 28px 22px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.hd-left{border-left:4px solid #00e5a0;padding-left:14px;margin-left:0}
+.hd-name{font-size:28px;font-weight:800;letter-spacing:-.5px;line-height:1.1;text-transform:uppercase;color:#fff}
+.hd-title{font-size:9.5px;color:#00e5a0;font-weight:500;margin-top:7px;letter-spacing:.12em;text-transform:uppercase}
+.hd-info{text-align:right;font-size:8px;color:rgba(255,255,255,.65);line-height:2.1}
+.hd-info b{color:#00e5a0;font-weight:400}
+.accent{height:3px;background:linear-gradient(90deg,#00e5a0,#00b4d8)}
 .body{display:flex}
-.left{flex:0 0 58%;padding:18px 18px 18px 28px;border-right:1px solid #ebebeb}
-.right{flex:0 0 42%;padding:18px 28px 18px 18px;background:#f9fafb}
-.sec{margin-bottom:14px}
-.sec-t{font-size:8.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#009966;
-       border-bottom:1.5px solid #00e5a0;padding-bottom:3px;margin-bottom:9px}
-.summary{font-size:9px;line-height:1.65;color:#333}
-.exp{margin-bottom:10px}
+.left{flex:0 0 58%;padding:16px 16px 16px 26px;border-right:1px solid #e0e8e0}
+.right{flex:0 0 42%;padding:16px 26px 16px 16px;background:#f7f9fb}
+.sec{margin-bottom:16px}
+.sec-t{font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#007a55;
+       border-bottom:1.5px solid #00e5a0;padding-bottom:3px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sec-t::before{content:'';display:inline-block;width:6px;height:6px;background:#00e5a0;border-radius:1px;flex-shrink:0}
+.summary{font-size:9px;line-height:1.7;color:#333}
+.exp{margin-bottom:11px}
 .exp-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:1px}
-.exp-role{font-size:10px;font-weight:700;color:#0d0f14}
-.exp-per{font-size:7.5px;font-weight:600;color:#009966;background:rgba(0,153,102,.07);
+.exp-role{font-size:10.5px;font-weight:700;color:#0d0f14}
+.exp-per{font-size:7.5px;font-weight:600;color:#007a55;background:rgba(0,153,102,.07);
           border:1px solid rgba(0,153,102,.2);padding:1.5px 6px;border-radius:8px;white-space:nowrap}
-.exp-co{font-size:8.5px;color:#555;margin-bottom:4px}
-.exp-ul{padding-left:11px}
-.exp-ul li{font-size:8.5px;color:#444;line-height:1.6;margin-bottom:.5px}
-.sk{margin-bottom:7px}
-.sk-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.sk-name{font-size:9px;color:#222;font-weight:500}
-.sk-lvl{font-size:7px;font-weight:700;padding:1px 5px;border-radius:8px;border:1px solid}
-.lv-av {background:rgba(0,153,102,.09);color:#007a4d;border-color:rgba(0,153,102,.25)}
-.lv-int{background:rgba(0,80,200,.07);color:#1a56c4;border-color:rgba(0,80,200,.2)}
-.lv-bas{background:rgba(100,60,200,.07);color:#5a32b8;border-color:rgba(100,60,200,.2)}
-.sk-bar{height:4px;background:#e5e5e5;border-radius:4px;overflow:hidden}
-.sk-fill{height:100%;border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.edu{margin-bottom:8px}
+.exp-co{font-size:8.5px;color:#444;margin-bottom:4px;font-weight:500}
+.exp-ul{list-style:none;padding-left:0}
+.exp-ul li{font-size:8.5px;color:#444;line-height:1.65;margin-bottom:2px;padding-left:13px;position:relative}
+.exp-ul li::before{content:'▸';color:#00c47a;font-size:9px;position:absolute;left:0;top:0;line-height:1.65}
+.sk{margin-bottom:9px}
+.sk-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.sk-name{font-size:9.5px;color:#1a1a1a;font-weight:600}
+.sk-lvl{font-size:7px;font-weight:700;padding:1.5px 6px;border-radius:8px;border:1px solid}
+.lv-av {background:rgba(0,153,102,.09);color:#006b40;border-color:rgba(0,153,102,.28)}
+.lv-int{background:rgba(0,80,200,.07);color:#1245a8;border-color:rgba(0,80,200,.22)}
+.lv-bas{background:rgba(100,60,200,.07);color:#4e28a8;border-color:rgba(100,60,200,.22)}
+.sk-bar{height:5px;background:#e0e0e0;border-radius:5px;overflow:hidden}
+.sk-fill{height:100%;border-radius:5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.edu{margin-bottom:9px}
 .edu-deg{font-size:10px;font-weight:700;color:#0d0f14}
 .edu-sch{font-size:8.5px;color:#555;margin-bottom:1px}
-.edu-yr{font-size:8px;color:#009966;font-weight:600}
-.lang{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.lang-name{font-size:9px;font-weight:600;color:#222;min-width:44px}
-.lang-lv{font-size:8px;color:#009966;min-width:36px}
-.lang-bar{flex:1;height:3px;background:#e5e5e5;border-radius:3px;overflow:hidden}
-.lang-fill{height:100%;background:#00e5a0;border-radius:3px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.edu-yr{font-size:8px;color:#007a55;font-weight:600}
+.lang{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.lang-name{font-size:9px;font-weight:600;color:#222;min-width:48px}
+.lang-lv{font-size:8px;color:#007a55;min-width:38px}
+.lang-bar{flex:1;height:4px;background:#e0e0e0;border-radius:4px;overflow:hidden}
+.lang-fill{height:100%;background:#00e5a0;border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{font-size:7.5px;font-weight:600;padding:2px 6px;border-radius:8px;border:1px solid;letter-spacing:.03em}
-.tg{background:rgba(0,153,102,.07);color:#007a4d;border-color:rgba(0,153,102,.22)}
-.tb{background:rgba(0,80,200,.06);color:#1a56c4;border-color:rgba(0,80,200,.18)}
-.ta{background:rgba(180,100,0,.06);color:#935200;border-color:rgba(180,100,0,.18)}
-.tp{background:rgba(90,50,184,.06);color:#5a32b8;border-color:rgba(90,50,184,.18)}
+.tag{font-size:7.5px;font-weight:600;padding:2.5px 7px;border-radius:8px;border:1px solid;letter-spacing:.03em}
+.tg{background:rgba(0,153,102,.07);color:#006b40;border-color:rgba(0,153,102,.25)}
+.tb{background:rgba(0,80,200,.06);color:#1245a8;border-color:rgba(0,80,200,.2)}
+.ta{background:rgba(180,100,0,.06);color:#884a00;border-color:rgba(180,100,0,.2)}
+.tp{background:rgba(90,50,184,.06);color:#4e28a8;border-color:rgba(90,50,184,.2)}
 </style></head><body>
 <div class="hd">
-  <div>
+  <div class="hd-left">
     <div class="hd-name">Gustavo Henrique<br>Da Cruz Lacerda</div>
     <div class="hd-title">Suporte Técnico &nbsp;·&nbsp; Infraestrutura &nbsp;·&nbsp; Automação com Python</div>
   </div>
   <div class="hd-info">
-    <div>📍 Belo Horizonte, MG</div>
-    <div>📞 (31) 98339-1648</div>
-    <div><span>ghlacerda8@gmail.com</span></div>
-    <div><span>linkedin.com/in/gustavo-henriquedcl</span></div>
-    <div><span>github.com/ghlacerda8-del</span></div>
+    <div><b>·</b> Belo Horizonte, MG</div>
+    <div><b>·</b> (31) 98339-1648</div>
+    <div><b>ghlacerda8@gmail.com</b></div>
+    <div><b>linkedin.com/in/gustavo-henriquedcl</b></div>
+    <div><b>github.com/ghlacerda8-del</b></div>
   </div>
 </div>
 <div class="accent"></div>
@@ -250,9 +262,21 @@ body{font-family:'Segoe UI',Arial,sans-serif;font-size:9.5px;color:#111;backgrou
     margin:      0,
     filename:    'Gustavo-Lacerda-CV.pdf',
     image:       { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
+    html2canvas: {
+      scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false,
+      onclone: (clonedDoc) => {
+        ['phase-modal', 'screen-login'].forEach(id => {
+          const el = clonedDoc.getElementById(id);
+          if (el) el.remove();
+        });
+        clonedDoc.querySelectorAll('.nav, .header, .modal-overlay').forEach(el => el.remove());
+      },
+    },
     jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
   }).from(html).save().then(() => {
+    if (btn) { btn.disabled = false; btn.textContent = '⬇ Salvar PDF'; }
+  }).catch(err => {
+    console.error('exportCvPdf error:', err);
     if (btn) { btn.disabled = false; btn.textContent = '⬇ Salvar PDF'; }
   });
 }
