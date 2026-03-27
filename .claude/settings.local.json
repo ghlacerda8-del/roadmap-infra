@@ -12,7 +12,10 @@
       "Bash(find /c /d /e 2)",
       "Bash(/dev/null -maxdepth 5 -name main.py -path */roadmap*)",
       "Bash(git subtree:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(python3 -c \":*)",
+      "Bash(py -3 -c \":*)",
+      "Bash(py -3 -m pip install pdfplumber -q)"
     ]
   }
 }
