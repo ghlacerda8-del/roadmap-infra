@@ -246,19 +246,13 @@ body{font-family:'Segoe UI',Arial,sans-serif;font-size:9.5px;color:#111;backgrou
 </div>
 </body></html>`;
 
-  const wrap = document.createElement('div');
-  wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;';
-  wrap.innerHTML = html;
-  document.body.appendChild(wrap);
-
   html2pdf().set({
     margin:      0,
     filename:    'Gustavo-Lacerda-CV.pdf',
     image:       { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, width: 794 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
     jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  }).from(wrap).save().then(() => {
-    document.body.removeChild(wrap);
+  }).from(html).save().then(() => {
     if (btn) { btn.disabled = false; btn.textContent = '⬇ Salvar PDF'; }
   });
 }
