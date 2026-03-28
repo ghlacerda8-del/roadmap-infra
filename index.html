@@ -41,7 +41,7 @@
       <!-- Conteúdo principal da landing -->
       <div id="landing-main">
 
-        <div class="landing-avatar">GH</div>
+        <div class="landing-avatar" onclick="toggleLoginMode(event)" title="Acesso administrativo" style="cursor:pointer">GH</div>
 
         <div class="landing-name">Gustavo Henrique<br><span>Da Cruz Lacerda</span></div>
         <div class="landing-role">Suporte Técnico · Infraestrutura de Redes · Automação</div>
@@ -49,10 +49,9 @@
         <div class="landing-tech">
           <span class="landing-tech-tag">Python</span>
           <span class="landing-tech-tag">Linux</span>
-          <span class="landing-tech-tag">Azure</span>
           <span class="landing-tech-tag">Redes</span>
           <span class="landing-tech-tag">SQL</span>
-          <span class="landing-tech-tag">Docker</span>
+          <span class="landing-tech-tag">Git</span>
         </div>
 
         <div class="landing-stats">
@@ -88,7 +87,7 @@
         <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
       </div>
 
-      <div class="auth-toggle" style="margin-top:20px">
+      <div class="auth-toggle" style="display:none">
         <a href="#" onclick="toggleLoginMode(event)" id="admin-toggle-link">⚙ Acesso administrativo</a>
       </div>
       <div class="auth-msg auth-error" id="l-error"></div>
@@ -534,10 +533,10 @@
         <div class="cv-section">
           <div class="cv-section-title">Resumo Profissional</div>
           <div class="cv-text" id="cv-resumo-text">
-            Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e manutenção
-            de hardware. Experiência prática em ambientes Windows Server e Linux, com desenvolvimento de scripts Python
-            para automação de processos e consultas SQL para suporte a sistemas internos. Perfil analítico e orientado
-            à resolução ágil de problemas, com foco em alta disponibilidade e qualidade dos serviços de TI.
+            Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação
+            com Python. Experiência em ambientes Linux (Ubuntu, Kali) e Windows Server, com scripts de automação em
+            servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico
+            e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.
           </div>
         </div>
 
@@ -684,14 +683,16 @@
               </div>
             </div>
             <div class="cv-project-card">
-              <div class="cv-project-title">VPN Linux Local</div>
-              <div class="cv-project-desc">Configuração de servidor VPN em máquina Linux local para acesso remoto seguro
-                com IP fixo, incluindo configuração de firewall, rotas e autenticação.</div>
+              <div class="cv-project-title">Servidor VPN Linux (OpenVPN)</div>
+              <div class="cv-project-desc">Servidor Ubuntu local com OpenVPN para acesso remoto seguro com IP fixo —
+                solução 100% open source. Configuração de firewall, rotas e autenticação por certificado digital,
+                com scripts Python para automação da infraestrutura e monitoramento do serviço.</div>
               <div class="cv-tags" style="margin-top:8px">
-                <span class="cv-tag cv-tag-amber">Linux</span>
-                <span class="cv-tag cv-tag-amber">VPN</span>
-                <span class="cv-tag cv-tag-blue">Redes</span>
+                <span class="cv-tag cv-tag-amber">Ubuntu Server</span>
+                <span class="cv-tag cv-tag-amber">OpenVPN</span>
                 <span class="cv-tag cv-tag-blue">Firewall</span>
+                <span class="cv-tag cv-tag-blue">Redes</span>
+                <span class="cv-tag cv-tag-teal">Python</span>
               </div>
             </div>
           </div>

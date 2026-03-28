@@ -1,13 +1,15 @@
 const CV_SKILLS_DEFAULT = [
-  { name: 'suporte',   label: 'Suporte Técnico N1/N2', level: 'Avançado',      pct: 85 },
-  { name: 'hardware',  label: 'Hardware & Manutenção',  level: 'Avançado',      pct: 80 },
-  { name: 'linux',     label: 'Linux',                  level: 'Intermediário', pct: 65 },
-  { name: 'winserver', label: 'Windows Server',         level: 'Intermediário', pct: 65 },
-  { name: 'redes',     label: 'Redes & Infraestrutura', level: 'Intermediário', pct: 60 },
-  { name: 'python',    label: 'Python',                 level: 'Básico',        pct: 25 },
-  { name: 'sql',       label: 'SQL',                    level: 'Intermediário', pct: 55 },
-  { name: 'azure',     label: 'Azure',                  level: 'Em estudo',     pct: 30 },
-  { name: 'docker',    label: 'Docker & Kubernetes',    level: 'Em estudo',     pct: 25 },
+  { name: 'suporte',   label: 'Suporte Técnico N1/N2',      level: 'Avançado',      pct: 85 },
+  { name: 'hardware',  label: 'Hardware & Manutenção',       level: 'Avançado',      pct: 85 },
+  { name: 'linux',     label: 'Linux (Ubuntu, Kali)',        level: 'Intermediário', pct: 65 },
+  { name: 'winserver', label: 'Windows Server',              level: 'Intermediário', pct: 65 },
+  { name: 'redes',     label: 'Redes & Infra (VPN, Grafana)',level: 'Intermediário', pct: 65 },
+  { name: 'python',    label: 'Python',                      level: 'Básico',        pct: 45 },
+  { name: 'sql',       label: 'SQL',                         level: 'Básico',        pct: 45 },
+  { name: 'git',       label: 'Git',                         level: 'Básico',        pct: 45 },
+  { name: 'bash',      label: 'Bash / Scripts',              level: 'Básico',        pct: 45 },
+  { name: 'azure',     label: 'Azure',                       level: 'Em estudo',     pct: 25 },
+  { name: 'docker',    label: 'Docker & Kubernetes',         level: 'Em estudo',     pct: 25 },
 ];
 
 const CV_FORMACAO_DEFAULT = [
@@ -16,7 +18,7 @@ const CV_FORMACAO_DEFAULT = [
 
 const CV_IDIOMAS_DEFAULT = [
   { name: 'Português', level: 'Domínio', pct: 100 },
-  { name: 'Inglês',    level: 'Básico',  pct: 25  },
+  { name: 'Inglês',    level: 'Leitura técnica',  pct: 30  },
 ];
 
 const CV_EXPERIENCIAS_DEFAULT = [
@@ -26,10 +28,10 @@ const CV_EXPERIENCIAS_DEFAULT = [
     location: 'Belo Horizonte, MG',
     period: '05/2025 – Atual',
     items: [
-      'Suporte técnico direto ao usuário, resolvendo incidentes de hardware e software.',
-      'Implementação de automações com Python para otimização do fluxo de trabalho e suporte.',
-      'Manutenção e monitoramento dos ativos de rede e da infraestrutura de TI.',
-      'Consultas em banco de dados SQL para suporte aos sistemas internos da faculdade.',
+      'Suporte técnico N1/N2, resolução de incidentes de hardware e software com foco em first-call resolution.',
+      'Desenvolvimento de scripts Python em servidor Ubuntu para automação de processos operacionais internos.',
+      'Monitoramento de redes com Grafana e consultas SQL nos sistemas acadêmicos da faculdade.',
+      'Manutenção e monitoramento contínuo dos ativos de rede e infraestrutura de TI da instituição.',
     ]
   },
   {
@@ -295,8 +297,11 @@ async function buildCvAdminSection() {
       <button onclick="addIdiomaRow()" style="${addBtn}">＋ Adicionar idioma</button>
     </div>
 
-    <button onclick="saveCvSettings()" class="btn-sm teal" style="padding:9px 20px">&#10003; Salvar currículo</button>
-    <span id="cv-save-confirm" style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-left:10px;display:none">&#10003; Salvo!</span>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button onclick="saveCvSettings()" class="btn-sm teal" style="padding:9px 20px">&#10003; Salvar currículo</button>
+      <button onclick="restaurarPadroesCv()" style="background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:var(--mono);font-size:11px;padding:7px 14px;cursor:pointer" title="Sobrescreve Resumo, Experiências e Idiomas com os dados mais atualizados">↺ Restaurar padrão</button>
+      <span id="cv-save-confirm" style="font-family:var(--mono);font-size:11px;color:var(--teal);display:none">&#10003; Salvo!</span>
+    </div>
   `;
 }
 
@@ -354,6 +359,26 @@ async function saveCvSettings() {
     loadCvSettings();
   } catch(e) {
     alert('Erro ao salvar: ' + e.message);
+  }
+}
+
+// ─── Restaurar padrões ────────────────────────────────────────────────────────
+
+async function restaurarPadroesCv() {
+  if (!confirm('Vai substituir Resumo, Experiências e Idiomas no banco pelos dados mais atualizados. Continuar?')) return;
+  const novoResumo = 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação com Python. Experiência em ambientes Linux (Ubuntu, Kali) e Windows Server, com scripts de automação em servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.';
+  try {
+    await sb.from('cv_settings').upsert([
+      { key: 'resumo',       value: novoResumo },
+      { key: 'experiencias', value: CV_EXPERIENCIAS_DEFAULT },
+      { key: 'idiomas',      value: CV_IDIOMAS_DEFAULT },
+    ], { onConflict: 'key' });
+    const confirmEl = document.getElementById('cv-save-confirm');
+    if (confirmEl) { confirmEl.style.display = 'inline'; setTimeout(() => confirmEl.style.display = 'none', 2500); }
+    loadCvSettings();
+    buildCvAdminSection();
+  } catch(e) {
+    alert('Erro: ' + e.message);
   }
 }
 

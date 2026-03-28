@@ -6,10 +6,10 @@ const EXPERIENCES = [
     period: '05/2025 – Atual · Belo Horizonte, MG',
     color: 'var(--teal)',
     items: [
-      { text: 'Suporte técnico direto ao usuário, resolvendo incidentes de hardware e software com foco em agilidade e satisfação.', tag: 'Suporte N1/N2' },
-      { text: 'Desenvolvimento e implementação de automações com Python para otimização do fluxo de trabalho e processos de suporte.', tag: 'Automação' },
+      { text: 'Suporte técnico N1/N2, resolução de incidentes de hardware e software com foco em agilidade e first-call resolution.', tag: 'Suporte N1/N2' },
+      { text: 'Desenvolvimento de scripts Python em servidor Ubuntu para automação de processos operacionais internos.', tag: 'Automação' },
+      { text: 'Monitoramento de redes com Grafana e consultas SQL nos sistemas acadêmicos da faculdade.', tag: 'Grafana/SQL' },
       { text: 'Manutenção e monitoramento contínuo dos ativos de rede e infraestrutura de TI da instituição.', tag: 'Infraestrutura' },
-      { text: 'Realização de consultas e manutenção em banco de dados SQL para suporte aos sistemas internos da faculdade.', tag: 'SQL' },
     ]
   },
   {
@@ -221,16 +221,16 @@ function exportCvPdf() {
       border-bottom:2px solid #00e5a0;padding-bottom:2px;margin-bottom:8px">${t}</div>`;
 
   const expBlock = (role, per, co, items) => `
-    <div style="margin-bottom:11px;page-break-inside:avoid;break-inside:avoid">
+    <div style="margin-bottom:7px;page-break-inside:avoid;break-inside:avoid">
       <table style="width:100%;border-collapse:collapse;margin-bottom:1px">
         <tr>
           <td style="font-size:10pt;font-weight:700;color:#0d1421">${role}</td>
           <td style="text-align:right;font-size:8pt;color:#666;white-space:nowrap">${per}</td>
         </tr>
       </table>
-      <div style="font-size:8pt;color:#00a06e;font-weight:600;margin-bottom:4px">${co}</div>
-      ${items.map(li => `
-        <div style="font-size:9pt;color:#444;line-height:1.6;margin-bottom:2px;padding-left:13px;position:relative">
+      <div style="font-size:8pt;color:#00a06e;font-weight:600;margin-bottom:3px">${co}</div>
+      ${items.slice(0, 3).map(li => `
+        <div style="font-size:8.5pt;color:#444;line-height:1.5;margin-bottom:1px;padding-left:13px;position:relative">
           <span style="position:absolute;left:0;top:2px;color:#00c47a;font-size:7.5pt">●</span>${li}
         </div>`).join('')}
     </div>`;
@@ -274,31 +274,39 @@ function exportCvPdf() {
   </div>
 </div>
 
-<div style="padding:12px 22px">
+<div style="padding:10px 22px">
 
-  <div style="margin-bottom:12px">
+  <div style="margin-bottom:9px">
     ${secTitle('Resumo')}
-    <div style="font-size:9pt;line-height:1.7;color:#333">${resumo || 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e manutenção de hardware. Experiência prática em ambientes Windows Server e Linux, com desenvolvimento de scripts Python para automação de processos e consultas SQL para suporte a sistemas internos. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade e qualidade dos serviços de TI.'}</div>
+    <div style="font-size:8.5pt;line-height:1.6;color:#333">${resumo || 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação com Python. Experiência em ambientes Linux (Ubuntu, Kali) e Windows Server, com scripts de automação em servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.'}</div>
   </div>
 
-  <div style="margin-bottom:12px">
+  <div style="margin-bottom:9px">
     ${secTitle('Skills')}
     ${skillsTable}
   </div>
 
-  <div style="margin-bottom:12px">
+  <div style="margin-bottom:9px">
     ${secTitle('Formação')}
     ${formacaoHtml}
   </div>
 
-  <div style="margin-bottom:12px">
+  <div style="margin-bottom:9px">
     ${secTitle('Idiomas')}
     ${idiomasHtml}
   </div>
 
-  <div>
+  <div style="margin-bottom:9px">
     ${secTitle('Experiência Profissional')}
     ${experienciasHtml}
+  </div>
+
+  <div>
+    ${secTitle('Projeto em Destaque')}
+    <div style="page-break-inside:avoid;break-inside:avoid">
+      <div style="font-size:9pt;font-weight:700;color:#0d1421">Servidor VPN Linux (OpenVPN) <span style="font-weight:400;font-size:7.5pt;color:#666">· Projeto Pessoal · Ubuntu · 2025</span></div>
+      <div style="font-size:8.5pt;color:#444;line-height:1.5;margin-top:3px">Servidor Ubuntu local com OpenVPN, firewall, autenticação por certificado e scripts Python para automação — acesso remoto seguro com IP fixo, solução 100% open source.</div>
+    </div>
   </div>
 
 </div>
