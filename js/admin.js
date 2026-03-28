@@ -1,15 +1,15 @@
 const CV_SKILLS_DEFAULT = [
-  { name: 'suporte',   label: 'Suporte Técnico N1/N2',      level: 'Avançado',      pct: 85 },
-  { name: 'hardware',  label: 'Hardware & Manutenção',       level: 'Avançado',      pct: 85 },
-  { name: 'linux',     label: 'Linux (Ubuntu, Kali)',        level: 'Intermediário', pct: 65 },
-  { name: 'winserver', label: 'Windows Server',              level: 'Intermediário', pct: 65 },
-  { name: 'redes',     label: 'Redes & Infra (VPN, Grafana)',level: 'Intermediário', pct: 65 },
-  { name: 'python',    label: 'Python',                      level: 'Básico',        pct: 45 },
-  { name: 'sql',       label: 'SQL',                         level: 'Básico',        pct: 45 },
-  { name: 'git',       label: 'Git',                         level: 'Básico',        pct: 45 },
-  { name: 'bash',      label: 'Bash / Scripts',              level: 'Básico',        pct: 45 },
-  { name: 'azure',     label: 'Azure',                       level: 'Em estudo',     pct: 25 },
-  { name: 'docker',    label: 'Docker & Kubernetes',         level: 'Em estudo',     pct: 25 },
+  { name: 'suporte', label: 'Suporte Técnico N1/N2', level: 'Avançado', pct: 85 },
+  { name: 'hardware', label: 'Hardware & Manutenção', level: 'Avançado', pct: 85 },
+  { name: 'linux', label: 'Linux (Ubuntu)', level: 'Intermediário', pct: 65 },
+  { name: 'winserver', label: 'Windows Server', level: 'Intermediário', pct: 65 },
+  { name: 'redes', label: 'Redes & Infra (VPN, Grafana)', level: 'Intermediário', pct: 65 },
+  { name: 'python', label: 'Python', level: 'Básico', pct: 45 },
+  { name: 'sql', label: 'SQL', level: 'Básico', pct: 45 },
+  { name: 'git', label: 'Git', level: 'Básico', pct: 45 },
+  { name: 'bash', label: 'Bash / Scripts', level: 'Básico', pct: 45 },
+  { name: 'azure', label: 'Azure', level: 'Em estudo', pct: 25 },
+  { name: 'docker', label: 'Docker & Kubernetes', level: 'Em estudo', pct: 25 },
 ];
 
 const CV_FORMACAO_DEFAULT = [
@@ -18,7 +18,7 @@ const CV_FORMACAO_DEFAULT = [
 
 const CV_IDIOMAS_DEFAULT = [
   { name: 'Português', level: 'Domínio', pct: 100 },
-  { name: 'Inglês',    level: 'Leitura técnica',  pct: 30  },
+  { name: 'Inglês', level: 'Leitura técnica', pct: 30 },
 ];
 
 const CV_EXPERIENCIAS_DEFAULT = [
@@ -59,22 +59,22 @@ const CV_EXPERIENCIAS_DEFAULT = [
   }
 ];
 
-const LEVEL_OPTIONS  = ['Avançado', 'Intermediário', 'Básico', 'Em estudo'];
+const LEVEL_OPTIONS = ['Avançado', 'Intermediário', 'Básico', 'Em estudo'];
 const LEVEL_PCT_AUTO = { 'Avançado': 85, 'Intermediário': 65, 'Básico': 45, 'Em estudo': 25 };
 
 const LEVEL_STYLE = {
-  'Avançado':      { cls: 'cv-lvl-av',  color: 'var(--teal)'   },
-  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)'   },
-  'Básico':        { cls: 'cv-lvl-bas', color: 'var(--purple)' },
-  'Em estudo':     { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+  'Avançado': { cls: 'cv-lvl-av', color: 'var(--teal)' },
+  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)' },
+  'Básico': { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+  'Em estudo': { cls: 'cv-lvl-bas', color: 'var(--purple)' },
 };
 
 function onSkillLevelChange(sel) {
-  const row      = sel.closest('.cv-admin-skill-row');
+  const row = sel.closest('.cv-admin-skill-row');
   const skillKey = row.dataset.skillName;
-  const level    = sel.value;
-  const pct      = LEVEL_PCT_AUTO[level] ?? 50;
-  const lv       = LEVEL_STYLE[level] || LEVEL_STYLE['Básico'];
+  const level = sel.value;
+  const pct = LEVEL_PCT_AUTO[level] ?? 50;
+  const lv = LEVEL_STYLE[level] || LEVEL_STYLE['Básico'];
 
   // Atualiza barra ao vivo no currículo
   const cvRow = skillKey && document.querySelector(`.cv-skill-row[data-skill="${skillKey}"]`);
@@ -83,9 +83,9 @@ function onSkillLevelChange(sel) {
       cvRow.style.display = 'none';
     } else {
       cvRow.style.display = '';
-      const fill  = cvRow.querySelector('.cv-skill-fill');
+      const fill = cvRow.querySelector('.cv-skill-fill');
       const lvlEl = cvRow.querySelector('.cv-skill-lvl');
-      if (fill)  { fill.style.width = pct + '%'; fill.style.background = lv.color; }
+      if (fill) { fill.style.width = pct + '%'; fill.style.background = lv.color; }
       if (lvlEl) { lvlEl.className = `cv-skill-lvl ${lv.cls}`; lvlEl.textContent = level; }
     }
   }
@@ -103,13 +103,13 @@ function onSkillLevelChange(sel) {
   }
 }
 
-const ROW_STYLE  = 'display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap';
+const ROW_STYLE = 'display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap';
 const INPUT_STYLE = 'background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text);font-family:var(--mono)';
-const BTN_DEL    = 'background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:13px;line-height:1;padding:4px 8px;cursor:pointer';
-const BTN_ADD    = 'margin-top:4px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--teal);font-family:var(--mono);font-size:11px;padding:4px 12px;cursor:pointer;width:100%';
+const BTN_DEL = 'background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:13px;line-height:1;padding:4px 8px;cursor:pointer';
+const BTN_ADD = 'margin-top:4px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--teal);font-family:var(--mono);font-size:11px;padding:4px 12px;cursor:pointer;width:100%';
 
 function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 // ─── Skills ───────────────────────────────────────────────────────────────────
@@ -237,34 +237,34 @@ async function buildCvAdminSection() {
   const section = document.getElementById('cv-admin-section');
   if (!section) return;
 
-  let resumo      = '';
-  let skills      = CV_SKILLS_DEFAULT.map(s => ({ ...s }));
+  let resumo = 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação com Python. Experiência em ambientes Linux (Ubuntu) e Windows Server, com scripts de automação em servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.';
+  let skills = CV_SKILLS_DEFAULT.map(s => ({ ...s }));
   let experiencias = CV_EXPERIENCIAS_DEFAULT.map(e => ({ ...e, items: [...e.items] }));
-  let formacao    = CV_FORMACAO_DEFAULT.map(f => ({ ...f }));
-  let idiomas     = CV_IDIOMAS_DEFAULT.map(l => ({ ...l }));
+  let formacao = CV_FORMACAO_DEFAULT.map(f => ({ ...f }));
+  let idiomas = CV_IDIOMAS_DEFAULT.map(l => ({ ...l }));
 
   try {
     const { data } = await sb.from('cv_settings').select('key,value');
     if (data) {
       const map = Object.fromEntries(data.map(r => [r.key, r.value]));
       if (map.resumo) resumo = map.resumo;
-      if (Array.isArray(map.skills)       && map.skills.length       > 0) {
+      if (Array.isArray(map.skills) && map.skills.length > 0) {
         skills = map.skills.map(sk => ({
-          name:  sk.name  || '',
+          name: sk.name || '',
           label: sk.label || CV_SKILLS_DEFAULT.find(d => d.name === sk.name)?.label || sk.name,
           level: sk.level || 'Básico',
-          pct:   sk.pct   ?? 0,
+          pct: sk.pct ?? 0,
         }));
       }
       if (Array.isArray(map.experiencias) && map.experiencias.length > 0) experiencias = map.experiencias;
-      if (Array.isArray(map.formacao)     && map.formacao.length     > 0) formacao     = map.formacao;
-      if (Array.isArray(map.idiomas)      && map.idiomas.length      > 0) idiomas      = map.idiomas;
+      if (Array.isArray(map.formacao) && map.formacao.length > 0) formacao = map.formacao;
+      if (Array.isArray(map.idiomas) && map.idiomas.length > 0) idiomas = map.idiomas;
     }
-  } catch(e) {}
+  } catch (e) { }
 
-  const card    = 'background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px';
-  const sub     = 'font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px';
-  const addBtn  = 'margin-top:6px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--teal);font-family:var(--mono);font-size:11px;padding:6px 14px;cursor:pointer;width:100%';
+  const card = 'background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px';
+  const sub = 'font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px';
+  const addBtn = 'margin-top:6px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--teal);font-family:var(--mono);font-size:11px;padding:6px 14px;cursor:pointer;width:100%';
 
   section.innerHTML = `
     <div style="${card}">
@@ -315,49 +315,49 @@ async function saveCvSettings() {
     const existingName = row.dataset.skillName;
     const name = existingName
       || label.toLowerCase().replace(/[\s&\/]+/g, '_').replace(/[^a-z0-9_]/g, '')
-         + '_' + Math.random().toString(36).slice(2, 5);
+      + '_' + Math.random().toString(36).slice(2, 5);
     return {
       name,
       label,
       level: row.querySelector('[data-cv-field="level"]')?.value || 'Básico',
-      pct:   LEVEL_PCT_AUTO[row.querySelector('[data-cv-field="level"]')?.value] ?? 45,
+      pct: LEVEL_PCT_AUTO[row.querySelector('[data-cv-field="level"]')?.value] ?? 45,
     };
   }).filter(s => s.label);
 
   const experiencias = Array.from(document.querySelectorAll('.cv-admin-exp-block')).map(block => ({
-    role:     block.querySelector('[data-exp-field="role"]')?.value.trim()     || '',
-    company:  block.querySelector('[data-exp-field="company"]')?.value.trim()  || '',
+    role: block.querySelector('[data-exp-field="role"]')?.value.trim() || '',
+    company: block.querySelector('[data-exp-field="company"]')?.value.trim() || '',
     location: block.querySelector('[data-exp-field="location"]')?.value.trim() || '',
-    period:   block.querySelector('[data-exp-field="period"]')?.value.trim()   || '',
-    items:    Array.from(block.querySelectorAll('.cv-admin-exp-item input'))
-                .map(inp => inp.value.trim()).filter(Boolean),
+    period: block.querySelector('[data-exp-field="period"]')?.value.trim() || '',
+    items: Array.from(block.querySelectorAll('.cv-admin-exp-item input'))
+      .map(inp => inp.value.trim()).filter(Boolean),
   })).filter(e => e.role || e.company);
 
   const formacao = Array.from(document.querySelectorAll('.cv-admin-formacao-row')).map(row => ({
-    course:      row.querySelector('[data-form-field="course"]')?.value.trim()      || '',
+    course: row.querySelector('[data-form-field="course"]')?.value.trim() || '',
     institution: row.querySelector('[data-form-field="institution"]')?.value.trim() || '',
-    type:        row.querySelector('[data-form-field="type"]')?.value.trim()        || '',
-    period:      row.querySelector('[data-form-field="period"]')?.value.trim()      || '',
+    type: row.querySelector('[data-form-field="type"]')?.value.trim() || '',
+    period: row.querySelector('[data-form-field="period"]')?.value.trim() || '',
   })).filter(f => f.course || f.institution);
 
   const idiomas = Array.from(document.querySelectorAll('.cv-admin-idioma-row')).map(row => ({
-    name:  row.querySelector('[data-lang-field="name"]')?.value.trim()  || '',
+    name: row.querySelector('[data-lang-field="name"]')?.value.trim() || '',
     level: row.querySelector('[data-lang-field="level"]')?.value.trim() || '',
-    pct:   Math.max(0, Math.min(100, parseInt(row.querySelector('[data-lang-field="pct"]')?.value) || 0)),
+    pct: Math.max(0, Math.min(100, parseInt(row.querySelector('[data-lang-field="pct"]')?.value) || 0)),
   })).filter(l => l.name);
 
   try {
     await sb.from('cv_settings').upsert([
-      { key: 'resumo',       value: resumo       },
-      { key: 'skills',       value: skills       },
+      { key: 'resumo', value: resumo },
+      { key: 'skills', value: skills },
       { key: 'experiencias', value: experiencias },
-      { key: 'formacao',     value: formacao     },
-      { key: 'idiomas',      value: idiomas      },
+      { key: 'formacao', value: formacao },
+      { key: 'idiomas', value: idiomas },
     ], { onConflict: 'key' });
     const confirm = document.getElementById('cv-save-confirm');
     if (confirm) { confirm.style.display = 'inline'; setTimeout(() => confirm.style.display = 'none', 2500); }
     loadCvSettings();
-  } catch(e) {
+  } catch (e) {
     alert('Erro ao salvar: ' + e.message);
   }
 }
@@ -366,18 +366,18 @@ async function saveCvSettings() {
 
 async function restaurarPadroesCv() {
   if (!confirm('Vai substituir Resumo, Experiências e Idiomas no banco pelos dados mais atualizados. Continuar?')) return;
-  const novoResumo = 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação com Python. Experiência em ambientes Linux (Ubuntu, Kali) e Windows Server, com scripts de automação em servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.';
+  const novoResumo = 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação com Python. Experiência em ambientes Linux (Ubuntu) e Windows Server, com scripts de automação em servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.';
   try {
     await sb.from('cv_settings').upsert([
-      { key: 'resumo',       value: novoResumo },
+      { key: 'resumo', value: novoResumo },
       { key: 'experiencias', value: CV_EXPERIENCIAS_DEFAULT },
-      { key: 'idiomas',      value: CV_IDIOMAS_DEFAULT },
+      { key: 'idiomas', value: CV_IDIOMAS_DEFAULT },
     ], { onConflict: 'key' });
     const confirmEl = document.getElementById('cv-save-confirm');
     if (confirmEl) { confirmEl.style.display = 'inline'; setTimeout(() => confirmEl.style.display = 'none', 2500); }
     loadCvSettings();
     buildCvAdminSection();
-  } catch(e) {
+  } catch (e) {
     alert('Erro: ' + e.message);
   }
 }
