@@ -1,6 +1,7 @@
 (async function init() {
   if (SUPABASE_URL.includes('COLE')) return;
   initSB();
+  loadLandingCareerCard();
   try {
     const { data: { session } } = await sb.auth.getSession();
     if (session?.user) {

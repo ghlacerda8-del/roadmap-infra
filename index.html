@@ -5,9 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gustavo Lacerda — Portfólio Infra</title>
-  <meta name="description" content="Portfólio de Gustavo Henrique Da Cruz Lacerda — Suporte Técnico, Infraestrutura de Redes e Automação com Python. Belo Horizonte, MG.">
+  <meta name="description"
+    content="Portfólio de Gustavo Henrique Da Cruz Lacerda — Suporte Técnico, Infraestrutura de Redes e Automação com Python. Belo Horizonte, MG.">
   <meta property="og:title" content="Gustavo Lacerda — Portfólio Infra">
-  <meta property="og:description" content="Profissional de TI com experiência em suporte N1/N2, redes, Linux e automação com Python. Disponível para novas oportunidades.">
+  <meta property="og:description"
+    content="Profissional de TI com experiência em suporte N1/N2, redes, Linux e automação com Python.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
   <meta name="twitter:card" content="summary">
@@ -34,68 +36,155 @@
 
 <body>
 
-  <!-- LANDING / LOGIN -->
+  <!-- LANDING -->
   <div class="screen active" id="screen-login">
-    <div class="landing-card">
 
-      <!-- Conteúdo principal da landing -->
-      <div id="landing-main">
+    <!-- Topbar -->
+    <div class="lp-topbar">
+      <div class="lp-logo" id="lp-logo-trigger">GL · INFRA</div>
+      <div class="lp-topbar-right">
+        <div class="lp-loc">BH · MG</div>
+      </div>
+    </div>
 
-        <div class="landing-avatar" onclick="toggleLoginMode(event)" title="Acesso administrativo" style="cursor:pointer">GH</div>
+    <!-- Grid principal -->
+    <div class="lp-grid">
 
-        <div class="landing-name">Gustavo Henrique<br><span>Da Cruz Lacerda</span></div>
-        <div class="landing-role">Suporte Técnico · Infraestrutura de Redes · Automação</div>
-
-        <div class="landing-tech">
-          <span class="landing-tech-tag">Python</span>
-          <span class="landing-tech-tag">Linux</span>
-          <span class="landing-tech-tag">Redes</span>
-          <span class="landing-tech-tag">SQL</span>
-          <span class="landing-tech-tag">Git</span>
-        </div>
-
-        <div class="landing-stats">
-          <div class="landing-stat">
-            <span class="landing-stat-val">2+</span>
-            <span class="landing-stat-lbl">anos em TI</span>
+      <!-- Coluna esquerda -->
+      <div class="lp-col-left">
+        <div class="lp-name">Gustavo<br>Lacerda</div>
+        <div class="lp-role-line">SUPORTE N1/N2 · INFRAESTRUTURA · AUTOMAÇÃO</div>
+        <div class="lp-current-role">Suporte ao Usuário e Infraestrutura · Faculdade Famart · desde maio 2025</div>
+        <p class="lp-bio">Profissional de TI com atuação desde 2024 em suporte técnico, redes e automação com Python.
+          Experiência real em servidores Linux, VPN open source, monitoramento com Grafana e scripts de infra.</p>
+        <div class="proof-row">
+          <div class="proof-item"><span class="proof-value">2+</span><span class="proof-label">anos em TI</span></div>
+          <div class="proof-item"><span class="proof-value">3</span><span class="proof-label">empresas</span></div>
+          <div class="proof-item"><span class="proof-value">800h</span><span class="proof-label">plano de estudos</span>
           </div>
-          <div class="landing-stat-div"></div>
-          <div class="landing-stat">
-            <span class="landing-stat-val">ADS</span>
-            <span class="landing-stat-lbl">graduado 2024</span>
-          </div>
-          <div class="landing-stat-div"></div>
-          <div class="landing-stat">
-            <span class="landing-stat-val">BH</span>
-            <span class="landing-stat-lbl">Minas Gerais</span>
+          <div class="proof-item"><span class="proof-value">AZ-900</span><span class="proof-label">em andamento</span>
           </div>
         </div>
-
-        <button class="btn-primary landing-btn" onclick="doVisitorLogin()">Ver Portfólio →</button>
-
-        <div class="landing-links">
-          <a href="mailto:ghlacerda8@gmail.com" class="landing-link">📧 E-mail</a>
-          <a href="https://wa.me/5531983391648?text=Ol%C3%A1%20Gustavo%2C%20vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!" target="_blank" class="landing-link">💬 WhatsApp</a>
-          <a href="https://www.linkedin.com/in/gustavo-henriquedcl/" target="_blank" class="landing-link">🔗 LinkedIn</a>
+        <div class="lp-skill-tags">
+          <span>Linux · Ubuntu</span>
+          <span>Python</span>
+          <span>OpenVPN</span>
+          <span>Grafana</span>
+          <span>Redes &amp; Racks</span>
+          <span>SQL</span>
+          <span>Windows Server</span>
+        </div>
+        <div class="lp-cta-row">
+          <a href="https://wa.me/5531983391648?text=Ol%C3%A1%20Gustavo%2C%20vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!"
+            target="_blank" class="btn-contato btn-contato-solid">WhatsApp</a>
+          <a href="https://www.linkedin.com/in/gustavo-henriquedcl/" target="_blank"
+            class="btn-contato btn-contato-ghost">LinkedIn</a>
+          <a href="mailto:ghlacerda8@gmail.com" class="btn-contato btn-contato-ghost">E-mail</a>
         </div>
       </div>
 
-      <!-- Campos de acesso administrativo (ocultos por padrão) -->
-      <div id="l-admin-fields" style="display:none">
-        <div class="field" style="text-align:left"><label>Usuário</label><input type="text" id="l-cpf" placeholder="Usuário" maxlength="14" autocomplete="username" /></div>
-        <div class="field" style="text-align:left"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password" /></div>
-        <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
-        <div style="text-align:center;margin-top:12px">
-          <a href="#" onclick="toggleLoginMode(event)" style="font-size:13px;color:var(--muted);text-decoration:none">← Voltar</a>
-        </div>
-      </div>
+      <!-- Coluna direita -->
+      <div class="lp-col-right">
 
-      <div class="auth-toggle" style="display:none">
-        <a href="#" onclick="toggleLoginMode(event)" id="admin-toggle-link">⚙ Acesso administrativo</a>
+        <div class="lp-section-lbl">PROJETOS</div>
+        <div class="lp-proj-list">
+          <div class="lp-proj-card">
+            <div class="lp-proj-top">
+              <div class="lp-proj-name">Servidor VPN Linux</div>
+            </div>
+            <p class="lp-proj-desc">Ubuntu local com OpenVPN, firewall, rotas e autenticação por certificado. Solução
+              100% open source com automação via Python.</p>
+            <div class="lp-proj-tags"><span>Linux</span><span>OpenVPN</span><span>Firewall</span><span>Python</span>
+            </div>
+          </div>
+          <div class="lp-proj-card">
+            <div class="lp-proj-top">
+              <div class="lp-proj-name">Roadmap Infra — Portfólio</div>
+            </div>
+            <p class="lp-proj-desc">App web interativo com autenticação, banco PostgreSQL via Supabase e plano de
+              carreira em infraestrutura.</p>
+            <div class="lp-proj-tags"><span>HTML/CSS/JS</span><span>FastAPI</span><span>Supabase</span><span>GitHub
+                Pages</span></div>
+          </div>
+        </div>
+
+        <!-- Card Plano de Carreira -->
+        <div class="lp-career-card">
+          <div class="lp-career-head">
+            <div style="display:flex;align-items:center;gap:8px"><span class="lp-career-dot"></span>PLANO DE CARREIRA ·
+              AO VIVO</div>
+            <span class="lp-career-updated">atualizado hoje</span>
+          </div>
+          <div class="lp-career-body">
+
+            <!-- Grid: fases + streak -->
+            <div class="teaser-grid">
+              <div class="teaser-block">
+                <div class="teaser-title">PROGRESSO POR FASE</div>
+                <div id="lp-career-phases"></div>
+              </div>
+              <div class="teaser-block">
+                <div class="teaser-title">STREAK · 14 DIAS</div>
+                <div class="lp-streak" id="lp-streak"></div>
+              </div>
+            </div>
+
+            <!-- Bloco bloqueado -->
+            <div class="locked-preview">
+              <div class="locked-rows">
+                <div class="lp-phase-row"><span class="lp-phase-lbl">Checklist</span>
+                  <div class="lp-cert-bar">
+                    <div class="lp-cert-fill" style="width:60%"></div>
+                  </div><span class="lp-phase-pct">60%</span>
+                </div>
+                <div class="lp-phase-row"><span class="lp-phase-lbl">AZ-900</span>
+                  <div class="lp-cert-bar">
+                    <div class="lp-cert-fill" style="width:30%"></div>
+                  </div><span class="lp-phase-pct">30%</span>
+                </div>
+                <div class="lp-phase-row"><span class="lp-phase-lbl">Semana</span>
+                  <div class="lp-cert-bar">
+                    <div class="lp-cert-fill" style="width:80%"></div>
+                  </div><span class="lp-phase-pct">80%</span>
+                </div>
+              </div>
+              <div class="lock-overlay">
+                <div class="lock-badge">🔒 +3 métricas · acesso restrito</div>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+              <p class="cta-hint">Veja meu progresso real, checklist e cronograma semanal — <span>atualizado
+                  diariamente</span></p>
+              <button class="unlock-btn" onclick="doVisitorLogin()">Acessar roadmap completo →</button>
+            </div>
+
+          </div>
+        </div>
+
       </div>
-      <div class="auth-msg auth-error" id="l-error"></div>
-      <div class="auth-msg auth-warn" id="l-pending"></div>
-    </div><!-- /landing-card -->
+    </div>
+
+    <!-- Modal de login admin (oculto — ativar com 3 cliques no logo) -->
+    <div id="lp-admin-modal" class="lp-modal-bg" style="display:none" onclick="handleAdminModalBg(event)">
+      <div class="lp-modal-box">
+        <div class="lp-modal-title">Acesso</div>
+        <div id="l-admin-fields">
+          <div class="field"><label>Usuário</label><input type="text" id="l-cpf" placeholder="Usuário" maxlength="14"
+              autocomplete="username" /></div>
+          <div class="field"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••"
+              autocomplete="current-password" /></div>
+          <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
+          <div style="text-align:center;margin-top:12px">
+            <a href="#" onclick="toggleLoginMode(event)"
+              style="font-size:13px;color:var(--muted);text-decoration:none">← Cancelar</a>
+          </div>
+        </div>
+        <div class="auth-msg auth-error" id="l-error"></div>
+        <div class="auth-msg auth-warn" id="l-pending"></div>
+      </div>
+    </div>
 
   </div><!-- /screen-login -->
 
@@ -222,13 +311,17 @@
         <div class="section-title">Painel master</div>
         <div class="invite-box">
           <div style="font-size:13px;font-weight:600;margin-bottom:4px">Compartilhar portfólio</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Link público da página de entrada · clique na URL para copiar</div>
-          <div class="invite-url" id="portfolio-url-txt" onclick="copyPortfolioLink()" style="cursor:pointer;user-select:all" title="Clique para copiar"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Link público da página de entrada · clique na
+            URL para copiar</div>
+          <div class="invite-url" id="portfolio-url-txt" onclick="copyPortfolioLink()"
+            style="cursor:pointer;user-select:all" title="Clique para copiar"></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
             <button class="btn-sm teal" onclick="copyPortfolioLink()">Copiar link</button>
             <button class="btn-sm teal" onclick="sharePortfolioWhatsApp()">Enviar via WhatsApp</button>
           </div>
-          <div id="copy-confirm" style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:6px;display:none">✓ Link copiado!</div>
+          <div id="copy-confirm"
+            style="font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:6px;display:none">✓ Link copiado!
+          </div>
         </div>
         <div class="section-title" style="margin-top:28px">Currículo</div>
         <div id="cv-admin-section">
@@ -527,18 +620,21 @@
               <span class="cv-contact-item">📍 Belo Horizonte, MG</span>
               <span class="cv-contact-item">📞 <a href="tel:+5531983391648">(31) 98339-1648</a></span>
               <span class="cv-contact-item">📧 <a href="mailto:ghlacerda8@gmail.com">ghlacerda8@gmail.com</a></span>
-              <span class="cv-contact-item">🔗 <a href="https://www.linkedin.com/in/gustavo-henriquedcl/" target="_blank">LinkedIn</a></span>
-              <span class="cv-contact-item">💻 <a href="https://github.com/ghlacerda8-del" target="_blank">GitHub</a></span>
+              <span class="cv-contact-item">🔗 <a href="https://www.linkedin.com/in/gustavo-henriquedcl/"
+                  target="_blank">LinkedIn</a></span>
+              <span class="cv-contact-item">💻 <a href="https://github.com/ghlacerda8-del"
+                  target="_blank">GitHub</a></span>
             </div>
           </div>
-          <button class="cv-print-btn" id="cv-pdf-btn" onclick="exportCvPdf()" title="Salvar como PDF">⬇ Salvar PDF</button>
+          <button class="cv-print-btn" id="cv-pdf-btn" onclick="exportCvPdf()" title="Salvar como PDF">⬇ Salvar
+            PDF</button>
         </div>
 
         <div class="cv-section">
           <div class="cv-section-title">Resumo Profissional</div>
           <div class="cv-text" id="cv-resumo-text">
             Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação
-            com Python. Experiência em ambientes Linux (Ubuntu, Kali) e Windows Server, com scripts de automação em
+            com Python. Experiência em ambientes Linux (Ubuntu) e Windows Server, com scripts de automação em
             servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico
             e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.
           </div>
@@ -552,63 +648,81 @@
                 <span class="cv-skill-name">Suporte Técnico N1/N2</span>
                 <span class="cv-skill-lvl cv-lvl-av">Avançado</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:85%;background:var(--teal)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:85%;background:var(--teal)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="hardware">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">Hardware &amp; Manutenção</span>
                 <span class="cv-skill-lvl cv-lvl-av">Avançado</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:80%;background:var(--teal)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:80%;background:var(--teal)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="linux">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">Linux</span>
                 <span class="cv-skill-lvl cv-lvl-int">Intermediário</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:65%;background:var(--blue)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:65%;background:var(--blue)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="winserver">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">Windows Server</span>
                 <span class="cv-skill-lvl cv-lvl-int">Intermediário</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:65%;background:var(--blue)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:65%;background:var(--blue)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="redes">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">Redes &amp; Infraestrutura</span>
                 <span class="cv-skill-lvl cv-lvl-int">Intermediário</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:60%;background:var(--blue)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:60%;background:var(--blue)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="python">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">Python</span>
                 <span class="cv-skill-lvl cv-lvl-bas">Básico</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:25%;background:var(--purple)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:25%;background:var(--purple)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="sql">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">SQL</span>
                 <span class="cv-skill-lvl cv-lvl-int">Intermediário</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:55%;background:var(--amber)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:55%;background:var(--amber)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="azure">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">Azure</span>
                 <span class="cv-skill-lvl cv-lvl-bas">Em estudo</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:30%;background:var(--purple)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:30%;background:var(--purple)"></div>
+              </div>
             </div>
             <div class="cv-skill-row" data-skill="docker">
               <div class="cv-skill-meta">
                 <span class="cv-skill-name">Docker &amp; Kubernetes</span>
                 <span class="cv-skill-lvl cv-lvl-bas">Em estudo</span>
               </div>
-              <div class="cv-skill-bar"><div class="cv-skill-fill" style="width:25%;background:var(--purple)"></div></div>
+              <div class="cv-skill-bar">
+                <div class="cv-skill-fill" style="width:25%;background:var(--purple)"></div>
+              </div>
             </div>
           </div>
           <div class="cv-skills-secondary">
@@ -705,11 +819,12 @@
         <!-- CTA de contato -->
         <div class="cv-cta-section">
           <div class="cv-cta-title">Gostou do perfil? Vamos conversar!</div>
-          <div class="cv-cta-sub">Disponível para oportunidades em infraestrutura, suporte técnico e automação.</div>
           <div class="cv-cta-btns">
             <a href="mailto:ghlacerda8@gmail.com" class="cv-cta-btn cv-cta-email">📧 ghlacerda8@gmail.com</a>
-            <a href="https://wa.me/5531983391648?text=Ol%C3%A1%20Gustavo%2C%20vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!" target="_blank" class="cv-cta-btn cv-cta-wpp">💬 (31) 98339-1648</a>
-            <a href="https://www.linkedin.com/in/gustavo-henriquedcl/" target="_blank" class="cv-cta-btn cv-cta-li">🔗 LinkedIn</a>
+            <a href="https://wa.me/5531983391648?text=Ol%C3%A1%20Gustavo%2C%20vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!"
+              target="_blank" class="cv-cta-btn cv-cta-wpp">💬 (31) 98339-1648</a>
+            <a href="https://www.linkedin.com/in/gustavo-henriquedcl/" target="_blank" class="cv-cta-btn cv-cta-li">🔗
+              LinkedIn</a>
           </div>
         </div>
 

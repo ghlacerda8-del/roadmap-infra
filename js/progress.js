@@ -77,6 +77,52 @@ function confirmReset() {
   }
 }
 
+async function loadLandingCareerCard() {
+  let checked = {}, studiedDays = [];
+  try {
+    const { data } = await sb.from('progresso').select('dados').eq('user_cpf', MASTER_CPF).maybeSingle();
+    if (data?.dados) { checked = data.dados.checked || {}; studiedDays = data.dados.studiedDays || []; }
+  } catch(e) {}
+
+  const all = PHASES.flatMap(p => p.items);
+  const done = all.filter(i => checked[i.id]).length;
+  const pct  = all.length ? Math.round((done / all.length) * 100) : 0;
+
+  const pctLabel = document.getElementById('lp-pct-label');
+  const pctFill  = document.getElementById('lp-pct-fill');
+  if (pctLabel) pctLabel.textContent = pct > 0 ? pct + '%' : 'Em andamento';
+  if (pctFill)  pctFill.style.width  = pct + '%';
+
+  const phasesEl = document.getElementById('lp-career-phases');
+  if (phasesEl) {
+    phasesEl.innerHTML = '';
+    PHASES.forEach((p, idx) => {
+      if (idx > 1) return;
+      const pd  = p.items.filter(i => checked[i.id]).length;
+      const pp  = Math.round((pd / p.items.length) * 100);
+      phasesEl.innerHTML += `<div class="lp-phase-row">
+        <span class="lp-phase-lbl">Fase ${idx}</span>
+        <div class="lp-cert-bar"><div class="lp-cert-fill" style="width:${pp}%;background:${p.color}"></div></div>
+        <span class="lp-phase-pct">${pp}%</span>
+      </div>`;
+    });
+  }
+
+  const streakEl = document.getElementById('lp-streak');
+  if (streakEl) {
+    streakEl.innerHTML = '';
+    const today = new Date();
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(today); d.setDate(today.getDate() - i);
+      const on   = studiedDays.includes(dateKey(d));
+      const blur = i < 3 ? ' lp-blur' : '';
+      const sq   = document.createElement('div');
+      sq.className = 'lp-streak-sq' + (on ? ' lp-streak-on' : '') + blur;
+      streakEl.appendChild(sq);
+    }
+  }
+}
+
 function updateReminderHour() {
   const rh = document.getElementById('reminder-hour');
   if (rh) {

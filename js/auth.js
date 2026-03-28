@@ -6,19 +6,16 @@ let adminMode = false;
 function toggleLoginMode(e) {
   if (e) e.preventDefault();
   adminMode = !adminMode;
-  const adminFields  = document.getElementById('l-admin-fields');
-  const landingMain  = document.getElementById('landing-main');
-  const toggleLink   = document.getElementById('admin-toggle-link');
-  if (adminMode) {
-    adminFields.style.display = '';
-    landingMain.style.display = 'none';
-    toggleLink.textContent    = '← Voltar';
-  } else {
-    adminFields.style.display = 'none';
-    landingMain.style.display = '';
-    toggleLink.textContent    = '⚙ Acesso administrativo';
-  }
+  const modal = document.getElementById('lp-admin-modal');
+  if (modal) modal.style.display = adminMode ? 'flex' : 'none';
   hideMsg('l-error'); hideMsg('l-pending');
+}
+
+function handleAdminModalBg(e) {
+  if (e.target === document.getElementById('lp-admin-modal')) {
+    adminMode = true;
+    toggleLoginMode(null);
+  }
 }
 
 async function doLogin() {
@@ -71,12 +68,7 @@ async function doLogout() {
   if (sb && !isVisitor) await sb.auth.signOut();
   currentUser = null; isMaster = false; isVisitor = false; adminMode = false;
   userProgress = { checked: {}, studiedDays: [] };
-  // Reset login form
-  const adminFields = document.getElementById('l-admin-fields');
-  const landingMain = document.getElementById('landing-main');
-  const toggleLink  = document.getElementById('admin-toggle-link');
-  if (adminFields) adminFields.style.display = 'none';
-  if (landingMain) landingMain.style.display = '';
-  if (toggleLink)  toggleLink.textContent    = '⚙ Acesso administrativo';
+  const modal = document.getElementById('lp-admin-modal');
+  if (modal) modal.style.display = 'none';
   showScreen('login');
 }

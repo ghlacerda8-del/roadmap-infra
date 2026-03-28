@@ -41,6 +41,20 @@ if (!history.state) {
   history.replaceState({ screen: 'login' }, '', location.pathname);
 }
 
+// Triple-click no logo para abrir login admin
+let _logoClicks = 0, _logoTimer = null;
+document.getElementById('lp-logo-trigger').addEventListener('click', function() {
+  _logoClicks++;
+  clearTimeout(_logoTimer);
+  if (_logoClicks >= 3) {
+    _logoClicks = 0;
+    adminMode = false;
+    toggleLoginMode(null);
+  } else {
+    _logoTimer = setTimeout(function() { _logoClicks = 0; }, 600);
+  }
+});
+
 document.getElementById('l-cpf').addEventListener('input', function() { this.value = this.value.replace(/[^\d.\-]/g, '').slice(0, 14); });
 document.getElementById('l-senha').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
 

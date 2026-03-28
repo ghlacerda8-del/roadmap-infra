@@ -40,24 +40,24 @@ const EXPERIENCES = [
 ];
 
 const LEVEL_MAP = {
-  'Avançado':      { cls: 'cv-lvl-av',  color: 'var(--teal)'   },
-  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)'   },
-  'Básico':        { cls: 'cv-lvl-bas', color: 'var(--purple)' },
-  'Em estudo':     { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+  'Avançado': { cls: 'cv-lvl-av', color: 'var(--teal)' },
+  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)' },
+  'Básico': { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+  'Em estudo': { cls: 'cv-lvl-bas', color: 'var(--purple)' },
 };
 
 // Module-level state – populated by loadCvSettings, read by PDF export + modal
-let _cvExp      = [];
+let _cvExp = [];
 let _cvFormacao = [];
-let _cvIdiomas  = [];
+let _cvIdiomas = [];
 
 function _expFromLegacy() {
   return EXPERIENCES.map(e => ({
-    role:     e.role,
-    company:  e.company,
+    role: e.role,
+    company: e.company,
     location: 'Belo Horizonte, MG',
-    period:   e.period.replace(' · Belo Horizonte, MG', ''),
-    items:    e.items.map(i => i.text),
+    period: e.period.replace(' · Belo Horizonte, MG', ''),
+    items: e.items.map(i => i.text),
   }));
 }
 
@@ -105,7 +105,7 @@ function _renderExp() {
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <div class="cv-entry-period">${exp.period}</div>
-          <span class="cv-entry-expand">↗</span>
+          <span class="cv-entry-expand"></span>
         </div>
       </div>
       <ul class="cv-entry-list">
@@ -116,9 +116,9 @@ function _renderExp() {
 
 async function loadCvSettings() {
   // Set defaults before async call so page renders immediately
-  _cvExp      = _expFromLegacy();
+  _cvExp = _expFromLegacy();
   _cvFormacao = CV_FORMACAO_DEFAULT.map(f => ({ ...f }));
-  _cvIdiomas  = CV_IDIOMAS_DEFAULT.map(l => ({ ...l }));
+  _cvIdiomas = CV_IDIOMAS_DEFAULT.map(l => ({ ...l }));
 
   if (!sb) {
     _renderFormacao(); _renderIdiomas(); _renderExp();
@@ -142,9 +142,9 @@ async function loadCvSettings() {
             .filter(sk => sk.level !== 'Em estudo')
             .sort((a, b) => (SKILL_RANK[b.level] || 0) - (SKILL_RANK[a.level] || 0))
             .map(sk => {
-            const lv    = LEVEL_MAP[sk.level] || LEVEL_MAP['Básico'];
-            const label = sk.label || sk.name;
-            return `
+              const lv = LEVEL_MAP[sk.level] || LEVEL_MAP['Básico'];
+              const label = sk.label || sk.name;
+              return `
               <div class="cv-skill-row" data-skill="${sk.name}">
                 <div class="cv-skill-meta">
                   <span class="cv-skill-name">${label}</span>
@@ -154,15 +154,15 @@ async function loadCvSettings() {
                   <div class="cv-skill-fill" style="width:${sk.pct}%;background:${lv.color}"></div>
                 </div>
               </div>`;
-          }).join('');
+            }).join('');
         }
       }
 
-      if (Array.isArray(map.experiencias) && map.experiencias.length > 0) _cvExp      = map.experiencias;
-      if (Array.isArray(map.formacao)     && map.formacao.length     > 0) _cvFormacao = map.formacao;
-      if (Array.isArray(map.idiomas)      && map.idiomas.length      > 0) _cvIdiomas  = map.idiomas;
+      if (Array.isArray(map.experiencias) && map.experiencias.length > 0) _cvExp = map.experiencias;
+      if (Array.isArray(map.formacao) && map.formacao.length > 0) _cvFormacao = map.formacao;
+      if (Array.isArray(map.idiomas) && map.idiomas.length > 0) _cvIdiomas = map.idiomas;
     }
-  } catch(e) {}
+  } catch (e) { }
 
   _renderFormacao();
   _renderIdiomas();
@@ -185,9 +185,9 @@ function exportCvPdf() {
 
   const skillsList = Array.from(document.querySelectorAll('.cv-skills-main .cv-skill-row'))
     .map(row => {
-      const key   = row.dataset.skill || '';
-      const raw   = row.querySelector('.cv-skill-name')?.textContent?.trim() || '';
-      const name  = (raw.length > 3 && raw !== key) ? raw : (DEFAULT_LABELS[key] || raw);
+      const key = row.dataset.skill || '';
+      const raw = row.querySelector('.cv-skill-name')?.textContent?.trim() || '';
+      const name = (raw.length > 3 && raw !== key) ? raw : (DEFAULT_LABELS[key] || raw);
       const level = row.querySelector('.cv-skill-lvl')?.textContent?.trim() || '';
       return { name, level };
     })
@@ -213,7 +213,7 @@ function exportCvPdf() {
     </tr>`;
 
   const skRows = [];
-  for (let i = 0; i < skillsList.length; i += 2) skRows.push(skRow(skillsList[i], skillsList[i+1]));
+  for (let i = 0; i < skillsList.length; i += 2) skRows.push(skRow(skillsList[i], skillsList[i + 1]));
   const skillsTable = `<table style="width:100%;border-collapse:collapse">${skRows.join('')}</table>`;
 
   const secTitle = (t) =>
@@ -278,7 +278,7 @@ function exportCvPdf() {
 
   <div style="margin-bottom:9px">
     ${secTitle('Resumo')}
-    <div style="font-size:8.5pt;line-height:1.6;color:#333">${resumo || 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação com Python. Experiência em ambientes Linux (Ubuntu, Kali) e Windows Server, com scripts de automação em servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.'}</div>
+    <div style="font-size:8.5pt;line-height:1.6;color:#333">${resumo || 'Profissional de TI com atuação desde 2024 em suporte técnico N1/N2, infraestrutura de redes e automação com Python. Experiência em ambientes Linux (Ubuntu) e Windows Server, com scripts de automação em servidores reais, monitoramento de redes com Grafana e configuração de VPN open source. Perfil analítico e orientado à resolução ágil de problemas, com foco em alta disponibilidade dos serviços de TI.'}</div>
   </div>
 
   <div style="margin-bottom:9px">
@@ -313,10 +313,10 @@ function exportCvPdf() {
 </body></html>`;
 
   html2pdf().set({
-    margin:      10,
-    filename:    'Gustavo-Lacerda-CV.pdf',
-    image:       { type: 'jpeg', quality: 0.98 },
-    pagebreak:   { mode: ['avoid-all', 'css', 'legacy'] },
+    margin: 10,
+    filename: 'Gustavo-Lacerda-CV.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
     html2canvas: {
       scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false,
       onclone: (clonedDoc) => {
@@ -341,11 +341,11 @@ function openExpModal(idx) {
   if (!exp) return;
 
   const colors = ['var(--teal)', 'var(--blue)', 'var(--amber)'];
-  const color  = colors[idx] || 'var(--teal)';
+  const color = colors[idx] || 'var(--teal)';
 
-  document.getElementById('pm-phase').textContent  = exp.company;
-  document.getElementById('pm-phase').style.color  = color;
-  document.getElementById('pm-title').textContent  = exp.role;
+  document.getElementById('pm-phase').textContent = exp.company;
+  document.getElementById('pm-phase').style.color = color;
+  document.getElementById('pm-title').textContent = exp.role;
   document.getElementById('pm-period').textContent = exp.period + (exp.location ? ' · ' + exp.location : '');
 
   let html = '';
