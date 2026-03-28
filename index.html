@@ -82,7 +82,7 @@
 
       <!-- Campos de acesso administrativo (ocultos por padrão) -->
       <div id="l-admin-fields" style="display:none">
-        <div class="field" style="text-align:left"><label>CPF</label><input type="text" id="l-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="username" /></div>
+        <div class="field" style="text-align:left"><label>Usuário</label><input type="text" id="l-cpf" placeholder="Usuário" maxlength="14" autocomplete="username" /></div>
         <div class="field" style="text-align:left"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password" /></div>
         <button class="btn-primary" id="btn-login" onclick="doLogin()">Entrar</button>
         <div style="text-align:center;margin-top:12px">
@@ -95,8 +95,9 @@
       </div>
       <div class="auth-msg auth-error" id="l-error"></div>
       <div class="auth-msg auth-warn" id="l-pending"></div>
-    </div>
-  </div>
+    </div><!-- /landing-card -->
+
+  </div><!-- /screen-login -->
 
   <!-- APP -->
   <div class="screen" id="screen-app">
