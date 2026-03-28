@@ -57,7 +57,49 @@ const CV_EXPERIENCIAS_DEFAULT = [
   }
 ];
 
-const LEVEL_OPTIONS = ['Avançado', 'Intermediário', 'Básico', 'Em estudo'];
+const LEVEL_OPTIONS  = ['Avançado', 'Intermediário', 'Básico', 'Em estudo'];
+const LEVEL_PCT_AUTO = { 'Avançado': 85, 'Intermediário': 65, 'Básico': 45, 'Em estudo': 25 };
+
+const LEVEL_STYLE = {
+  'Avançado':      { cls: 'cv-lvl-av',  color: 'var(--teal)'   },
+  'Intermediário': { cls: 'cv-lvl-int', color: 'var(--blue)'   },
+  'Básico':        { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+  'Em estudo':     { cls: 'cv-lvl-bas', color: 'var(--purple)' },
+};
+
+function onSkillLevelChange(sel) {
+  const row      = sel.closest('.cv-admin-skill-row');
+  const skillKey = row.dataset.skillName;
+  const level    = sel.value;
+  const pct      = LEVEL_PCT_AUTO[level] ?? 50;
+  const lv       = LEVEL_STYLE[level] || LEVEL_STYLE['Básico'];
+
+  // Atualiza barra ao vivo no currículo
+  const cvRow = skillKey && document.querySelector(`.cv-skill-row[data-skill="${skillKey}"]`);
+  if (cvRow) {
+    if (level === 'Em estudo') {
+      cvRow.style.display = 'none';
+    } else {
+      cvRow.style.display = '';
+      const fill  = cvRow.querySelector('.cv-skill-fill');
+      const lvlEl = cvRow.querySelector('.cv-skill-lvl');
+      if (fill)  { fill.style.width = pct + '%'; fill.style.background = lv.color; }
+      if (lvlEl) { lvlEl.className = `cv-skill-lvl ${lv.cls}`; lvlEl.textContent = level; }
+    }
+  }
+
+  // Reordena container do currículo do maior para o menor nível
+  const cvContainer = document.querySelector('.cv-skills-main');
+  if (cvContainer) {
+    Array.from(cvContainer.querySelectorAll('.cv-skill-row'))
+      .sort((a, b) => {
+        const la = a.querySelector('.cv-skill-lvl')?.textContent?.trim() || '';
+        const lb = b.querySelector('.cv-skill-lvl')?.textContent?.trim() || '';
+        return (LEVEL_PCT_AUTO[lb] || 0) - (LEVEL_PCT_AUTO[la] || 0);
+      })
+      .forEach(r => cvContainer.appendChild(r));
+  }
+}
 
 const ROW_STYLE  = 'display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap';
 const INPUT_STYLE = 'background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text);font-family:var(--mono)';
@@ -78,10 +120,7 @@ function buildSkillRow(sk) {
     <div class="cv-admin-skill-row" data-skill-name="${escHtml(sk.name)}" style="${ROW_STYLE}">
       <input class="cv-skill-label-input" type="text" value="${escHtml(sk.label)}" placeholder="Nome da skill"
         style="${INPUT_STYLE};min-width:140px;flex:1">
-      <select data-cv-field="level" style="${INPUT_STYLE}">${levelOpts}</select>
-      <input type="number" min="0" max="100" value="${sk.pct}" data-cv-field="pct"
-        style="${INPUT_STYLE};width:56px">
-      <span style="font-size:11px;color:var(--muted)">%</span>
+      <select data-cv-field="level" style="${INPUT_STYLE}" onchange="onSkillLevelChange(this)">${levelOpts}</select>
       <button onclick="deleteSkillRow(this)" style="${BTN_DEL}" title="Remover skill">✕</button>
     </div>`;
 }
@@ -89,7 +128,7 @@ function buildSkillRow(sk) {
 function addSkillRow() {
   const container = document.getElementById('cv-skills-admin-list');
   if (!container) return;
-  container.insertAdjacentHTML('beforeend', buildSkillRow({ name: '', label: '', level: 'Básico', pct: 50 }));
+  container.insertAdjacentHTML('beforeend', buildSkillRow({ name: '', label: '', level: 'Básico', pct: 45 }));
 }
 
 function deleteSkillRow(btn) {
@@ -276,7 +315,7 @@ async function saveCvSettings() {
       name,
       label,
       level: row.querySelector('[data-cv-field="level"]')?.value || 'Básico',
-      pct:   Math.max(0, Math.min(100, parseInt(row.querySelector('[data-cv-field="pct"]')?.value) || 0)),
+      pct:   LEVEL_PCT_AUTO[row.querySelector('[data-cv-field="level"]')?.value] ?? 45,
     };
   }).filter(s => s.label);
 

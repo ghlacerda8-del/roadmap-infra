@@ -137,7 +137,11 @@ async function loadCvSettings() {
       if (Array.isArray(map.skills) && map.skills.length > 0) {
         const container = document.querySelector('.cv-skills-main');
         if (container) {
-          container.innerHTML = map.skills.map(sk => {
+          const SKILL_RANK = { 'Avançado': 4, 'Intermediário': 3, 'Básico': 2, 'Em estudo': 1 };
+          container.innerHTML = map.skills
+            .filter(sk => sk.level !== 'Em estudo')
+            .sort((a, b) => (SKILL_RANK[b.level] || 0) - (SKILL_RANK[a.level] || 0))
+            .map(sk => {
             const lv    = LEVEL_MAP[sk.level] || LEVEL_MAP['Básico'];
             const label = sk.label || sk.name;
             return `
