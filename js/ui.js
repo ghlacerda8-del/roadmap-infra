@@ -1,6 +1,9 @@
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + id).classList.add('active');
+  if (id === 'login') {
+    history.replaceState({ screen: 'login' }, '', location.pathname);
+  }
 }
 
 function showMsg(id, txt, type) {
@@ -11,7 +14,7 @@ function showMsg(id, txt, type) {
 
 function hideMsg(id) { document.getElementById(id).classList.remove('show'); }
 
-function showPage(id) {
+function showPage(id, pushHistory = true) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
@@ -21,9 +24,24 @@ function showPage(id) {
   if (id === 'progresso') renderProgress();
   if (id === 'admin')     loadAdminPanel();
   if (id === 'curriculo') loadCvSettings();
+  if (pushHistory) history.pushState({ screen: 'app', page: id }, '', location.pathname + '#' + id);
 }
 
-document.getElementById('l-cpf').addEventListener('input', function() { this.value = fmtCpf(this.value); });
+window.addEventListener('popstate', function(e) {
+  const state = e.state;
+  if (!state || state.screen === 'login') {
+    doLogout();
+  } else if (state.screen === 'app' && state.page) {
+    showPage(state.page, false);
+  }
+});
+
+// Garante estado inicial na history para o botão voltar funcionar
+if (!history.state) {
+  history.replaceState({ screen: 'login' }, '', location.pathname);
+}
+
+document.getElementById('l-cpf').addEventListener('input', function() { this.value = this.value.replace(/[^\d.\-]/g, '').slice(0, 14); });
 document.getElementById('l-senha').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
 
 function openPhaseModal(pid) {

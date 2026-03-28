@@ -42,5 +42,6 @@ function showApp() {
     roleEl.textContent = 'VIEWER'; roleEl.className = 'nav-role role-viewer';
     document.getElementById('nav-admin').style.display = 'none';
   }
-  buildChecklist(); renderProgress(); updateHeaderStats();
+  buildChecklist(); updateHeaderStats();
+  showPage('progresso');
 }
