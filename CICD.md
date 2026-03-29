@@ -1,0 +1,262 @@
+# CI/CD — Roadmap Infra
+
+Documentação do pipeline de deploy e operações do projeto.
+
+---
+
+## 1. Arquitetura atual
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     USUÁRIO (browser)                   │
+└───────────────┬─────────────────────┬───────────────────┘
+                │                     │
+                ▼                     ▼
+   ┌────────────────────┐   ┌──────────────────────┐
+   │  GitHub Pages      │   │  Render (FastAPI)    │
+   │  (frontend estático│   │  roadmap-backend     │
+   │   HTML/CSS/JS)     │   │  Python 3.11         │
+   └────────────────────┘   └──────────┬───────────┘
+                                        │
+                                        ▼
+                             ┌──────────────────────┐
+                             │  Supabase            │
+                             │  PostgreSQL + Auth   │
+                             │  Storage + RLS       │
+                             └──────────────────────┘
+```
+
+| Camada    | Serviço        | Repositório                         | Branch |
+|-----------|----------------|-------------------------------------|--------|
+| Frontend  | GitHub Pages   | ghlacerda8-del/roadmap-infra        | main   |
+| Backend   | Render         | ghlacerda8-del/roadmap-infra-backend| main   |
+| Banco     | Supabase       | Projeto no painel Supabase          | —      |
+
+---
+
+## 2. Fluxo de deploy atual
+
+### Frontend — GitHub Pages
+
+Deploy automático a cada `git push` na branch `main`.
+
+```
+código local  →  git push origin main  →  GitHub Actions (Pages)  →  ar em ~1 min
+```
+
+**URL de produção:** `https://ghlacerda8-del.github.io/roadmap-infra/`
+
+Passos manuais:
+```bash
+# 1. Verificar o que mudou
+git status
+git diff
+
+# 2. Adicionar arquivos alterados
+git add index.html css/auth.css js/progress.js   # arquivos específicos
+# ou
+git add -p   # adicionar por trecho (mais seguro)
+
+# 3. Commit com mensagem descritiva
+git commit -m "feat: descrição da mudança"
+
+# 4. Push — o deploy acontece automaticamente
+git push origin main
+```
+
+> O GitHub Pages serve os arquivos estáticos diretamente da branch `main`.
+> Não há build step — o que está no repositório é o que vai para o ar.
+
+---
+
+### Backend — Render
+
+O Render detecta `git push` no repositório `roadmap-infra-backend` e faz redeploy automático.
+
+```
+código local  →  git push origin main  →  Render build  →  FastAPI online em ~2 min
+```
+
+**URL de produção:** configurada no painel do Render (ex: `https://roadmap-backend.onrender.com`)
+
+Passos manuais:
+```bash
+cd roadmap-backend/backend
+
+# 1. Editar código (main.py, database.py, email_service.py...)
+
+# 2. Commit e push
+git add .
+git commit -m "fix: descrição da correção"
+git push origin main
+
+# 3. Acompanhar o deploy no painel do Render
+# Render > Dashboard > roadmap-backend > Logs
+```
+
+**Variáveis de ambiente no Render** (nunca commitar no git):
+| Variável         | Descrição                        |
+|------------------|----------------------------------|
+| `SUPABASE_URL`   | URL do projeto Supabase          |
+| `SUPABASE_KEY`   | Service role key (privada)       |
+| `RESEND_API_KEY` | Chave da API de e-mail Resend    |
+| `MASTER_CPF`     | CPF do usuário administrador     |
+
+---
+
+### Banco — Supabase
+
+O banco não tem pipeline de deploy automatizado. Alterações de schema são feitas diretamente no painel do Supabase ou via SQL Editor.
+
+**Tabelas principais:**
+| Tabela       | Descrição                              |
+|--------------|----------------------------------------|
+| `progresso`  | Progresso do checklist por usuário     |
+| `cv_settings`| Dados do currículo (resumo, exp, etc.) |
+| `login_log`  | Registro de acessos                    |
+
+**Acesso:**
+- Painel: `https://supabase.com/dashboard`
+- SQL Editor: executar migrations manualmente
+- Row Level Security (RLS): deve estar ativo em todas as tabelas
+
+---
+
+## 3. Próximos passos recomendados
+
+### CI com GitHub Actions
+
+Criar `.github/workflows/deploy.yml` para validar o frontend antes do deploy:
+
+```yaml
+name: CI Frontend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar HTML
+        run: npx html-validate index.html || true
+      - name: Verificar JS
+        run: npx eslint js/ --ext .js || true
+```
+
+### Testes automáticos (backend)
+
+Criar `roadmap-backend/backend/tests/test_main.py`:
+
+```python
+from fastapi.testclient import TestClient
+from main import app
+
+client = TestClient(app)
+
+def test_health():
+    response = client.get("/health")
+    assert response.status_code == 200
+```
+
+Rodar localmente:
+```bash
+cd roadmap-backend/backend
+pip install pytest httpx
+pytest tests/
+```
+
+### Variáveis de ambiente e secrets
+
+- **Frontend (público):** `SUPABASE_URL` e `SUPABASE_KEY` (anon) ficam em `js/config.js` — aceitável com RLS ativo
+- **Backend (privado):** todas as chaves ficam em `.env` (nunca no git) e no painel do Render
+- **GitHub Secrets:** adicionar no repositório para uso em Actions: `Settings > Secrets and variables > Actions`
+
+### Monitoramento
+
+| O que monitorar          | Onde ver                                      |
+|--------------------------|-----------------------------------------------|
+| Logs do backend          | Render > Dashboard > Logs                     |
+| Erros de autenticação    | Supabase > Authentication > Logs              |
+| Queries lentas           | Supabase > Database > Query Performance       |
+| Uptime do backend        | UptimeRobot (gratuito) ou Better Uptime       |
+| Deploy do frontend       | GitHub > Actions (aba do repositório)         |
+
+---
+
+## 4. Comandos úteis do dia a dia
+
+### Deploy de atualização (rotina normal)
+
+```bash
+# Frontend
+cd d:/roadmap-infra
+git add <arquivos>
+git commit -m "feat|fix|chore: descrição"
+git push origin main
+# Aguardar ~1 min e verificar em https://ghlacerda8-del.github.io/roadmap-infra/
+
+# Backend
+cd d:/roadmap-infra/roadmap-backend/backend  # ou repositório separado
+git add .
+git commit -m "fix: descrição"
+git push origin main
+# Acompanhar no painel do Render
+```
+
+### Verificar status atual
+
+```bash
+git status           # arquivos modificados
+git log --oneline -10  # últimos 10 commits
+git diff             # o que mudou (não commitado)
+git diff HEAD~1      # diferença do último commit
+```
+
+### Rollback de emergência (frontend)
+
+```bash
+# Ver histórico
+git log --oneline
+
+# Reverter para o commit anterior (cria novo commit de reversão — seguro)
+git revert HEAD
+git push origin main
+
+# Ou fazer checkout de um commit específico em nova branch para analisar
+git checkout -b hotfix abc1234
+```
+
+### Rollback no Render (backend)
+
+No painel do Render: `Dashboard > roadmap-backend > Deploys > [commit anterior] > Redeploy`
+
+### Rodar backend localmente
+
+```bash
+cd roadmap-backend/backend
+python -m venv venv
+venv/Scripts/activate       # Windows
+source venv/bin/activate    # Linux/Mac
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+# API disponível em http://localhost:8000
+# Docs em http://localhost:8000/docs
+```
+
+---
+
+## Convenção de commits
+
+| Prefixo   | Quando usar                              |
+|-----------|------------------------------------------|
+| `feat:`   | Nova funcionalidade                      |
+| `fix:`    | Correção de bug                          |
+| `chore:`  | Ajuste menor, sem impacto funcional      |
+| `style:`  | Mudança visual/CSS sem lógica            |
+| `refactor:` | Refatoração sem mudança de comportamento |
+| `docs:`   | Documentação                             |
