@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% set cor = '#00e5a0' if pct >= 50 else '#ffb830' if pct >= 20 else '#ff5f5f' %}
+
+{% block extra_styles %}
+.stat-row { display:flex; gap:12px; margin-bottom:20px; }
+.stat-box { flex:1; background:#1a1e28; border-radius:10px; padding:16px; text-align:center; }
+.stat-val { font-size:24px; font-weight:700; margin-bottom:4px; }
+.stat-lbl { font-size:11px; color:#7a7f94; text-transform:uppercase; letter-spacing:.08em; }
+{% endblock %}
+
+{% block body %}
+<p style="font-size:14px;color:#7a7f94;margin:0 0 20px">Olá {{ nome }}! Aqui está seu progresso desta semana:</p>
+<div class="stat-row">
+  <div class="stat-box">
+    <div class="stat-val" style="color:{{ cor }}">{{ pct }}%</div>
+    <div class="stat-lbl">Concluído</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-val" style="color:#e8eaf0">{{ done }}/{{ total }}</div>
+    <div class="stat-lbl">Tarefas</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-val" style="color:#e8eaf0">{{ dias }}</div>
+    <div class="stat-lbl">Dias estudados</div>
+  </div>
+</div>
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>Progresso geral</span>
+    <span style="color:{{ cor }};font-weight:600">{{ pct }}%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" style="width:{{ pct }}%;background:{{ cor }}"></div>
+  </div>
+</div>
+<a href="https://ghlacerda8-del.github.io/roadmap-infra" class="btn" style="background:#ffb830;color:#000">
+  Abrir Roadmap →
+</a>
+{% endblock %}

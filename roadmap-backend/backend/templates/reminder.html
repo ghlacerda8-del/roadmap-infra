@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+.day-card { background:#1a1e28; border-radius:10px; padding:18px; margin-bottom:16px; }
+.day-label { font-size:11px; color:#7a7f94; text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
+.day-tema { font-size:18px; font-weight:600; color:#e8eaf0; margin-bottom:4px; }
+.day-detail { font-size:13px; color:#7a7f94; }
+{% endblock %}
+
+{% block body %}
+<p style="font-size:14px;color:#7a7f94;margin:0 0 20px">
+  Olá{% if nome %}, {{ nome }}{% endif %}! É hora de estudar. Aqui está sua tarefa de hoje:
+</p>
+<div class="day-card">
+  <div class="day-label">{{ dia_nome }}</div>
+  <div class="day-tema">{{ tema }}</div>
+  <div class="day-detail">{{ detalhe }}</div>
+</div>
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>Seu progresso geral</span>
+    <span style="color:#00e5a0;font-weight:600">{{ pct }}%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" style="width:{{ pct }}%;background:#00e5a0"></div>
+  </div>
+</div>
+<a href="https://ghlacerda8-del.github.io/roadmap-infra" class="btn" style="background:#00e5a0;color:#000">
+  Abrir Roadmap →
+</a>
+{% endblock %}

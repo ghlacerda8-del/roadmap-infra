@@ -2,6 +2,7 @@ import resend
 import os
 import logging
 from datetime import datetime
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 logger = logging.getLogger(__name__)
 
@@ -9,9 +10,13 @@ resend.api_key = os.getenv("RESEND_API_KEY")
 if not resend.api_key:
     raise RuntimeError("RESEND_API_KEY não configurada nas variáveis de ambiente")
 
-FROM_EMAIL = os.getenv("FROM_EMAIL", "Roadmap Infra <onboarding@resend.dev>")
+FROM_EMAIL  = os.getenv("FROM_EMAIL", "Roadmap Infra <onboarding@resend.dev>")
+TOTAL_TASKS = 59
 
-TOTAL_TASKS = 59  # Total de tarefas no roadmap
+_templates = Environment(
+    loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates")),
+    autoescape=select_autoescape(["html"]),
+)
 
 DIAS_SEMANA = {
     "Monday":    ("Segunda-feira", "Redes / Teoria",   "Aula do curso ou módulo teórico do dia"),
@@ -20,6 +25,8 @@ DIAS_SEMANA = {
     "Thursday":  ("Quinta-feira",  "Linux / Infra",    "Terminal, automação, scripts"),
     "Friday":    ("Sexta-feira",   "Projeto",          "Publicar algo concreto no GitHub"),
 }
+
+# ── Helpers ───────────────────────────────────────────────────
 
 def calc_progress(dados: dict) -> dict:
     checked = dados.get("checked", {})
@@ -37,320 +44,88 @@ def fmt_cpf(cpf: str) -> str:
         return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
     return cpf
 
-# ── TEMPLATES HTML ────────────────────────────────────────────
+def _render(template_name: str, **ctx) -> str:
+    return _templates.get_template(template_name).render(**ctx)
 
-def template_reminder(nome: str, dia_nome: str, tema: str, detalhe: str, pct: int) -> str:
-    return f"""
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-  body{{margin:0;padding:0;background:#0d0f14;font-family:'Segoe UI',Arial,sans-serif;color:#e8eaf0}}
-  .wrap{{max-width:560px;margin:0 auto;padding:32px 16px}}
-  .card{{background:#13161e;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden}}
-  .header{{background:#13161e;padding:28px 32px 20px;border-bottom:1px solid rgba(255,255,255,.06)}}
-  .tag{{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#00e5a0;margin-bottom:10px}}
-  .title{{font-size:22px;font-weight:700;color:#e8eaf0;line-height:1.2}}
-  .title span{{color:#00e5a0}}
-  .body{{padding:24px 32px}}
-  .day-card{{background:#1a1e28;border-radius:10px;padding:18px;margin-bottom:16px}}
-  .day-label{{font-size:11px;color:#7a7f94;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}}
-  .day-tema{{font-size:18px;font-weight:600;color:#e8eaf0;margin-bottom:4px}}
-  .day-detail{{font-size:13px;color:#7a7f94}}
-  .progress-wrap{{margin-bottom:20px}}
-  .progress-label{{font-size:12px;color:#7a7f94;margin-bottom:6px;display:flex;justify-content:space-between}}
-  .progress-bar{{background:rgba(255,255,255,.06);border-radius:6px;height:8px;overflow:hidden}}
-  .progress-fill{{background:#00e5a0;height:100%;border-radius:6px}}
-  .btn{{display:block;text-align:center;background:#00e5a0;color:#000;font-weight:700;font-size:13px;padding:13px;border-radius:8px;text-decoration:none;letter-spacing:.04em}}
-  .footer{{padding:16px 32px;font-size:11px;color:#7a7f94;text-align:center;border-top:1px solid rgba(255,255,255,.06)}}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="card">
-    <div class="header">
-      <div class="tag">— Lembrete de estudos</div>
-      <div class="title">Roadmap<br><span>Analista de Infra</span></div>
-    </div>
-    <div class="body">
-      <p style="font-size:14px;color:#7a7f94;margin:0 0 20px">Olá{', ' + nome if nome else ''}! É hora de estudar. Aqui está sua tarefa de hoje:</p>
-      <div class="day-card">
-        <div class="day-label">{dia_nome}</div>
-        <div class="day-tema">{tema}</div>
-        <div class="day-detail">{detalhe}</div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Seu progresso geral</span>
-          <span style="color:#00e5a0;font-weight:600">{pct}%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width:{pct}%"></div>
-        </div>
-      </div>
-      <a href="https://ghlacerda8-del.github.io/roadmap-infra" class="btn">Abrir Roadmap →</a>
-    </div>
-    <div class="footer">Roadmap Analista de Infra · 2h/dia · Seg–Sex · 24 meses</div>
-  </div>
-</div>
-</body></html>"""
+def _send(to: str, subject: str, html: str) -> None:
+    try:
+        resend.Emails.send({"from": FROM_EMAIL, "to": [to], "subject": subject, "html": html})
+        logger.info(f"E-mail enviado para {to} — {subject}")
+    except Exception as e:
+        logger.error(f"Erro ao enviar e-mail para {to}: {e}")
 
-def template_weekly(admin_nome: str, users_data: list) -> str:
-    rows = ""
-    for u in users_data:
-        cpf  = fmt_cpf(u["cpf"])
-        pct  = u["pct"]
-        done = u["done"]
-        cor  = "#00e5a0" if pct >= 50 else "#ffb830" if pct >= 20 else "#ff5f5f"
-        rows += f"""
-        <tr>
-          <td style="padding:10px 12px;font-size:13px;color:#e8eaf0;border-bottom:1px solid rgba(255,255,255,.05)">{cpf}</td>
-          <td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05)">
-            <span style="font-weight:700;color:{cor}">{pct}%</span>
-          </td>
-          <td style="padding:10px 12px;text-align:center;font-size:12px;color:#7a7f94;border-bottom:1px solid rgba(255,255,255,.05)">{done}/{TOTAL_TASKS}</td>
-        </tr>"""
+# ── Funções de envio ──────────────────────────────────────────
 
-    return f"""
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head><meta charset="UTF-8">
-<style>
-  body{{margin:0;padding:0;background:#0d0f14;font-family:'Segoe UI',Arial,sans-serif;color:#e8eaf0}}
-  .wrap{{max-width:600px;margin:0 auto;padding:32px 16px}}
-  .card{{background:#13161e;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden}}
-  .header{{padding:28px 32px 20px;border-bottom:1px solid rgba(255,255,255,.06)}}
-  .tag{{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ffb830;margin-bottom:10px}}
-  .title{{font-size:22px;font-weight:700;color:#e8eaf0}}
-  .title span{{color:#ffb830}}
-  .body{{padding:24px 32px}}
-  table{{width:100%;border-collapse:collapse;background:#1a1e28;border-radius:10px;overflow:hidden}}
-  th{{padding:10px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#7a7f94;background:#1a1e28;border-bottom:1px solid rgba(255,255,255,.08)}}
-  .btn{{display:block;text-align:center;background:#ffb830;color:#000;font-weight:700;font-size:13px;padding:13px;border-radius:8px;text-decoration:none;margin-top:20px}}
-  .footer{{padding:16px 32px;font-size:11px;color:#7a7f94;text-align:center;border-top:1px solid rgba(255,255,255,.06)}}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="card">
-    <div class="header">
-      <div class="tag">— Resumo semanal</div>
-      <div class="title">Roadmap<br><span>Analista de Infra</span></div>
-    </div>
-    <div class="body">
-      <p style="font-size:14px;color:#7a7f94;margin:0 0 20px">Olá {admin_nome}! Aqui está o resumo de progresso da semana:</p>
-      <table>
-        <thead><tr>
-          <th>Usuário (CPF)</th>
-          <th style="text-align:center">Progresso</th>
-          <th style="text-align:center">Tarefas</th>
-        </tr></thead>
-        <tbody>{rows}</tbody>
-      </table>
-      <a href="https://ghlacerda8-del.github.io/roadmap-infra" class="btn">Abrir Painel Admin →</a>
-    </div>
-    <div class="footer">Roadmap Analista de Infra · Resumo toda sexta-feira</div>
-  </div>
-</div>
-</body></html>"""
-
-def template_admin_notify(cpf: str, admin_nome: str, approve_url: str) -> str:
-    return f"""
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head><meta charset="UTF-8">
-<style>
-  body{{margin:0;padding:0;background:#0d0f14;font-family:'Segoe UI',Arial,sans-serif;color:#e8eaf0}}
-  .wrap{{max-width:520px;margin:0 auto;padding:32px 16px}}
-  .card{{background:#13161e;border:1px solid rgba(255,184,48,.2);border-radius:14px;overflow:hidden}}
-  .header{{padding:24px 28px 18px;border-bottom:1px solid rgba(255,255,255,.06)}}
-  .tag{{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ffb830;margin-bottom:8px}}
-  .title{{font-size:20px;font-weight:700;color:#e8eaf0}}
-  .body{{padding:22px 28px}}
-  .info-box{{background:#1a1e28;border-radius:10px;padding:16px;margin-bottom:18px}}
-  .info-label{{font-size:11px;color:#7a7f94;margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}}
-  .info-val{{font-size:15px;font-weight:600;color:#e8eaf0}}
-  .btn{{display:block;text-align:center;background:#00e5a0;color:#000;font-weight:700;font-size:13px;padding:13px;border-radius:8px;text-decoration:none}}
-  .footer{{padding:14px 28px;font-size:11px;color:#7a7f94;text-align:center;border-top:1px solid rgba(255,255,255,.06)}}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="card">
-    <div class="header">
-      <div class="tag">⚠ Nova solicitação de acesso</div>
-      <div class="title">Roadmap Analista de Infra</div>
-    </div>
-    <div class="body">
-      <p style="font-size:14px;color:#7a7f94;margin:0 0 18px">Olá {admin_nome}! Um novo usuário solicitou acesso ao Roadmap.</p>
-      <div class="info-box">
-        <div class="info-label">CPF solicitante</div>
-        <div class="info-val">{fmt_cpf(cpf)}</div>
-      </div>
-      <div class="info-box">
-        <div class="info-label">Horário</div>
-        <div class="info-val">{datetime.now().strftime("%d/%m/%Y às %H:%M")}</div>
-      </div>
-      <a href="{approve_url}" class="btn">Acessar painel para aprovar →</a>
-    </div>
-    <div class="footer">Roadmap Analista de Infra · Notificação automática</div>
-  </div>
-</div>
-</body></html>"""
-
-# ── TEMPLATE RESUMO PESSOAL ──────────────────────────────────
-
-def template_weekly_personal(nome: str, prog: dict) -> str:
-    pct  = prog["pct"]
-    done = prog["done"]
-    dias = prog["dias"]
-    cor  = "#00e5a0" if pct >= 50 else "#ffb830" if pct >= 20 else "#ff5f5f"
-    return f"""
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head><meta charset="UTF-8">
-<style>
-  body{{margin:0;padding:0;background:#0d0f14;font-family:'Segoe UI',Arial,sans-serif;color:#e8eaf0}}
-  .wrap{{max-width:560px;margin:0 auto;padding:32px 16px}}
-  .card{{background:#13161e;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden}}
-  .header{{padding:28px 32px 20px;border-bottom:1px solid rgba(255,255,255,.06)}}
-  .tag{{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ffb830;margin-bottom:10px}}
-  .title{{font-size:22px;font-weight:700;color:#e8eaf0}}
-  .title span{{color:#ffb830}}
-  .body{{padding:24px 32px}}
-  .stat-row{{display:flex;gap:12px;margin-bottom:20px}}
-  .stat-box{{flex:1;background:#1a1e28;border-radius:10px;padding:16px;text-align:center}}
-  .stat-val{{font-size:24px;font-weight:700;color:{cor};margin-bottom:4px}}
-  .stat-lbl{{font-size:11px;color:#7a7f94;text-transform:uppercase;letter-spacing:.08em}}
-  .progress-wrap{{margin-bottom:20px}}
-  .progress-label{{font-size:12px;color:#7a7f94;margin-bottom:6px;display:flex;justify-content:space-between}}
-  .progress-bar{{background:rgba(255,255,255,.06);border-radius:6px;height:8px;overflow:hidden}}
-  .progress-fill{{background:{cor};height:100%;border-radius:6px}}
-  .btn{{display:block;text-align:center;background:#ffb830;color:#000;font-weight:700;font-size:13px;padding:13px;border-radius:8px;text-decoration:none;letter-spacing:.04em}}
-  .footer{{padding:16px 32px;font-size:11px;color:#7a7f94;text-align:center;border-top:1px solid rgba(255,255,255,.06)}}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="card">
-    <div class="header">
-      <div class="tag">— Resumo semanal</div>
-      <div class="title">Roadmap<br><span>Analista de Infra</span></div>
-    </div>
-    <div class="body">
-      <p style="font-size:14px;color:#7a7f94;margin:0 0 20px">Olá {nome}! Aqui está seu progresso desta semana:</p>
-      <div class="stat-row">
-        <div class="stat-box">
-          <div class="stat-val">{pct}%</div>
-          <div class="stat-lbl">Concluído</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" style="color:#e8eaf0">{done}/{TOTAL_TASKS}</div>
-          <div class="stat-lbl">Tarefas</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" style="color:#e8eaf0">{dias}</div>
-          <div class="stat-lbl">Dias estudados</div>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Progresso geral</span>
-          <span style="color:{cor};font-weight:600">{pct}%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width:{pct}%"></div>
-        </div>
-      </div>
-      <a href="https://ghlacerda8-del.github.io/roadmap-infra" class="btn">Abrir Roadmap →</a>
-    </div>
-    <div class="footer">Roadmap Analista de Infra · Resumo toda sexta-feira</div>
-  </div>
-</div>
-</body></html>"""
-
-# ── FUNÇÕES DE ENVIO ──────────────────────────────────────────
-
-async def send_daily_reminder_direct(email: str, dados: dict):
-    """Envia lembrete diário para um email específico, com dados de progresso já obtidos."""
+async def send_daily_reminder_direct(email: str, dados: dict) -> None:
     prog = calc_progress(dados)
     dia_nome, tema, detalhe = get_day_info()
-    try:
-        resend.Emails.send({
-            "from":    FROM_EMAIL,
-            "to":      [email],
-            "subject": f"📚 {dia_nome} — Hora de estudar! ({prog['pct']}% concluído)",
-            "html":    template_reminder("", dia_nome, tema, detalhe, prog["pct"])
-        })
-        logger.info(f"Lembrete enviado para {email}")
-    except Exception as e:
-        logger.error(f"Erro ao enviar lembrete para {email}: {e}")
+    html = _render(
+        "reminder.html",
+        tag="— Lembrete de estudos",
+        nome="",
+        dia_nome=dia_nome,
+        tema=tema,
+        detalhe=detalhe,
+        pct=prog["pct"],
+    )
+    _send(email, f"📚 {dia_nome} — Hora de estudar! ({prog['pct']}% concluído)", html)
 
-async def send_weekly_personal(email: str, nome: str, prog: dict):
-    """Envia resumo semanal pessoal (sem tabela de múltiplos usuários)."""
-    try:
-        resend.Emails.send({
-            "from":    FROM_EMAIL,
-            "to":      [email],
-            "subject": f"📊 Resumo semanal — {prog['pct']}% concluído · {prog['done']}/{TOTAL_TASKS} tarefas",
-            "html":    template_weekly_personal(nome, prog)
-        })
-        logger.info(f"Resumo semanal enviado para {email}")
-    except Exception as e:
-        logger.error(f"Erro ao enviar resumo para {email}: {e}")
+async def send_weekly_personal(email: str, nome: str, prog: dict) -> None:
+    html = _render(
+        "weekly_personal.html",
+        tag="— Resumo semanal",
+        tag_color="#ffb830",
+        nome=nome,
+        pct=prog["pct"],
+        done=prog["done"],
+        total=prog["total"],
+        dias=prog["dias"],
+        footer="Roadmap Analista de Infra · Resumo toda sexta-feira",
+    )
+    _send(
+        email,
+        f"📊 Resumo semanal — {prog['pct']}% concluído · {prog['done']}/{TOTAL_TASKS} tarefas",
+        html,
+    )
 
-async def send_daily_reminder(user: dict):
-    email = user.get("email")
-    cpf   = user.get("cpf", "")
-    if not email:
-        return
-    from database import get_user_progress
-    dados  = await get_user_progress(cpf)
-    prog   = calc_progress(dados)
-    dia_nome, tema, detalhe = get_day_info()
-    try:
-        resend.Emails.send({
-            "from":    FROM_EMAIL,
-            "to":      [email],
-            "subject": f"📚 {dia_nome} — Hora de estudar! ({prog['pct']}% concluído)",
-            "html":    template_reminder("", dia_nome, tema, detalhe, prog["pct"])
-        })
-        logger.info(f"Lembrete enviado para {email}")
-    except Exception as e:
-        logger.error(f"Erro ao enviar lembrete para {email}: {e}")
-
-async def send_weekly_summary(users: list, progress: dict, admin_email: str):
+async def send_weekly_summary(users: list, progress: dict, admin_email: str) -> None:
     if not admin_email:
         logger.warning("Email do admin não configurado")
         return
-    users_data = []
-    for u in users:
-        cpf  = u.get("cpf", "")
-        prog = calc_progress(progress.get(cpf, {}))
-        users_data.append({"cpf": cpf, **prog})
-    users_data.sort(key=lambda x: x["pct"], reverse=True)
-    try:
-        resend.Emails.send({
-            "from":    FROM_EMAIL,
-            "to":      [admin_email],
-            "subject": f"📊 Resumo semanal — Roadmap Infra ({len(users_data)} usuários)",
-            "html":    template_weekly("Gustavo", users_data)
-        })
-        logger.info(f"Resumo semanal enviado para {admin_email}")
-    except Exception as e:
-        logger.error(f"Erro ao enviar resumo: {e}")
+    users_data = sorted(
+        [{"cpf": fmt_cpf(u.get("cpf", "")), **calc_progress(progress.get(u.get("cpf", ""), {}))} for u in users],
+        key=lambda x: x["pct"],
+        reverse=True,
+    )
+    html = _render(
+        "weekly_admin.html",
+        tag="— Resumo semanal",
+        tag_color="#ffb830",
+        admin_nome="Gustavo",
+        users=users_data,
+        footer="Roadmap Analista de Infra · Resumo toda sexta-feira",
+    )
+    _send(admin_email, f"📊 Resumo semanal — Roadmap Infra ({len(users_data)} usuários)", html)
 
-async def send_admin_notification(cpf: str, admin_email: str, admin_nome: str):
+async def send_admin_notification(cpf: str, admin_email: str, admin_nome: str) -> None:
     if not admin_email:
         return
-    approve_url = "https://ghlacerda8-del.github.io/roadmap-infra"
-    try:
-        resend.Emails.send({
-            "from":    FROM_EMAIL,
-            "to":      [admin_email],
-            "subject": f"🔔 Nova solicitação de acesso — CPF {fmt_cpf(cpf)}",
-            "html":    template_admin_notify(cpf, admin_nome or "Admin", approve_url)
-        })
-        logger.info(f"Admin notificado sobre CPF {cpf}")
-    except Exception as e:
-        logger.error(f"Erro ao notificar admin: {e}")
+    html = _render(
+        "admin_notify.html",
+        tag="⚠ Nova solicitação de acesso",
+        tag_color="#ffb830",
+        admin_nome=admin_nome or "Admin",
+        cpf_fmt=fmt_cpf(cpf),
+        horario=datetime.now().strftime("%d/%m/%Y às %H:%M"),
+        approve_url="https://ghlacerda8-del.github.io/roadmap-infra",
+        footer="Roadmap Analista de Infra · Notificação automática",
+    )
+    _send(admin_email, f"🔔 Nova solicitação de acesso — CPF {fmt_cpf(cpf)}", html)
+
+async def send_daily_reminder(user: dict) -> None:
+    email = user.get("email")
+    if not email:
+        return
+    from database import get_user_progress
+    dados = await get_user_progress(user.get("cpf", ""))
+    await send_daily_reminder_direct(email, dados)

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+.info-box { background:#1a1e28; border-radius:10px; padding:16px; margin-bottom:14px; }
+.info-label { font-size:11px; color:#7a7f94; margin-bottom:4px; text-transform:uppercase; letter-spacing:.08em; }
+.info-val { font-size:15px; font-weight:600; color:#e8eaf0; }
+{% endblock %}
+
+{% block body %}
+<p style="font-size:14px;color:#7a7f94;margin:0 0 18px">
+  Olá {{ admin_nome }}! Um novo usuário solicitou acesso ao Roadmap.
+</p>
+<div class="info-box">
+  <div class="info-label">CPF solicitante</div>
+  <div class="info-val">{{ cpf_fmt }}</div>
+</div>
+<div class="info-box">
+  <div class="info-label">Horário</div>
+  <div class="info-val">{{ horario }}</div>
+</div>
+<a href="{{ approve_url }}" class="btn" style="background:#00e5a0;color:#000">
+  Acessar painel para aprovar →
+</a>
+{% endblock %}
