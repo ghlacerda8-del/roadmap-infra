@@ -47,7 +47,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-INTERNAL_TOKEN = os.getenv("INTERNAL_TOKEN", "roadmap_backend_2026")
+INTERNAL_TOKEN = os.getenv("INTERNAL_TOKEN")
+if not INTERNAL_TOKEN:
+    raise RuntimeError("INTERNAL_TOKEN não configurado nas variáveis de ambiente")
 
 def verify_token(authorization: str = Header(None)):
     if not authorization or authorization != f"Bearer {INTERNAL_TOKEN}":

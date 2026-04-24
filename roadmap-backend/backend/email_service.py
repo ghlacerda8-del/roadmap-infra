@@ -5,7 +5,9 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-resend.api_key = os.getenv("RESEND_API_KEY", "re_QpuSPZLM_523rF72kD13rxzJcnkT58UDB")
+resend.api_key = os.getenv("RESEND_API_KEY")
+if not resend.api_key:
+    raise RuntimeError("RESEND_API_KEY não configurada nas variáveis de ambiente")
 
 FROM_EMAIL = os.getenv("FROM_EMAIL", "Roadmap Infra <onboarding@resend.dev>")
 
