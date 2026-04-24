@@ -58,6 +58,7 @@ async function loginAuth(cpf, senha, master, btn) {
 }
 
 function doVisitorLogin() {
+  sessionStorage.setItem('roadmap_visitor', '1');
   currentUser = { cpf: 'visitante', email: null, id: null, master: false };
   isMaster = false;
   isVisitor = true;
@@ -65,6 +66,7 @@ function doVisitorLogin() {
 }
 
 async function doLogout() {
+  sessionStorage.removeItem('roadmap_visitor');
   if (sb && !isVisitor) await sb.auth.signOut();
   currentUser = null; isMaster = false; isVisitor = false; adminMode = false;
   userProgress = { checked: {}, studiedDays: [] };
