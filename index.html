@@ -816,6 +816,83 @@
           </div>
         </div>
 
+        <div class="cv-section">
+          <div class="cv-section-title">Certificados &amp; Histórico Escolar</div>
+          <div class="cv-certs-docs">
+
+            <div class="cv-cert-doc cv-cert-doc--academic"
+              onclick="openCertModal('Análise e Desenvolvimento de Sistemas','Centro Universitário Estácio · Tecnólogo · C.R. 9,80',['docs/historico-escolar-1.png','docs/historico-escolar-2.png','docs/historico-escolar-3.png'])">
+              <div class="cv-cert-doc-icon">🎓</div>
+              <div class="cv-cert-doc-body">
+                <div class="cv-cert-doc-title">Análise e Desenvolvimento de Sistemas</div>
+                <div class="cv-cert-doc-inst">Centro Universitário Estácio de Santa Catarina</div>
+                <div class="cv-cert-doc-meta"><span class="cv-cert-doc-hours">Tecnólogo · C.R. 9,80</span><span
+                    class="cv-cert-doc-date">Ingresso Jan 2022</span></div>
+              </div>
+              <span class="cv-cert-doc-badge"
+                style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">Concluido</span>
+              <span class="cv-cert-doc-view">Ver →</span>
+            </div>
+
+            <div class="cv-cert-doc"
+              onclick="openCertModal('Técnico de Informática','Faculdade Famart · Capacitação · 80h · Fev 2026','docs/cert-tecnico-informatica.png')">
+              <div class="cv-cert-doc-icon">📜</div>
+              <div class="cv-cert-doc-body">
+                <div class="cv-cert-doc-title">Técnico de Informática</div>
+                <div class="cv-cert-doc-inst">Faculdade Famart · Capacitação</div>
+                <div class="cv-cert-doc-meta"><span class="cv-cert-doc-hours">80h</span><span
+                    class="cv-cert-doc-date">Fev 2026</span></div>
+              </div>
+              <span class="cv-cert-doc-badge"
+                style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">Concluído</span>
+              <span class="cv-cert-doc-view">Ver →</span>
+            </div>
+
+            <div class="cv-cert-doc"
+              onclick="openCertModal('Rede de Computadores','Faculdade Famart · Capacitação · 80h · Fev 2026','docs/cert-redes.png')">
+              <div class="cv-cert-doc-icon">📜</div>
+              <div class="cv-cert-doc-body">
+                <div class="cv-cert-doc-title">Rede de Computadores</div>
+                <div class="cv-cert-doc-inst">Faculdade Famart · Capacitação</div>
+                <div class="cv-cert-doc-meta"><span class="cv-cert-doc-hours">80h</span><span
+                    class="cv-cert-doc-date">Fev 2026</span></div>
+              </div>
+              <span class="cv-cert-doc-badge"
+                style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">Concluído</span>
+              <span class="cv-cert-doc-view">Ver →</span>
+            </div>
+
+            <div class="cv-cert-doc"
+              onclick="openCertModal('Fundamentos e Arquitetura de Informática','Faculdade Famart · Capacitação · 60h · Fev 2026','docs/cert-fundamentos-arquitetura.png')">
+              <div class="cv-cert-doc-icon">📜</div>
+              <div class="cv-cert-doc-body">
+                <div class="cv-cert-doc-title">Fundamentos e Arquitetura de Informática</div>
+                <div class="cv-cert-doc-inst">Faculdade Famart · Capacitação</div>
+                <div class="cv-cert-doc-meta"><span class="cv-cert-doc-hours">60h</span><span
+                    class="cv-cert-doc-date">Fev 2026</span></div>
+              </div>
+              <span class="cv-cert-doc-badge"
+                style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">Concluído</span>
+              <span class="cv-cert-doc-view">Ver →</span>
+            </div>
+
+            <div class="cv-cert-doc"
+              onclick="openCertModal('Introdução à Algoritmos','Faculdade Famart · Capacitação · 60h · Fev 2026','docs/cert-algoritmos.png')">
+              <div class="cv-cert-doc-icon">📜</div>
+              <div class="cv-cert-doc-body">
+                <div class="cv-cert-doc-title">Introdução à Algoritmos</div>
+                <div class="cv-cert-doc-inst">Faculdade Famart · Capacitação</div>
+                <div class="cv-cert-doc-meta"><span class="cv-cert-doc-hours">60h</span><span
+                    class="cv-cert-doc-date">Fev 2026</span></div>
+              </div>
+              <span class="cv-cert-doc-badge"
+                style="background:rgba(0,229,160,.12);color:var(--teal);border-color:rgba(0,229,160,.25)">Concluído</span>
+              <span class="cv-cert-doc-view">Ver →</span>
+            </div>
+
+          </div>
+        </div>
+
         <!-- CTA de contato -->
         <div class="cv-cta-section">
           <div class="cv-cta-title">Gostou do perfil? Vamos conversar!</div>
@@ -851,6 +928,20 @@
     </div>
   </div>
 
+  <!-- CERT MODAL -->
+  <div class="cert-modal-overlay" id="cert-modal" onclick="closeCertModal()">
+    <div class="cert-modal-box" onclick="event.stopPropagation()">
+      <div class="cert-modal-header">
+        <div class="cert-modal-info">
+          <div class="cert-modal-title" id="cert-modal-title"></div>
+          <div class="cert-modal-sub" id="cert-modal-sub"></div>
+        </div>
+        <button class="cert-modal-close" onclick="closeCertModal()">✕</button>
+      </div>
+      <div class="cert-modal-body" id="cert-modal-body"></div>
+    </div>
+  </div>
+
   <!-- JS — CDN primeiro, depois módulos em ordem de dependência -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -868,6 +959,7 @@
   <script src="js/curriculo.js"></script>
   <script src="js/app.js"></script>
   <script src="js/init.js"></script>
+  <script src="js/certs.js"></script>
 
 </body>
 

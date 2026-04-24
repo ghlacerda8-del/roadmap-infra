@@ -468,6 +468,216 @@
   border-radius: 4px;
 }
 
+/* ── Certificados & Histórico Escolar ───────────────────────── */
+
+.cv-certs-docs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cv-cert-doc {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color .2s, transform .2s;
+}
+
+.cv-cert-doc:hover {
+  border-color: rgba(0,229,160,.25);
+  transform: translateY(-1px);
+}
+
+.cv-cert-doc--academic {
+  border-color: rgba(255,184,48,.15);
+}
+
+.cv-cert-doc--academic:hover {
+  border-color: rgba(255,184,48,.35);
+}
+
+.cv-cert-doc-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.cv-cert-doc-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cv-cert-doc-title {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.cv-cert-doc-inst {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.cv-cert-doc-meta {
+  display: flex;
+  gap: 10px;
+}
+
+.cv-cert-doc-hours {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--teal);
+  background: rgba(0,229,160,.08);
+  border: 1px solid rgba(0,229,160,.2);
+  border-radius: 4px;
+  padding: 1px 7px;
+}
+
+.cv-cert-doc-date {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 1px 0;
+}
+
+.cv-cert-doc-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 1px solid;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cv-cert-doc-view {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--teal);
+  opacity: 0;
+  transition: opacity .2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cv-cert-doc:hover .cv-cert-doc-view {
+  opacity: 1;
+}
+
+/* ── Modal de Certificado ────────────────────────────────────── */
+
+.cert-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cert-modal-overlay.open {
+  display: flex;
+}
+
+.cert-modal-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+}
+
+.cert-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.cert-modal-title {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cert-modal-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.cert-modal-download {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--teal);
+  background: rgba(0,229,160,.1);
+  border: 1px solid rgba(0,229,160,.25);
+  border-radius: 6px;
+  padding: 5px 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity .15s;
+}
+
+.cert-modal-download:hover { opacity: .8; }
+
+.cert-modal-close {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color .15s, background .15s;
+  flex-shrink: 0;
+}
+
+.cert-modal-close:hover { color: var(--text); background: rgba(255,255,255,.1); }
+
+.cert-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 20px;
+  background: rgba(0,0,0,.2);
+}
+
+.cert-modal-body img {
+  max-width: 100%;
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+}
+
 /* ── Responsive ────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
