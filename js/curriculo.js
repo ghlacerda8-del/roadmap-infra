@@ -270,7 +270,7 @@ function exportCvPdf() {
   <div style="font-size:18pt;font-weight:800;color:#0d1421;line-height:1.1">Gustavo Henrique Da Cruz Lacerda</div>
   <div style="font-size:8.5pt;color:#00a06e;font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.06em">Suporte Técnico N1/N2 &nbsp;·&nbsp; Infraestrutura de Redes &nbsp;·&nbsp; Automação com Python</div>
   <div style="font-size:7.5pt;color:#555;margin-top:8px">
-    (31) 98339-1648 &nbsp;·&nbsp; Belo Horizonte, MG &nbsp;·&nbsp; ghlacerda8@gmail.com &nbsp;·&nbsp; linkedin.com/in/gustavo-henriquedcl &nbsp;·&nbsp; github.com/ghlacerda8-del
+    (31) 98339-1648 &nbsp;·&nbsp; Belo Horizonte, MG &nbsp;·&nbsp; ghlacerda8@gmail.com &nbsp;·&nbsp; linkedin.com/in/gustavo-henriquedcl &nbsp;·&nbsp; github.com/ghlacerda8-del &nbsp;·&nbsp; roadmap-infra.pages.dev
   </div>
 </div>
 

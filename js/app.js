@@ -8,15 +8,13 @@ function showApp() {
     roleEl.textContent = 'VISITANTE'; roleEl.className = 'nav-role role-visitor';
     document.getElementById('nav-admin').style.display = 'none';
     // Esconde botões de nav irrelevantes para visitante
-    ['progresso', 'semana', 'checklist'].forEach(page => {
+    ['progresso', 'semana', 'checklist', 'cronograma'].forEach(page => {
       const btn = document.querySelector(`[onclick="showPage('${page}')"]`);
       if (btn) btn.style.display = 'none';
     });
-    // Renomeia abas para linguagem amigável ao visitante
-    const roadmapBtn    = document.querySelector(`[onclick="showPage('roadmap')"]`);
-    const cronogramaBtn = document.querySelector(`[onclick="showPage('cronograma')"]`);
-    if (roadmapBtn)    roadmapBtn.textContent    = 'Plano de Carreira';
-    if (cronogramaBtn) cronogramaBtn.textContent = 'Cronograma de Estudos';
+    // Renomeia aba de roadmap para linguagem amigável ao visitante
+    const roadmapBtn = document.querySelector(`[onclick="showPage('roadmap')"]`);
+    if (roadmapBtn) roadmapBtn.textContent = 'Plano de Carreira';
     showPage('curriculo');
     return;
   }

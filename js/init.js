@@ -43,6 +43,8 @@
 
 function restorePageFromHash() {
   const hash = location.hash.replace('#', '');
-  const valid = ['progresso', 'semana', 'checklist', 'roadmap', 'cronograma', 'curriculo', 'admin'];
+  const valid = isVisitor
+    ? ['roadmap', 'curriculo']
+    : ['progresso', 'semana', 'checklist', 'roadmap', 'cronograma', 'curriculo', 'admin'];
   if (hash && valid.includes(hash)) showPage(hash, false);
 }
