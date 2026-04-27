@@ -69,10 +69,10 @@ function _renderFormacao() {
     <div class="cv-entry">
       <div class="cv-entry-header">
         <div>
-          <div class="cv-entry-title">${f.course}</div>
-          <div class="cv-entry-company">${f.institution}${f.type ? ' · ' + f.type : ''}</div>
+          <div class="cv-entry-title">${escapeHtml(f.course)}</div>
+          <div class="cv-entry-company">${escapeHtml(f.institution)}${f.type ? ' · ' + escapeHtml(f.type) : ''}</div>
         </div>
-        <div class="cv-entry-period">${f.period}</div>
+        <div class="cv-entry-period">${escapeHtml(f.period)}</div>
       </div>
     </div>`).join('');
 }
@@ -84,10 +84,10 @@ function _renderIdiomas() {
   el.innerHTML = data.map(lang => `
     <div class="cv-entry" style="padding:12px 20px">
       <div style="display:flex;align-items:center;gap:16px">
-        <span style="font-size:13px;font-weight:600;color:var(--text)">${lang.name}</span>
-        <span class="cv-entry-period">${lang.level}</span>
+        <span style="font-size:13px;font-weight:600;color:var(--text)">${escapeHtml(lang.name)}</span>
+        <span class="cv-entry-period">${escapeHtml(lang.level)}</span>
         <div class="cv-lang-bar">
-          <div class="cv-lang-fill" style="width:${lang.pct}%"></div>
+          <div class="cv-lang-fill" style="width:${Number(lang.pct) || 0}%"></div>
         </div>
       </div>
     </div>`).join('');
@@ -100,16 +100,16 @@ function _renderExp() {
     <div class="cv-entry cv-entry-clickable" onclick="openExpModal(${idx})">
       <div class="cv-entry-header">
         <div>
-          <div class="cv-entry-title">${exp.role}</div>
-          <div class="cv-entry-company">${exp.company}${exp.location ? ' · ' + exp.location : ''}</div>
+          <div class="cv-entry-title">${escapeHtml(exp.role)}</div>
+          <div class="cv-entry-company">${escapeHtml(exp.company)}${exp.location ? ' · ' + escapeHtml(exp.location) : ''}</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
-          <div class="cv-entry-period">${exp.period}</div>
+          <div class="cv-entry-period">${escapeHtml(exp.period)}</div>
           <span class="cv-entry-expand"></span>
         </div>
       </div>
       <ul class="cv-entry-list">
-        ${exp.items.map(item => `<li>${item}</li>`).join('')}
+        ${exp.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
       </ul>
     </div>`).join('');
 }

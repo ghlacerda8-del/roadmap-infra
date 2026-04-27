@@ -1,6 +1,12 @@
 from supabase import create_client, Client
 from functools import lru_cache
-import os, logging
+import re, os, logging
+
+_CPF_RE = re.compile(r"\d{3}\.?\d{3}\.?\d{3}-?\d{2}")
+
+def _mask_cpf(cpf: str) -> str:
+    c = re.sub(r"\D", "", cpf or "")
+    return c[:3] + "***" + c[-2:] if len(c) >= 5 else "***"
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +47,7 @@ async def get_user_progress(cpf: str) -> dict:
         res = get_client().table("progresso").select("dados").eq("user_cpf", cpf).single().execute()
         return res.data["dados"] if res.data else {"checked": {}, "studiedDays": []}
     except Exception as e:
-        logger.error(f"Erro ao buscar progresso de {cpf}: {e}")
+        logger.error(f"Erro ao buscar progresso de {_mask_cpf(cpf)}: {e}")
         return {"checked": {}, "studiedDays": []}
 
 async def get_admin_progress() -> dict:

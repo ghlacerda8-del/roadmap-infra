@@ -1,3 +1,12 @@
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function cpfDigits(v) { return v.replace(/\D/g, ''); }
 function cpfToEmail(c) { return c + '@roadmap.infra'; }
 function fmtCpf(v) {
