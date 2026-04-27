@@ -2,7 +2,7 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + id).classList.add('active');
   if (id === 'login') {
-    history.replaceState({ screen: 'login' }, '', location.pathname);
+    history.replaceState({ screen: 'login' }, '', '/');
   }
 }
 
@@ -24,7 +24,7 @@ function showPage(id, pushHistory = true) {
   if (id === 'progresso') renderProgress();
   if (id === 'admin')     loadAdminPanel();
   if (id === 'curriculo') loadCvSettings();
-  if (pushHistory) history.pushState({ screen: 'app', page: id }, '', location.pathname + '#' + id);
+  if (pushHistory) history.pushState({ screen: 'app', page: id }, '', '/' + id);
 }
 
 window.addEventListener('popstate', function(e) {
@@ -38,7 +38,7 @@ window.addEventListener('popstate', function(e) {
 
 // Garante estado inicial na history para o botão voltar funcionar
 if (!history.state) {
-  history.replaceState({ screen: 'login' }, '', location.pathname);
+  history.replaceState({ screen: 'login' }, '', '/');
 }
 
 // Triple-click no logo para abrir login admin

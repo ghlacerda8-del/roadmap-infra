@@ -1,0 +1,14 @@
+# Redireciona dominio antigo do GitHub Pages para o novo
+# (configurar no painel Cloudflare quando dominio proprio estiver ativo)
+
+# SPA fallback — qualquer rota cai no index.html (a JS resolve pela pathname)
+/progresso     /index.html   200
+/semana        /index.html   200
+/checklist     /index.html   200
+/roadmap       /index.html   200
+/cronograma    /index.html   200
+/curriculo     /index.html   200
+/admin         /index.html   200
+
+# Catch-all para rotas desconhecidas (mantem app rodando)
+/*             /index.html   200

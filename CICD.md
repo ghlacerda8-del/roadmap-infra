@@ -12,39 +12,43 @@ Documentação do pipeline de deploy e operações do projeto.
 └───────────────┬─────────────────────┬───────────────────┘
                 │                     │
                 ▼                     ▼
-   ┌────────────────────┐   ┌──────────────────────┐
-   │  GitHub Pages      │   │  Render (FastAPI)    │
-   │  (frontend estático│   │  roadmap-backend     │
-   │   HTML/CSS/JS)     │   │  Python 3.11         │
-   └────────────────────┘   └──────────┬───────────┘
-                                        │
-                                        ▼
-                             ┌──────────────────────┐
-                             │  Supabase            │
-                             │  PostgreSQL + Auth   │
-                             │  Storage + RLS       │
-                             └──────────────────────┘
+   ┌──────────────────────┐   ┌──────────────────────┐
+   │  Cloudflare Pages    │   │  Fly.io (FastAPI)    │
+   │  (frontend estatico) │   │  Docker · região GRU │
+   │  CDN · CSP · HSTS    │   │  Python 3.12         │
+   └──────────────────────┘   └──────────┬───────────┘
+                                          │
+                                          ▼
+                               ┌──────────────────────┐
+                               │  Supabase            │
+                               │  PostgreSQL + Auth   │
+                               │  Storage + RLS       │
+                               └──────────────────────┘
 ```
 
-| Camada    | Serviço        | Repositório                         | Branch |
-|-----------|----------------|-------------------------------------|--------|
-| Frontend  | GitHub Pages   | ghlacerda8-del/roadmap-infra        | main   |
-| Backend   | Render         | ghlacerda8-del/roadmap-infra-backend| main   |
-| Banco     | Supabase       | Projeto no painel Supabase          | —      |
+| Camada    | Serviço          | Repositório                         | Branch |
+|-----------|------------------|-------------------------------------|--------|
+| Frontend  | Cloudflare Pages | ghlacerda8-del/roadmap-infra        | main   |
+| Backend   | Fly.io           | ghlacerda8-del/roadmap-infra        | main   |
+| Banco     | Supabase         | Projeto no painel Supabase          | —      |
+
+> Guia passo a passo de provisionamento em **[DEPLOY.md](DEPLOY.md)**.
 
 ---
 
 ## 2. Fluxo de deploy atual
 
-### Frontend — GitHub Pages
+### Frontend — Cloudflare Pages
 
-Deploy automático a cada `git push` na branch `main`.
+Deploy automatico a cada `git push` na branch `main` (via integracao GitHub <-> Cloudflare).
 
 ```
-código local  →  git push origin main  →  GitHub Actions (Pages)  →  ar em ~1 min
+codigo local  ->  git push origin main  ->  Cloudflare Pages build  ->  no ar em ~30s
 ```
 
-**URL de produção:** `https://ghlacerda8-del.github.io/roadmap-infra/`
+**URL de producao:** `https://roadmap-infra.pages.dev`
+
+Outras branches geram preview URLs unicas: `<branch>.roadmap-infra.pages.dev`. Build command: `npm run build`. Output dir: `dist`.
 
 Passos manuais:
 ```bash
@@ -64,43 +68,47 @@ git commit -m "feat: descrição da mudança"
 git push origin main
 ```
 
-> O GitHub Pages serve os arquivos estáticos diretamente da branch `main`.
-> Não há build step — o que está no repositório é o que vai para o ar.
+> Cloudflare Pages roda `npm run build` (definido em `package.json`) que copia
+> apenas `index.html`, `css/`, `js/`, `docs/`, `_headers` e `_redirects` para
+> `dist/`. O codigo do backend Python nao e exposto no CDN.
 
 ---
 
-### Backend — Render
+### Backend — Fly.io
 
-O Render detecta `git push` no repositório `roadmap-infra-backend` e faz redeploy automático.
+O deploy do backend e feito via `fly deploy` (manual) ou GitHub Actions
+(automatico — ver `.github/workflows/fly-deploy.yml` em DEPLOY.md secao 3).
 
 ```
-código local  →  git push origin main  →  Render build  →  FastAPI online em ~2 min
+codigo local  ->  git push origin main  ->  Fly.io build (Docker)  ->  FastAPI online em ~1 min
 ```
 
-**URL de produção:** configurada no painel do Render (ex: `https://roadmap-backend.onrender.com`)
+**URL de producao:** `https://roadmap-infra-api.fly.dev`
 
 Passos manuais:
 ```bash
 cd roadmap-backend/backend
 
-# 1. Editar código (main.py, database.py, email_service.py...)
+# 1. Editar codigo (main.py, database.py, email_service.py...)
 
-# 2. Commit e push
-git add .
-git commit -m "fix: descrição da correção"
-git push origin main
+# 2. Deploy direto via flyctl
+fly deploy
 
-# 3. Acompanhar o deploy no painel do Render
-# Render > Dashboard > roadmap-backend > Logs
+# 3. Acompanhar logs
+fly logs
 ```
 
-**Variáveis de ambiente no Render** (nunca commitar no git):
-| Variável         | Descrição                        |
-|------------------|----------------------------------|
-| `SUPABASE_URL`   | URL do projeto Supabase          |
-| `SUPABASE_KEY`   | Service role key (privada)       |
-| `RESEND_API_KEY` | Chave da API de e-mail Resend    |
-| `MASTER_CPF`     | CPF do usuário administrador     |
+**Variaveis de ambiente no Fly.io** (via `fly secrets set` — ver DEPLOY.md secao 2.3):
+| Variavel              | Descricao                                       |
+|-----------------------|-------------------------------------------------|
+| `SUPABASE_URL`        | URL do projeto Supabase                         |
+| `SUPABASE_KEY`        | Service role key (privada)                      |
+| `RESEND_API_KEY`      | Chave da API de e-mail Resend                   |
+| `INTERNAL_TOKEN`      | Token para endpoints `/send-*` (forte!)         |
+| `ALLOWED_ORIGINS`     | Origens CORS permitidas                         |
+| `ALLOWED_ORIGIN_REGEX`| Regex pra previews (`*.roadmap-infra.pages.dev`)|
+| `FRONTEND_URL`        | URL do frontend (usado em e-mails)              |
+| `ADMIN_EMAIL/CPF/NOME`| Dados do administrador                          |
 
 ---
 
@@ -173,18 +181,20 @@ pytest tests/
 ### Variáveis de ambiente e secrets
 
 - **Frontend (público):** `SUPABASE_URL` e `SUPABASE_KEY` (anon) ficam em `js/config.js` — aceitável com RLS ativo
-- **Backend (privado):** todas as chaves ficam em `.env` (nunca no git) e no painel do Render
+- **Backend (privado):** todas as chaves ficam em `.env` (nunca no git) e no Fly.io via `fly secrets set`
 - **GitHub Secrets:** adicionar no repositório para uso em Actions: `Settings > Secrets and variables > Actions`
 
 ### Monitoramento
 
 | O que monitorar          | Onde ver                                      |
 |--------------------------|-----------------------------------------------|
-| Logs do backend          | Render > Dashboard > Logs                     |
-| Erros de autenticação    | Supabase > Authentication > Logs              |
+| Logs do backend          | `fly logs` ou Fly.io Dashboard > Monitoring   |
+| Erros de autenticacao    | Supabase > Authentication > Logs              |
 | Queries lentas           | Supabase > Database > Query Performance       |
 | Uptime do backend        | UptimeRobot (gratuito) ou Better Uptime       |
-| Deploy do frontend       | GitHub > Actions (aba do repositório)         |
+| Deploy do frontend       | Cloudflare Dashboard > Pages > Deployments    |
+| Analytics frontend       | Cloudflare Dashboard > Pages > Analytics      |
+| Headers de seguranca     | https://securityheaders.com (meta: A ou A+)   |
 
 ---
 
@@ -198,14 +208,12 @@ cd d:/roadmap-infra
 git add <arquivos>
 git commit -m "feat|fix|chore: descrição"
 git push origin main
-# Aguardar ~1 min e verificar em https://ghlacerda8-del.github.io/roadmap-infra/
+# Aguardar ~30s e verificar em https://roadmap-infra.pages.dev
 
 # Backend
-cd d:/roadmap-infra/roadmap-backend/backend  # ou repositório separado
-git add .
-git commit -m "fix: descrição"
-git push origin main
-# Acompanhar no painel do Render
+cd d:/roadmap-infra/roadmap-backend/backend
+fly deploy
+fly logs   # acompanhar deploy
 ```
 
 ### Verificar status atual
@@ -231,9 +239,16 @@ git push origin main
 git checkout -b hotfix abc1234
 ```
 
-### Rollback no Render (backend)
+### Rollback no Fly.io (backend)
 
-No painel do Render: `Dashboard > roadmap-backend > Deploys > [commit anterior] > Redeploy`
+```bash
+fly releases                          # ver historico
+fly deploy --image <image-tag>        # voltar para release anterior
+```
+
+### Rollback no Cloudflare Pages (frontend)
+
+Painel: `Pages > roadmap-infra > Deployments > [deploy anterior] > Rollback to this deployment`.
 
 ### Rodar backend localmente
 

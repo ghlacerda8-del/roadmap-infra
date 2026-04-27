@@ -1,0 +1,9 @@
+{
+  "name": "roadmap-infra",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Roadmap Analista de Infra — frontend estatico (Cloudflare Pages)",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && cp -r index.html css js docs _headers _redirects dist/ 2>/dev/null && echo 'Build OK -> dist/'"
+  }
+}

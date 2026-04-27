@@ -9,7 +9,7 @@
     isMaster = false;
     isVisitor = true;
     showApp();
-    restorePageFromHash();
+    restorePageFromPath();
     return;
   }
 
@@ -34,15 +34,18 @@
         ]);
       } catch(e) {}
       showApp();
-      restorePageFromHash();
+      restorePageFromPath();
     }
   } catch(e) {
     console.error('Init error:', e);
   }
 })();
 
-function restorePageFromHash() {
-  const hash = location.hash.replace('#', '');
+function restorePageFromPath() {
   const valid = ['progresso', 'semana', 'checklist', 'roadmap', 'cronograma', 'curriculo', 'admin'];
-  if (hash && valid.includes(hash)) showPage(hash, false);
+  // Aceita /curriculo (Cloudflare Pages) e #curriculo (compat retroativa GitHub Pages)
+  const fromPath = location.pathname.replace(/^\/+|\/+$/g, '').split('/').pop();
+  const fromHash = location.hash.replace('#', '');
+  const target = valid.includes(fromPath) ? fromPath : (valid.includes(fromHash) ? fromHash : null);
+  if (target) showPage(target, false);
 }

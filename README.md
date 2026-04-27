@@ -2,7 +2,7 @@
 
 Aplicação web fullstack para acompanhamento de plano de carreira em infraestrutura de TI. Inclui autenticação, progresso persistido em banco, notificações por e-mail e currículo interativo.
 
-**Produção:** https://ghlacerda8-del.github.io/roadmap-infra/
+**Produção:** https://roadmap-infra.pages.dev (Cloudflare Pages)
 
 ---
 
@@ -14,8 +14,8 @@ Aplicação web fullstack para acompanhamento de plano de carreira em infraestru
 | Backend | Python · FastAPI · APScheduler |
 | Banco | Supabase (PostgreSQL + Auth) |
 | E-mail | Resend API · Jinja2 |
-| Frontend host | GitHub Pages |
-| Backend host | Render |
+| Frontend host | Cloudflare Pages (CDN global · CSP · HSTS) |
+| Backend host | Fly.io (Docker · região GRU) |
 
 ---
 
@@ -37,9 +37,9 @@ Aplicação web fullstack para acompanhamento de plano de carreira em infraestru
 
 ```
 Browser
-  ├── GitHub Pages (HTML/CSS/JS estático)
+  ├── Cloudflare Pages (HTML/CSS/JS estático · CDN global · CSP/HSTS)
   │     └── Supabase JS SDK (auth + banco)
-  └── Render (FastAPI)
+  └── Fly.io (FastAPI em Docker · região GRU)
         ├── APScheduler (cron de e-mails)
         ├── Resend API (envio de e-mail)
         └── Supabase Python SDK (leitura de progresso)
@@ -96,13 +96,14 @@ pytest tests/ -v
 
 ## Deploy
 
-```bash
-# Frontend — GitHub Pages (automático no push)
-git add .
-git commit -m "feat: descrição"
-git push origin main
+Veja o passo a passo completo em **[DEPLOY.md](DEPLOY.md)** (Cloudflare Pages + Fly.io).
 
-# Backend — Render (automático no push do repositório do backend)
+```bash
+# Frontend — Cloudflare Pages (deploy automatico no push para main)
+git add . && git commit -m "feat: descricao" && git push origin main
+
+# Backend — Fly.io
+cd roadmap-backend/backend && fly deploy
 ```
 
 Convenção de commits: `feat:` · `fix:` · `chore:` · `style:` · `refactor:` · `docs:` · `security:`

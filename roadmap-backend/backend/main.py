@@ -39,9 +39,14 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+_default_origins = "https://ghlacerda8-del.github.io,https://roadmap-infra.pages.dev"
+_allowed_origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", _default_origins).split(",") if o.strip()]
+_allowed_origin_regex = os.getenv("ALLOWED_ORIGIN_REGEX", r"^https://([a-z0-9-]+\.)?roadmap-infra\.pages\.dev$")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ghlacerda8-del.github.io"],
+    allow_origins=_allowed_origins,
+    allow_origin_regex=_allowed_origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
